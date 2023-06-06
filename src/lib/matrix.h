@@ -1,6 +1,9 @@
 #ifndef __MATRIX_H__
 #define __MATRIX_H__
 
+#include <algorithm>
+#include <random>
+#include <stdexcept>
 #include <vector>
 
 class Matrix {
@@ -16,16 +19,21 @@ class Matrix {
   int GetRows() const;
   int GetCols() const;
 
-  double& operator()(std::size_t index_i, std::size_t index_j);
-  const double& operator()(std::size_t index_i, std::size_t index_j) const;
+  double& operator()(int index_i, int index_j);
+  const double& operator()(int index_i, int index_j) const;
 
   std::vector<double> MultiplyMatrixByVector(
       const std::vector<double>& vec) const;
+  void FillMatrixRandomValues(double min_random_value = 0.0,
+                              double max_random_value = 0.5);
 
  private:
-  std::size_t rows_;
-  std::size_t cols_;
+  int rows_;
+  int cols_;
   std::vector<std::vector<double>> matrix_;
+
+  static std::random_device rd_;
+  static std::mt19937 gen_;
 };
 
 #endif  // __MATRIX_H__
