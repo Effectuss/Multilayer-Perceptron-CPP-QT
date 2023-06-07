@@ -8,7 +8,7 @@
 
 class Matrix {
  public:
-  Matrix() = delete;
+  Matrix() = default;
   Matrix(const int& rows, const int& cols);
   Matrix(const Matrix& over_matri) = default;
   Matrix(Matrix&& over_matrix) = default;
@@ -24,7 +24,7 @@ class Matrix {
 
   std::vector<double> MultiplyMatrixByVector(
       const std::vector<double>& vec) const;
-  void FillMatrixRandomValues(double min_random_value = 0.0,
+  void FillMatrixRandomValues(double min_random_value = 0.1,
                               double max_random_value = 0.5);
 
  private:
