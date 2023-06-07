@@ -29,14 +29,21 @@ const double& Matrix::operator()(int index_i, int index_j) const {
   return matrix_[index_i][index_j];
 }
 
-std::vector<double> Matrix::MultiplyMatrixByVector(
-    const std::vector<double>& vec) const {
-  if (cols_ != vec.size()) {
+Matrix Matrix::MultiplyMatrix(const Matrix& other_matrix) const {
+  if (cols_ != other_matrix.rows_) {
     throw std::runtime_error(
-        "The amount of cols in matrix have to equal size vector!");
+        "The amount of cols in matrix have to equal rows in other matrix!");
   }
-  std::vector<double> result_vec;
-  return result_vec;
+  Matrix result_matrix = Matrix(rows_, other_matrix.cols_);
+  for (int i = 0; i < rows_; ++i) {
+    for (int j = 0; j < other_matrix.cols_; ++j) {
+      for (int k = 0; k < other_matrix.rows_; ++k) {
+        result_matrix.matrix_[i][j] +=
+            matrix_[i][k] * other_matrix.matrix_[k][j];
+      }
+    }
+  }
+  return result_matrix;
 }
 
 void Matrix::FillMatrixRandomValues(double min_random_value,

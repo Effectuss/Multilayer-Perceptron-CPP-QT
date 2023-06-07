@@ -1,5 +1,7 @@
 #include "matrix_perceptron.h"
 
+#include <iomanip>
+#include <iostream>
 MatrixPerceptron::MatrixPerceptron(int hidden_layers_count,
                                    int size_hidden_layers)
     : number_of_layers_{hidden_layers_count + 2},
@@ -31,5 +33,7 @@ void MatrixPerceptron::InitRandomWeights() {
 
 void MatrixPerceptron::InitMatricesNeurons() {
   for (int i = 0; i < number_of_layers_; ++i) {
+    neuron_values_.push_back(std::move(Matrix(size_layers_[i], 1)));
+    neuron_errors_.push_back(std::move(Matrix(size_layers_[i], 1)));
   }
 }

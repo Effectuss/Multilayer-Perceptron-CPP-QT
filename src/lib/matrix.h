@@ -22,8 +22,7 @@ class Matrix {
   double& operator()(int index_i, int index_j);
   const double& operator()(int index_i, int index_j) const;
 
-  std::vector<double> MultiplyMatrixByVector(
-      const std::vector<double>& vec) const;
+  Matrix MultiplyMatrix(const Matrix& other_matrix) const;
   void FillMatrixRandomValues(double min_random_value = 0.1,
                               double max_random_value = 0.5);
 

@@ -29,8 +29,8 @@ class MatrixPerceptron : public PerceptronInterface {
   std::unique_ptr<ActivationFunctionInterface> activation_function_;
   std::vector<int> size_layers_;
   std::vector<Matrix> weights_;
-  Matrix neuron_values_;
-  Matrix neuron_errors_;
+  std::vector<Matrix> neuron_values_;
+  std::vector<Matrix> neuron_errors_;
   bool dataset_download_{false};
 };
 
