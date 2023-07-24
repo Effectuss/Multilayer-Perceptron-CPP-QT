@@ -136,3 +136,5 @@ dkms.conf
 */src/cmake-build-debug/
 *build*
 *CMakeLists.txt.user*
+
+.clang-format
