@@ -17,6 +17,9 @@ class MainWindow : public QMainWindow {
   ~MainWindow();
 
  private slots:
+  void on_penRadiusSpinbox_valueChanged(int arg1);
+
+ private slots:
   void on_penRadiusSlider_valueChanged(int value);
 
  private:
