@@ -7,20 +7,30 @@ void DrawArea::ClearImage() {
   update();
 }
 
+void DrawArea::SetPenRadius(int radius) { radius_ = radius; }
+
 void DrawArea::mousePressEvent(QMouseEvent* event) {
-  qDebug() << event->pos();
-  if (event->buttons().testFlags({Qt::LeftButton, Qt::RightButton})) {
-    ClearImage();
-  } else if (event->buttons().testFlag(Qt::LeftButton)) {
-    DrawCircle(event->pos(), kPenColor);
-  } else if (event->buttons().testFlag(Qt::RightButton)) {
-    DrawCircle(event->pos(), kEraserColor);
+  if (!cleared_) {
+    if (event->buttons().testFlags({Qt::LeftButton, Qt::RightButton})) {
+      ClearImage();
+      cleared_ = true;
+    } else if (event->buttons().testFlag(Qt::LeftButton)) {
+      DrawCircle(event->pos(), kPenColor);
+    } else if (event->buttons().testFlag(Qt::RightButton)) {
+      DrawCircle(event->pos(), kEraserColor);
+    }
   }
 }
 
 void DrawArea::mouseMoveEvent(QMouseEvent* event) {
   if (!event->buttons().testFlags({Qt::LeftButton, Qt::RightButton})) {
     mousePressEvent(event);
+  }
+}
+
+void DrawArea::mouseReleaseEvent(QMouseEvent* event) {
+  if (event->buttons().testFlag(Qt::NoButton)) {
+    cleared_ = false;
   }
 }
 

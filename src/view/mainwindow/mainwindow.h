@@ -16,6 +16,9 @@ class MainWindow : public QMainWindow {
   MainWindow(QWidget *parent = nullptr);
   ~MainWindow();
 
+ private slots:
+  void on_penRadiusSlider_valueChanged(int value);
+
  private:
   Ui::MainWindow *ui;
 };

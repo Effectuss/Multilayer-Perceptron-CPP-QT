@@ -13,11 +13,14 @@ class DrawArea : public QWidget {
  public:
   DrawArea(QWidget* parent = nullptr);
 
+ public slots:
   void ClearImage();
+  void SetPenRadius(int radius);
 
  protected:
   void mousePressEvent(QMouseEvent* event) override;
   void mouseMoveEvent(QMouseEvent* event) override;
+  void mouseReleaseEvent(QMouseEvent*) override;
   void paintEvent(QPaintEvent* event) override;
 
  private:
@@ -28,7 +31,8 @@ class DrawArea : public QWidget {
   const QColor kBackgroundColor{255, 255, 255};
 
   QImage image_{512, 512, QImage::Format_RGBA8888};
-  int radius_ = 15;
+  int radius_;
+  bool cleared_ = false;
 };
 
 #endif  // DRAWAREA_H
