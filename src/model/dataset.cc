@@ -1,18 +1,9 @@
 #include "dataset.h"
 
-#include <stdexcept>
-
-void Dataset::AppendPair(const std::pair<Picture, int> &data) {
+void Dataset::AppendDataToVector(const std::pair<Picture, int> &data) {
   data_.push_back(data);
 }
 
-void Dataset::SetSizeOutputLayers(int size_output_layers) {
-  if (size_output_layers <= 0) {
-    throw std::invalid_argument("Invalid size output layers");
-  }
-  size_output_layers_ = size_output_layers;
-}
+int Dataset::GetDataSize() const { return data_.size(); }
 
-int Dataset::GetSizeOutputLayers() const { return size_output_layers_; }
-
-int Dataset::GetSizeDataset() const { return data_.size(); }
+std::vector<std::pair<Picture, int> > Dataset::GetData() const { return data_; }

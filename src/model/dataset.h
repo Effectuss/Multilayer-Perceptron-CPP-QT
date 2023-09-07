@@ -7,14 +7,12 @@
 
 class Dataset {
  public:
-  void AppendPair(const std::pair<Picture, int>&);
-  void SetSizeOutputLayers(int);
-  int GetSizeOutputLayers() const;
-  int GetSizeDataset() const;
+  void AppendDataToVector(const std::pair<Picture, int>&);
+  int GetDataSize() const;
+  std::vector<std::pair<Picture, int> > GetData() const;
 
  private:
   std::vector<std::pair<Picture, int> > data_;
-  int size_output_layers_;
 };
 
 #endif  // MULTILAYER_PERCEPTRON_CPP_QT_DATASET_H
