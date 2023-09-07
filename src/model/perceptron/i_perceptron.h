@@ -3,8 +3,8 @@
 
 #include <iostream>
 
-#include "dataset.h"
-#include "picture.h"
+#include "../data/dataset.h"
+#include "../data/picture.h"
 
 class IPerceptron {
  public:

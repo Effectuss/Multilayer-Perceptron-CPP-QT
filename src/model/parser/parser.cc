@@ -16,14 +16,14 @@ Dataset Parser::ParseDataset(const std::string &file_path) {
   while (std::getline(file, buffer_line)) {
     std::stringstream string_stream(buffer_line);
     std::pair<Picture, int> tmp_data;
-    std::vector<int> pixels;
+    std::vector<double> pixels;
     std::string pixel;
 
     string_stream >> tmp_data.second;
     string_stream.ignore(1);
 
     while (std::getline(string_stream, pixel, ',')) {
-      pixels.push_back(std::stoi(pixel));
+      pixels.push_back(std::stoi(pixel) / 255.0);
     }
 
     tmp_data.first.SetData(pixels);
