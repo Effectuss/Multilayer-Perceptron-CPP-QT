@@ -6,13 +6,12 @@
 class Picture {
  public:
   Picture();
-  const std::vector<int>& GetData() const;
-  void SetData(const std::vector<int>&);
+  const std::vector<double>& GetData() const;
+  void SetData(const std::vector<double>&);
 
  private:
-  // todo type pic
   static constexpr int kMaxPictureSize = 784;
-  std::vector<int> data_;
+  std::vector<double> data_;
 };
 
 #endif  // MULTILAYER_PERCEPTRON_CPP_QT_PICTURE_H
