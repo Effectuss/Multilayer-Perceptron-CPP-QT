@@ -9,6 +9,7 @@
 
 class IPerceptron {
 public:
+  virtual ~IPerceptron() = default;
   virtual int Predict(Picture picture) = 0;
   virtual void Train(int epochs) = 0;
   virtual void LoadWeights(const std::istream &) = 0;

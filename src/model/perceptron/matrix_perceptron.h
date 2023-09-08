@@ -11,6 +11,7 @@ class MatrixPerceptron : public IPerceptron {
 public:
   MatrixPerceptron(Dataset, Mapping, int hidden_layers_count,
                    int size_hidden_layers);
+  ~MatrixPerceptron() override = default;
 
 private:
   static bool IsValidDataForPerceptron(int, int);
