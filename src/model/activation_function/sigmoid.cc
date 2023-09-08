@@ -1,6 +1,7 @@
 #include "sigmoid.h"
 
 #include <algorithm>
+#include <cmath>
 
 void Sigmoid::ApplyActivationFunction(std::vector<double> &values) {
   std::transform(values.begin(), values.end(), values.begin(),

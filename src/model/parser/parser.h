@@ -7,7 +7,7 @@
 #include "../data/mapping.h"
 
 class Parser {
- public:
+public:
   static Dataset ParseDataset(const std::string&);
   static Mapping ParseMapping(const std::string&);
 };

@@ -5,13 +5,13 @@
 #include <set>
 
 class Mapping {
- public:
+public:
   void AddData(int, const std::set<int>&);
-  int GetDataSize() const;
-  std::map<int, std::set<int> > GetData() const;
-  std::set<int> GetItem(int) const;
+  [[nodiscard]] std::size_t GetDataSize() const;
+  [[nodiscard]] std::map<int, std::set<int> > GetData() const;
+  [[nodiscard]] std::set<int> GetItem(int) const;
 
- private:
+private:
   std::map<int, std::set<int> > data_;
 };
 
