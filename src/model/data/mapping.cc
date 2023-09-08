@@ -4,7 +4,7 @@ void Mapping::AddData(int key, const std::set<int> &value) {
   data_[key] = value;
 }
 
-std::map<int, std::set<int> > Mapping::GetData() const { return data_; }
+std::map<int, std::set<int>> Mapping::GetData() const { return data_; }
 
 std::size_t Mapping::GetDataSize() const { return data_.size(); }
 

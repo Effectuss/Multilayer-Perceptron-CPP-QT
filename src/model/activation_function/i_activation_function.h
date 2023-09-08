@@ -4,8 +4,10 @@
 #include <vector>
 
 class IActivationFunction {
-public:
+protected:
   virtual ~IActivationFunction() = default;
+
+public:
   virtual void ApplyActivationFunction(std::vector<double> &values) = 0;
   virtual void
   CalculateActivationFunctionDerivative(std::vector<double> &values) = 0;
