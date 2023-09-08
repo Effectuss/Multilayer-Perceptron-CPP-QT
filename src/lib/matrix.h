@@ -2,12 +2,14 @@
 #define MULTILAYER_PERCEPTRON_CPP_QT_MATRIX_H
 
 #include <algorithm>
+#include <istream>
+#include <ostream>
 #include <random>
 #include <stdexcept>
 #include <vector>
 
 class Matrix {
-public:
+ public:
   Matrix() = default;
 
   Matrix(int rows, int cols);
@@ -35,7 +37,11 @@ public:
   void FillMatrixRandomValues(double min_random_value = 0.1,
                               double max_random_value = 0.5);
 
-private:
+  friend std::ostream &operator<<(std::ostream &, const Matrix &);
+
+  friend std::istream &operator>>(std::istream &, Matrix &);
+
+ private:
   int rows_{};
   int cols_{};
   std::vector<std::vector<double>> matrix_;
@@ -44,4 +50,4 @@ private:
   static std::mt19937 gen_;
 };
 
-#endif // MULTILAYER_PERCEPTRON_CPP_QT_MATRIX_H
+#endif  // MULTILAYER_PERCEPTRON_CPP_QT_MATRIX_H
