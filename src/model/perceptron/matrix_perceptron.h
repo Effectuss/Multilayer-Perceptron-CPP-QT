@@ -25,10 +25,15 @@ private:
   Dataset dataset_;
   Mapping mapping_;
   std::unique_ptr<IActivationFunction> activation_function_;
+  // количество слоев
   int number_of_layers_{2};
+  //  сколько нейронов на каждом слое
   std::vector<int> size_layers_;
+  // матрица весов
   std::vector<Matrix> weights_;
+  // значение нейронов
   std::vector<Matrix> neuron_values_;
+  // ошибки для нейронов
   std::vector<Matrix> neuron_errors_;
 };
 
