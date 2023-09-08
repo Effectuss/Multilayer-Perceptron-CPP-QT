@@ -8,8 +8,8 @@
 class Dataset {
  public:
   void AppendDataToVector(const std::pair<Picture, int>&);
-  int GetDataSize() const;
-  std::vector<std::pair<Picture, int> > GetData() const;
+  [[nodiscard]] std::size_t GetDataSize() const;
+  [[nodiscard]] std::vector<std::pair<Picture, int> > GetData() const;
 
  private:
   std::vector<std::pair<Picture, int> > data_;

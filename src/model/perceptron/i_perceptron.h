@@ -3,18 +3,16 @@
 
 #include <iostream>
 
-#include "../data/dataset.h"
-#include "../data/picture.h"
+#include "dataset.h"
+#include "mapping.h"
+#include "picture.h"
 
 class IPerceptron {
- public:
-  // IPerceptron (Dataset, Mapping, number of hidden 2-5, size of hidden > 0)
+public:
   virtual int Predict(Picture picture) = 0;
   virtual void Train(int epochs) = 0;
-  virtual void LoadWeights(const std::istream&) = 0;
-  virtual void ExportWeights(const std::ostream&) = 0;
-
- private:
+  virtual void LoadWeights(const std::istream &) = 0;
+  virtual void ExportWeights(const std::ostream &) = 0;
 };
 
-#endif  // MULTILAYER_PERCEPTRON_CPP_QT_IPERCEPTRON_H
+#endif // MULTILAYER_PERCEPTRON_CPP_QT_IPERCEPTRON_H

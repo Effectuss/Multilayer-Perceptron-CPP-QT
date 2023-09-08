@@ -11,6 +11,6 @@ public:
   CalculateActivationFunctionDerivative(std::vector<double> &values) = 0;
 };
 
-IActivationFunction::~IActivationFunction() = default;
+inline IActivationFunction::~IActivationFunction() = default;
 
 #endif // MULTILAYER_PERCEPTRON_CPP_QT_I_ACTIVATION_FUNCTION_H
