@@ -5,7 +5,7 @@
 #include "parser.h"
 
 int main() {
-  Matrix m(3, 3);
+  Matrix m(4, 4);
   m.FillMatrixRandomValues();
   std::cout << m;
 

@@ -28,18 +28,31 @@ class Matrix {
 
   [[nodiscard]] int GetCols() const;
 
+//  [[nodiscard]] const std::vector<double> &GetVector(int rows) const;
+
   double &operator()(int index_i, int index_j);
 
   const double &operator()(int index_i, int index_j) const;
 
-  [[nodiscard]] Matrix MultiplyMatrix(const Matrix &other_matrix) const;
+  [[nodiscard]] Matrix MultiplyByMatrix(const Matrix &other_matrix) const;
+
+//  [[nodiscard]] std::vector<double> MultiplyByVector(
+//      const std::vector<double> &vector) const;
 
   void FillMatrixRandomValues(double min_random_value = 0.1,
                               double max_random_value = 0.5);
 
+  Matrix operator*(const Matrix &) const;
+
+//  std::vector<double> operator*(const std::vector<double> &) const;
+
   friend std::ostream &operator<<(std::ostream &, const Matrix &);
 
   friend std::istream &operator>>(std::istream &, Matrix &);
+
+//  std::vector<double> &operator[](int rows);
+//
+//  const std::vector<double> &operator[](int rows) const;
 
  private:
   int rows_{};

@@ -8,6 +8,7 @@ Matrix::Matrix(int rows, int cols)
     : rows_(rows), cols_(cols), matrix_(rows, std::vector<double>(cols)) {}
 
 int Matrix::GetRows() const { return rows_; }
+
 int Matrix::GetCols() const { return cols_; }
 
 double& Matrix::operator()(int index_i, int index_j) {
@@ -27,7 +28,7 @@ const double& Matrix::operator()(int index_i, int index_j) const {
   return matrix_[index_i][index_j];
 }
 
-Matrix Matrix::MultiplyMatrix(const Matrix& other_matrix) const {
+Matrix Matrix::MultiplyByMatrix(const Matrix& other_matrix) const {
   if (cols_ != other_matrix.rows_) {
     throw std::runtime_error(
         "The amount of cols in matrix have to equal rows in other matrix!");
@@ -59,6 +60,9 @@ std::ostream& operator<<(std::ostream& out, const Matrix& matrix) {
   for (int i = 0; i < matrix.GetRows(); ++i) {
     for (int j = 0; j < matrix.GetCols(); ++j) {
       out << matrix(i, j) << " ";
+      if (out.fail()) {
+        throw std::runtime_error("Error output matrix");
+      }
     }
     out << "\n";
   }
@@ -69,9 +73,13 @@ std::istream& operator>>(std::istream& in, Matrix& matrix) {
   for (int i = 0; i < matrix.GetRows(); ++i) {
     for (int j = 0; j < matrix.GetCols(); ++j) {
       if (!(in >> matrix(i, j))) {
-        throw std::runtime_error("Ошибка ввода матрицы.");
+        throw std::runtime_error("Error input matrix!");
       }
     }
   }
   return in;
+}
+Matrix Matrix::operator*(const Matrix& other_matrix) const {
+  Matrix result = *this;
+  return result.MultiplyByMatrix(other_matrix);
 }
