@@ -8,4 +8,4 @@ class Sigmoid : public IActivationFunction {
   void CalculateDerivative(std::vector<double> &values) override;
 };
 
-#endif // MULTILAYER_PERCEPTRON_CPP_QT_SIGMOID_H
+#endif  // MULTILAYER_PERCEPTRON_CPP_QT_SIGMOID_H

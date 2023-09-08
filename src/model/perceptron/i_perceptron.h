@@ -6,7 +6,7 @@
 #include "picture.h"
 
 class IPerceptron {
-public:
+ public:
   // вот такой конструктор в своем прецептроне в интерфейсе не надо
   //  MatrixPerceptron(Dataset, Mapping, int hidden_layers_count,
   //                   int size_hidden_layers);
@@ -20,4 +20,4 @@ public:
 
 inline IPerceptron::~IPerceptron() {}
 
-#endif // MULTILAYER_PERCEPTRON_CPP_QT_IPERCEPTRON_H
+#endif  // MULTILAYER_PERCEPTRON_CPP_QT_IPERCEPTRON_H

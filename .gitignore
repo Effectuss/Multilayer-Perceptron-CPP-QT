@@ -136,4 +136,4 @@ dkms.conf
 *build*
 *CMakeLists.txt.user*
 
-.clang-format
+src/.clang-format

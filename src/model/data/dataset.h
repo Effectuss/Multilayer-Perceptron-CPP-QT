@@ -6,13 +6,13 @@
 #include "picture.h"
 
 class Dataset {
-public:
+ public:
   void AppendDataToVector(const std::pair<Picture, int> &);
   [[nodiscard]] std::size_t GetDataSize() const;
   [[nodiscard]] std::vector<std::pair<Picture, int>> GetData() const;
 
-private:
+ private:
   std::vector<std::pair<Picture, int>> data_;
 };
 
-#endif // MULTILAYER_PERCEPTRON_CPP_QT_DATASET_H
+#endif  // MULTILAYER_PERCEPTRON_CPP_QT_DATASET_H

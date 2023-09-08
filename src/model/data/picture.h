@@ -4,16 +4,16 @@
 #include <vector>
 
 class Picture {
-public:
+ public:
   Picture();
 
   [[nodiscard]] const std::vector<double> &GetData() const;
   void SetData(const std::vector<double> &);
   [[nodiscard]] std::size_t GetSize() const;
 
-private:
+ private:
   static constexpr int kMaxPictureSize = 784;
   std::vector<double> data_;
 };
 
-#endif // MULTILAYER_PERCEPTRON_CPP_QT_PICTURE_H
+#endif  // MULTILAYER_PERCEPTRON_CPP_QT_PICTURE_H

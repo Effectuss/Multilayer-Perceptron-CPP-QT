@@ -7,9 +7,9 @@
 #include "../data/mapping.h"
 
 class Parser {
-public:
+ public:
   static Dataset ParseDataset(const std::string &);
   static Mapping ParseMapping(const std::string &);
 };
 
-#endif // MULTILAYER_PERCEPTRON_CPP_QT_IPARSER_H
+#endif  // MULTILAYER_PERCEPTRON_CPP_QT_IPARSER_H
