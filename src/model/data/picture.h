@@ -6,8 +6,10 @@
 class Picture {
  public:
   Picture();
-  const std::vector<double>& GetData() const;
-  void SetData(const std::vector<double>&);
+
+  [[nodiscard]] const std::vector<double> &GetData() const;
+  void SetData(const std::vector<double> &);
+  [[nodiscard]] std::size_t GetSize() const;
 
  private:
   static constexpr int kMaxPictureSize = 784;
