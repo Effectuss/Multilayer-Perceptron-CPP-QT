@@ -1,14 +1,11 @@
-#include <iostream>
+#include "mainwindow.h"
 
-#include "parser.h"
+#include <QApplication>
 
-int main() {
-  Mapping mapping = Parser::ParseMapping(
-      "/opt/goinfre/englishk/Multilayer-Perceptron-CPP-QT/datasets/"
-      "emnist-letters/emnist-letters-mapping.txt");
-  //  for (auto &elem: mapping.GetItem(12)) {
-  //    std::cout << elem << std::endl;
-  //  }
-  std::cout << mapping.GetDataSize();
-  return 1;
+int main(int argc, char *argv[])
+{
+  QApplication a(argc, argv);
+  MainWindow w;
+  w.show();
+  return a.exec();
 }
