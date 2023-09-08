@@ -3,17 +3,19 @@
 
 #include <memory>
 
+#include "dataset.h"
 #include "i_perceptron.h"
+#include "mapping.h"
 #include "matrix.h"
 #include "sigmoid.h"
 
 class MatrixPerceptron : public IPerceptron {
-public:
+ public:
   MatrixPerceptron(Dataset, Mapping, int hidden_layers_count,
                    int size_hidden_layers);
   ~MatrixPerceptron() override = default;
 
-private:
+ private:
   static bool IsValidDataForPerceptron(int, int);
   void InitSizeLayers(int size_hidden);
   void InitRandomWeights();
@@ -37,4 +39,4 @@ private:
   std::vector<Matrix> neuron_errors_;
 };
 
-#endif // MULTILAYER_PERCEPTRON_CPP_QT_MATRIX_PERCEPTRON_H
+#endif  // MULTILAYER_PERCEPTRON_CPP_QT_MATRIX_PERCEPTRON_H
