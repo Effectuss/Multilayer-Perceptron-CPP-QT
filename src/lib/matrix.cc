@@ -4,8 +4,12 @@ std::random_device Matrix::rd_;
 
 std::mt19937 Matrix::gen_(rd_());
 
-Matrix::Matrix(int rows, int cols)
-    : rows_(rows), cols_(cols), matrix_(rows, std::vector<double>(cols)) {}
+Matrix::Matrix(int rows, int cols) : rows_(rows), cols_(cols) {
+  if (!IsCorrectIndex(rows, cols)) {
+    throw std::invalid_argument("Incorrect size for matrix");
+  }
+  matrix_ = std::vector(rows, std::vector<double>(cols));
+}
 
 int Matrix::GetRows() const { return rows_; }
 
@@ -83,3 +87,20 @@ Matrix Matrix::operator*(const Matrix& other_matrix) const {
   Matrix result = *this;
   return result.MultiplyByMatrix(other_matrix);
 }
+
+std::vector<double>& Matrix::operator[](int row_index) {
+  if (row_index >= rows_ || row_index < 0) {
+    throw std::invalid_argument("Incorrect value of rows index");
+  }
+
+  return matrix_[row_index];
+}
+
+const std::vector<double>& Matrix::operator[](int row_index) const {
+  if (row_index >= rows_ || row_index < 0) {
+    throw std::invalid_argument("Incorrect value of rows index");
+  }
+  return matrix_[row_index];
+}
+
+bool Matrix::IsCorrectIndex(int rows, int cols) { return rows > 0 && cols > 0; }

@@ -5,20 +5,15 @@
 #include "parser.h"
 
 int main() {
-  Matrix m(4, 4);
-  m.FillMatrixRandomValues();
-  std::cout << m;
+  Dataset dataset = Parser::ParseDataset(
+      "/opt/goinfre/englishk/Multilayer-Perceptron-CPP-QT/datasets/"
+      "emnist-letters/emnist-letters-train.csv");
+  Mapping mapping = Parser::ParseMapping(
+      "/opt/goinfre/englishk/Multilayer-Perceptron-CPP-QT/datasets/"
+      "emnist-letters/emnist-letters-mapping.txt");
 
-  std::ifstream in_file(
-      "/opt/goinfre/englishk/Multilayer-Perceptron-CPP-QT/src/model/"
-      "matrix.txt");
-  in_file >> m;
-
-  std::ofstream out_file(
-      "/opt/goinfre/englishk/Multilayer-Perceptron-CPP-QT/src/model/"
-      "matrix_out.txt");
-  out_file << m;
-
-  std::cout << m;
+  MatrixPerceptron mat_pre(dataset, mapping, 2, 100);
+  mat_pre.PrintPerceptronSetting();
+  mat_pre.Train(1);
   return 1;
 }

@@ -6,14 +6,50 @@
 MatrixPerceptron::MatrixPerceptron(Dataset dataset, Mapping mapping,
                                    int hidden_layers_count,
                                    int size_hidden_layers)
-    : dataset_{std::move(dataset)}, mapping_{std::move(mapping)},
+    : dataset_{std::move(dataset)},
+      mapping_{std::move(mapping)},
       activation_function_(std::make_unique<Sigmoid>()) {
-
   if (!IsValidDataForPerceptron(hidden_layers_count, size_hidden_layers)) {
     throw std::invalid_argument("Incorrect data for perceptron!");
   }
 
   number_of_layers_ = hidden_layers_count + 2;
+
+  InitSizeLayers(size_hidden_layers);
+  InitRandomWeights();
+  InitMatricesNeurons();
+}
+
+void MatrixPerceptron::InitSizeLayers(int size_hidden) {
+  for (int i = 0; i < number_of_layers_; ++i) {
+    if (i == 0) {
+      size_layers_.push_back(
+          static_cast<int>(dataset_.GetData()[i].first.GetSize()));
+    } else if (i == number_of_layers_ - 1) {
+      size_layers_.push_back(static_cast<int>(mapping_.GetDataSize()));
+    } else {
+      size_layers_.push_back(size_hidden);
+    }
+  }
+}
+
+void MatrixPerceptron::InitRandomWeights() {
+  weights_.resize(number_of_layers_ - 1);
+  biases_.resize(number_of_layers_ - 1);
+
+  for (int i = 0; i < number_of_layers_ - 1; ++i) {
+    weights_[i] = std::move(Matrix(size_layers_[i + 1], size_layers_[i]));
+    biases_[i] = std::move(Matrix(size_layers_[i + 1], size_layers_[i]));
+    weights_[i].FillMatrixRandomValues();
+    biases_[i].FillMatrixRandomValues();
+  }
+}
+
+void MatrixPerceptron::InitMatricesNeurons() {
+  for (int i = 0; i < number_of_layers_; ++i) {
+    neuron_values_.push_back(std::move(Matrix(size_layers_[i], 1)));
+    neuron_errors_.push_back(std::move(Matrix(size_layers_[i], 1)));
+  }
 }
 
 bool MatrixPerceptron::IsValidDataForPerceptron(int hidden_layers_count,
@@ -21,4 +57,17 @@ bool MatrixPerceptron::IsValidDataForPerceptron(int hidden_layers_count,
   return (hidden_layers_count <= kMaxAmountOfHiddenLayers &&
           hidden_layers_count >= kMinAmountOfHiddenLayers) &&
          size_hidden_layers > 0;
+}
+void MatrixPerceptron::Train(int epochs) {
+  while (epochs--) {
+      ForwardFeed();
+  }
+}
+void MatrixPerceptron::ForwardFeed() {
+  for (int i = 0; i < number_of_layers_ - 1; ++i) {
+    neuron_values_[i + 1] = weights_[i] * neuron_values_[i];
+    for (int j = 0; j < neuron_values_[i + 1].GetRows(); ++j) {
+      activation_function_->Apply(neuron_values_[i + 1][j]);
+    }
+  }
 }
