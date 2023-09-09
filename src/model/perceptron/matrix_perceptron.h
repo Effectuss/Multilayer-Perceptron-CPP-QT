@@ -17,9 +17,6 @@ class MatrixPerceptron : public IPerceptron {
 
  private:
   static bool IsValidDataForPerceptron(int, int);
-  void InitSizeLayers(int size_hidden);
-  void InitRandomWeights();
-  void InitMatricesNeurons();
 
   static constexpr int kMinAmountOfHiddenLayers{2};
   static constexpr int kMaxAmountOfHiddenLayers{5};
@@ -37,6 +34,8 @@ class MatrixPerceptron : public IPerceptron {
   std::vector<Matrix> neuron_values_;
   // ошибки для нейронов
   std::vector<Matrix> neuron_errors_;
+  // веса смещения biases
+  Matrix delta_weights_;
 };
 
 #endif  // MULTILAYER_PERCEPTRON_CPP_QT_MATRIX_PERCEPTRON_H
