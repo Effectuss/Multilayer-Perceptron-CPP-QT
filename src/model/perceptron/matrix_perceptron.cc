@@ -17,8 +17,8 @@ MatrixPerceptron::MatrixPerceptron(Dataset dataset, Mapping mapping,
   number_of_layers_ = hidden_layers_count + 2;
 
   InitSizeLayers(size_hidden_layers);
-  InitRandomWeights();
-  InitNeurons();
+  InitRandomWeightsAndBiases();
+  InitNeuronsAndErr();
 }
 
 void MatrixPerceptron::InitSizeLayers(int size_hidden) {
@@ -34,18 +34,21 @@ void MatrixPerceptron::InitSizeLayers(int size_hidden) {
   }
 }
 
-void MatrixPerceptron::InitRandomWeights() {
+void MatrixPerceptron::InitRandomWeightsAndBiases() {
   weights_.resize(number_of_layers_ - 1);
+  biases_.resize(number_of_layers_ - 1);
 
+  // todo random bias
   for (int i = 0; i < number_of_layers_ - 1; ++i) {
     weights_[i] = std::move(Matrix(size_layers_[i + 1], size_layers_[i]));
     weights_[i].FillMatrixRandomValues();
   }
 }
 
-void MatrixPerceptron::InitNeurons() {
+void MatrixPerceptron::InitNeuronsAndErr() {
   for (int i = 0; i < number_of_layers_; ++i) {
     neuron_values_.emplace_back(size_layers_[i]);
+    neuron_errors_.emplace_back(size_layers_[i]);
   }
 }
 
@@ -58,20 +61,18 @@ bool MatrixPerceptron::IsValidDataForPerceptron(int hidden_layers_count,
 
 void MatrixPerceptron::Train(int epochs) {}
 
-void MatrixPerceptron::ForwardFeed() {
+int MatrixPerceptron::ForwardFeed() {
   for (int i = 0; i < number_of_layers_ - 1; ++i) {
     neuron_values_[i + 1] = weights_[i] * neuron_values_[i];
-    activation_function_->Apply(neuron_values_[i + 1]);
+    activation_function_->Activate(neuron_values_[i + 1]);
   }
+  return FindMaxIndex(neuron_values_[number_of_layers_ - 1]);
 }
 
 int MatrixPerceptron::Predict(Picture picture) {
   neuron_values_[0] = picture.GetData();
-  ForwardFeed();
-  picture.PrintPicture();
-  PrintInputLayer();
-  return *mapping_.GetItem(FindMaxIndex(neuron_values_[number_of_layers_ - 1]))
-              .begin();
+  int max_index = ForwardFeed();
+  return *mapping_.GetData()[max_index].begin();
 }
 
 int MatrixPerceptron::FindMaxIndex(const std::vector<double>& vector) {
@@ -84,3 +85,5 @@ int MatrixPerceptron::FindMaxIndex(const std::vector<double>& vector) {
 
   return static_cast<int>(max_index);
 }
+
+void MatrixPerceptron::BackPropagation() {}

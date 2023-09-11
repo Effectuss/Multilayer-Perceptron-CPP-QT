@@ -55,9 +55,10 @@ class MatrixPerceptron final : public IPerceptron {
   static int FindMaxIndex(const std::vector<double> &);
 
   void InitSizeLayers(int size_hidden);
-  void InitRandomWeights();
-  void InitNeurons();
-  void ForwardFeed();
+  void InitRandomWeightsAndBiases();
+  void InitNeuronsAndErr();
+  int ForwardFeed();
+  void BackPropagation();
 
   static constexpr int kMinAmountOfHiddenLayers{2};
   static constexpr int kMaxAmountOfHiddenLayers{5};
@@ -71,6 +72,8 @@ class MatrixPerceptron final : public IPerceptron {
   std::vector<int> size_layers_;
   std::vector<Matrix> weights_;
   std::vector<std::vector<double> > neuron_values_;
+  std::vector<std::vector<double> > neuron_errors_;
+  std::vector<std::vector<double> > biases_;
 };
 
 #endif  // MULTILAYER_PERCEPTRON_CPP_QT_MATRIX_PERCEPTRON_H

@@ -131,3 +131,13 @@ std::vector<double> Matrix::MultiplyByVector(
 
   return result;
 }
+
+Matrix Matrix::Transpose() const {
+  Matrix matrix(cols_, rows_);
+  for (int i = 0; i < this->rows_; ++i) {
+    for (int j = 0; j < this->cols_; ++j) {
+      matrix(j, i) = (*this)(i, j);
+    }
+  }
+  return matrix;
+}

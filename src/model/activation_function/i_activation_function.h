@@ -7,8 +7,10 @@ class IActivationFunction {
  public:
   virtual ~IActivationFunction() = 0;
 
-  virtual void Apply(std::vector<double> &values) = 0;
-  virtual void CalculateDerivative(std::vector<double> &values) = 0;
+  virtual void Activate(std::vector<double> &values) = 0;
+  virtual void Derivative(std::vector<double> &values) = 0;
+  virtual double Activate(double value) = 0;
+  virtual double Derivative(double value) = 0;
 };
 
 inline IActivationFunction::~IActivationFunction() {}

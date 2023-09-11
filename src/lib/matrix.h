@@ -40,6 +40,8 @@ class Matrix {
   void FillMatrixRandomValues(double min_random_value = 0.1,
                               double max_random_value = 0.5);
 
+  Matrix Transpose() const;
+
   Matrix operator*(const Matrix &) const;
 
   std::vector<double> operator*(const std::vector<double> &) const;
