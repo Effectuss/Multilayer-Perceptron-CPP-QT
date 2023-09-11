@@ -23,6 +23,7 @@ double& Matrix::operator()(int index_i, int index_j) {
   }
   return matrix_[index_i][index_j];
 }
+
 const double& Matrix::operator()(int index_i, int index_j) const {
   if (index_i >= rows_ || index_j >= cols_) {
     throw std::invalid_argument(
@@ -37,7 +38,9 @@ Matrix Matrix::MultiplyByMatrix(const Matrix& other_matrix) const {
     throw std::runtime_error(
         "The amount of cols in matrix have to equal rows in other matrix!");
   }
-  Matrix result_matrix = Matrix(rows_, other_matrix.cols_);
+
+  Matrix result_matrix = std::move(Matrix(rows_, other_matrix.cols_));
+
   for (int i = 0; i < rows_; ++i) {
     for (int j = 0; j < other_matrix.cols_; ++j) {
       for (int k = 0; k < other_matrix.rows_; ++k) {
@@ -46,6 +49,7 @@ Matrix Matrix::MultiplyByMatrix(const Matrix& other_matrix) const {
       }
     }
   }
+
   return result_matrix;
 }
 
@@ -53,7 +57,9 @@ void Matrix::FillMatrixRandomValues(double min_random_value,
                                     double max_random_value) {
   std::uniform_real_distribution<double> dist(min_random_value,
                                               max_random_value);
+
   auto generate = [&]() -> double { return dist(gen_); };
+
   std::for_each(matrix_.begin(), matrix_.end(),
                 [&](std::vector<double>& inner_vec) {
                   std::generate(inner_vec.begin(), inner_vec.end(), generate);
@@ -83,9 +89,9 @@ std::istream& operator>>(std::istream& in, Matrix& matrix) {
   }
   return in;
 }
+
 Matrix Matrix::operator*(const Matrix& other_matrix) const {
-  Matrix result = *this;
-  return result.MultiplyByMatrix(other_matrix);
+  return this->MultiplyByMatrix(other_matrix);
 }
 
 std::vector<double>& Matrix::operator[](int row_index) {
@@ -104,3 +110,24 @@ const std::vector<double>& Matrix::operator[](int row_index) const {
 }
 
 bool Matrix::IsCorrectIndex(int rows, int cols) { return rows > 0 && cols > 0; }
+
+std::vector<double> Matrix::operator*(const std::vector<double>& vector) const {
+  return MultiplyByVector(vector);
+}
+
+std::vector<double> Matrix::MultiplyByVector(
+    const std::vector<double>& vector) const {
+  if (cols_ != vector.size()) {
+    throw std::invalid_argument("Error multiply!");
+  }
+
+  std::vector<double> result(rows_, 0.0);
+
+  for (int i = 0; i < rows_; ++i) {
+    for (int j = 0; j < cols_; ++j) {
+      result[i] += matrix_[i][j] * vector[j];
+    }
+  }
+
+  return result;
+}

@@ -1,5 +1,6 @@
 #include "matrix_perceptron.h"
 
+#include <algorithm>
 #include <iomanip>
 #include <utility>
 
@@ -17,7 +18,7 @@ MatrixPerceptron::MatrixPerceptron(Dataset dataset, Mapping mapping,
 
   InitSizeLayers(size_hidden_layers);
   InitRandomWeights();
-  InitMatricesNeurons();
+  InitNeurons();
 }
 
 void MatrixPerceptron::InitSizeLayers(int size_hidden) {
@@ -35,20 +36,16 @@ void MatrixPerceptron::InitSizeLayers(int size_hidden) {
 
 void MatrixPerceptron::InitRandomWeights() {
   weights_.resize(number_of_layers_ - 1);
-  biases_.resize(number_of_layers_ - 1);
 
   for (int i = 0; i < number_of_layers_ - 1; ++i) {
     weights_[i] = std::move(Matrix(size_layers_[i + 1], size_layers_[i]));
-    biases_[i] = std::move(Matrix(size_layers_[i + 1], size_layers_[i]));
     weights_[i].FillMatrixRandomValues();
-    biases_[i].FillMatrixRandomValues();
   }
 }
 
-void MatrixPerceptron::InitMatricesNeurons() {
+void MatrixPerceptron::InitNeurons() {
   for (int i = 0; i < number_of_layers_; ++i) {
-    neuron_values_.push_back(std::move(Matrix(size_layers_[i], 1)));
-    neuron_errors_.push_back(std::move(Matrix(size_layers_[i], 1)));
+    neuron_values_.emplace_back(size_layers_[i]);
   }
 }
 
@@ -58,16 +55,32 @@ bool MatrixPerceptron::IsValidDataForPerceptron(int hidden_layers_count,
           hidden_layers_count >= kMinAmountOfHiddenLayers) &&
          size_hidden_layers > 0;
 }
-void MatrixPerceptron::Train(int epochs) {
-  while (epochs--) {
-      ForwardFeed();
-  }
-}
+
+void MatrixPerceptron::Train(int epochs) {}
+
 void MatrixPerceptron::ForwardFeed() {
   for (int i = 0; i < number_of_layers_ - 1; ++i) {
     neuron_values_[i + 1] = weights_[i] * neuron_values_[i];
-    for (int j = 0; j < neuron_values_[i + 1].GetRows(); ++j) {
-      activation_function_->Apply(neuron_values_[i + 1][j]);
-    }
+    activation_function_->Apply(neuron_values_[i + 1]);
   }
+}
+
+int MatrixPerceptron::Predict(Picture picture) {
+  neuron_values_[0] = picture.GetData();
+  ForwardFeed();
+  picture.PrintPicture();
+  PrintInputLayer();
+  return *mapping_.GetItem(FindMaxIndex(neuron_values_[number_of_layers_ - 1]))
+              .begin();
+}
+
+int MatrixPerceptron::FindMaxIndex(const std::vector<double>& vector) {
+  if (vector.empty()) {
+    return 0;
+  }
+
+  auto max_element = std::max_element(vector.begin(), vector.end());
+  auto max_index = std::distance(vector.begin(), max_element);
+
+  return static_cast<int>(max_index);
 }

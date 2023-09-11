@@ -34,10 +34,15 @@ class Matrix {
 
   [[nodiscard]] Matrix MultiplyByMatrix(const Matrix &other_matrix) const;
 
+  [[nodiscard]] std::vector<double> MultiplyByVector(
+      const std::vector<double> &) const;
+
   void FillMatrixRandomValues(double min_random_value = 0.1,
                               double max_random_value = 0.5);
 
   Matrix operator*(const Matrix &) const;
+
+  std::vector<double> operator*(const std::vector<double> &) const;
 
   friend std::ostream &operator<<(std::ostream &, const Matrix &);
 
@@ -48,10 +53,10 @@ class Matrix {
   const std::vector<double> &operator[](int rows) const;
 
  private:
-  static bool IsCorrectIndex(int, int) ;
+  static bool IsCorrectIndex(int, int);
 
-  int rows_;
-  int cols_;
+  int rows_{};
+  int cols_{};
   std::vector<std::vector<double>> matrix_;
 
   static std::random_device rd_;
