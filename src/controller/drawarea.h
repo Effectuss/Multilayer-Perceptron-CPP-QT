@@ -2,13 +2,14 @@
 #define DRAWAREA_H
 
 #include <QFlags>
+#include <QGraphicsScene>
+#include <QGraphicsSceneMouseEvent>
 #include <QMouseEvent>
 #include <QObject>
-#include <QPaintEvent>
 #include <QPainter>
 #include <QWidget>
 
-class DrawArea : public QWidget {
+class DrawArea : public QGraphicsScene {
   Q_OBJECT
  public:
   DrawArea(QWidget* parent = nullptr);
@@ -18,19 +19,20 @@ class DrawArea : public QWidget {
   void SetPenRadius(int radius);
 
  protected:
-  void mousePressEvent(QMouseEvent* event) override;
-  void mouseMoveEvent(QMouseEvent* event) override;
-  void mouseReleaseEvent(QMouseEvent*) override;
-  void paintEvent(QPaintEvent* event) override;
+  void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
+  void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
+  void mouseReleaseEvent(QGraphicsSceneMouseEvent*) override;
 
  private:
-  void DrawCircle(const QPoint& point, const QColor& color);
+  void DrawCircle(const QPointF& point, const QColor& color);
+  void DrawLine(const QPointF& p1, const QPointF& p2, const QColor& color);
+
+  QPointF previous_point_;
 
   const QColor kPenColor{0, 0, 0};
   const QColor kEraserColor{255, 255, 255};
   const QColor kBackgroundColor{255, 255, 255};
 
-  QImage image_{512, 512, QImage::Format_RGBA8888};
   int radius_;
   bool cleared_ = false;
 };

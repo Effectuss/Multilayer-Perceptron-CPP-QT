@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <drawarea.h>
+
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
@@ -27,6 +29,7 @@ class MainWindow : public QMainWindow {
 
  private:
   Ui::MainWindow *ui;
+  DrawArea drawarea_;
 };
 
 #endif  // MAINWINDOW_H

@@ -25,16 +25,12 @@ include_directories(
 set(CMAKE_AUTOUIC_SEARCH_PATHS view/forms)
 
 set(SOURCES
-    ${CMAKE_SOURCE_DIR}/controller/controller.cc
-    ${CMAKE_SOURCE_DIR}/model/model.cc
-    ${CMAKE_SOURCE_DIR}/view/mainwindow/mainwindow.cc
-    ${CMAKE_SOURCE_DIR}/view/drawarea/drawarea.cc)
+    ${CMAKE_SOURCE_DIR}/controller/mainwindow.cc
+    ${CMAKE_SOURCE_DIR}/controller/drawarea.cc)
 
 set(HEADERS
-    ${CMAKE_SOURCE_DIR}/controller/controller.h
-    ${CMAKE_SOURCE_DIR}/model/model.h
-    ${CMAKE_SOURCE_DIR}/view/mainwindow/mainwindow.h
-    ${CMAKE_SOURCE_DIR}/view/drawarea/drawarea.h)
+    ${CMAKE_SOURCE_DIR}/controller/mainwindow.h
+    ${CMAKE_SOURCE_DIR}/controller/drawarea.h)
 
 set(UI_FORMS ${CMAKE_SOURCE_DIR}/view/forms/mainwindow.ui)
 

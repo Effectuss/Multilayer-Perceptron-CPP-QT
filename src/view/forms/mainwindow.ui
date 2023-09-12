@@ -113,7 +113,7 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
-          <widget class="DrawArea" name="drawArea" native="true">
+          <widget class="QGraphicsView" name="drawAreaView">
            <property name="minimumSize">
             <size>
              <width>512</width>
@@ -125,6 +125,29 @@
              <width>512</width>
              <height>512</height>
             </size>
+           </property>
+           <property name="verticalScrollBarPolicy">
+            <enum>Qt::ScrollBarAlwaysOff</enum>
+           </property>
+           <property name="horizontalScrollBarPolicy">
+            <enum>Qt::ScrollBarAlwaysOff</enum>
+           </property>
+           <property name="backgroundBrush">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>255</red>
+              <green>255</green>
+              <blue>255</blue>
+             </color>
+            </brush>
+           </property>
+           <property name="sceneRect">
+            <rectf>
+             <x>0.000000000000000</x>
+             <y>0.000000000000000</y>
+             <width>512.000000000000000</width>
+             <height>512.000000000000000</height>
+            </rectf>
            </property>
           </widget>
          </item>
@@ -162,14 +185,6 @@
    </widget>
   </widget>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>DrawArea</class>
-   <extends>QWidget</extends>
-   <header>drawarea.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>
