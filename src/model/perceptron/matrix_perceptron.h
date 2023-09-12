@@ -17,8 +17,8 @@ class MatrixPerceptron final : public IPerceptron {
 
   int Predict(Picture picture) override;
   void Train(int epochs) override;
-  void LoadWeights(const std::istream &) override {}
-  void ExportWeights(const std::ostream &) override {}
+  void LoadWeights(const std::istream &) override;
+  void ExportWeights(const std::ostream &) override;
 
   void PrintPerceptronSetting() {
     std::cout << "===================PERCEPTRON SETTING=================="
@@ -58,11 +58,12 @@ class MatrixPerceptron final : public IPerceptron {
   void InitRandomWeightsAndBiases();
   void InitNeuronsAndErr();
   int ForwardFeed();
-  void BackPropagation();
+  void BackPropagation(int);
+  void UpdateWeights(double);
+  void UpdateBiases(double);
 
   static constexpr int kMinAmountOfHiddenLayers{2};
   static constexpr int kMaxAmountOfHiddenLayers{5};
-  static constexpr double learning_rate{0.05};
 
   Dataset dataset_;
   Mapping mapping_;

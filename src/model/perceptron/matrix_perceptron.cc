@@ -1,7 +1,6 @@
 #include "matrix_perceptron.h"
 
 #include <algorithm>
-#include <iomanip>
 #include <utility>
 
 MatrixPerceptron::MatrixPerceptron(Dataset dataset, Mapping mapping,
@@ -67,8 +66,6 @@ bool MatrixPerceptron::IsValidDataForPerceptron(int hidden_layers_count,
          size_hidden_layers > 0;
 }
 
-void MatrixPerceptron::Train(int epochs) {}
-
 int MatrixPerceptron::ForwardFeed() {
   for (int i = 0; i < number_of_layers_ - 1; ++i) {
     neuron_values_[i + 1] = weights_[i] * neuron_values_[i];
@@ -96,4 +93,52 @@ int MatrixPerceptron::FindMaxIndex(const std::vector<double>& vector) {
   return static_cast<int>(max_index);
 }
 
-void MatrixPerceptron::BackPropagation() {}
+void MatrixPerceptron::BackPropagation(int expect) {
+  for (int i = 0; i < size_layers_[number_of_layers_ - 1]; ++i) {
+    if (i != expect) {
+      neuron_errors_[number_of_layers_ - 1][i] =
+          -neuron_values_[number_of_layers_ - 1][i] *
+          activation_function_->Derivative(
+              neuron_values_[number_of_layers_ - 1][i]);
+    } else {
+      neuron_errors_[number_of_layers_ - 1][i] =
+          (1.0 - neuron_values_[number_of_layers_ - 1][i]) *
+          activation_function_->Derivative(
+              neuron_values_[number_of_layers_ - 1][i]);
+    }
+  }
+
+  for (int k = number_of_layers_ - 2; k < 0; --k) {
+    Matrix trans_weight = weights_[k];
+    neuron_errors_[k] = trans_weight.MultiplyByVector(neuron_errors_[k + 1]);
+    for (int j = 0; j < size_layers_[k]; ++j) {
+      neuron_errors_[k][j] *=
+          activation_function_->Derivative(neuron_values_[k][j]);
+    }
+  }
+}
+
+void MatrixPerceptron::UpdateWeights(double learning_rate) {
+  for (int i = 0; i < number_of_layers_ - 1; ++i) {
+    for (int j = 0; j < size_layers_[i + 1]; ++j) {
+      for (int k = 0; k < size_layers_[i]; ++k) {
+        weights_[i](j, k) +=
+            neuron_values_[i][k] * neuron_errors_[i + 1][j] * learning_rate;
+      }
+    }
+  }
+}
+
+void MatrixPerceptron::UpdateBiases(double learning_rate) {
+  for (int i = 0; i < number_of_layers_ - 1; ++i) {
+    for (int k = 0; k < size_layers_[i + 1]; ++k) {
+      biases_[i][k] += neuron_errors_[i + 1][k] * learning_rate;
+    }
+  }
+}
+
+void MatrixPerceptron::Train(int epochs) {}
+
+void MatrixPerceptron::LoadWeights(const std::istream&) {}
+
+void MatrixPerceptron::ExportWeights(const std::ostream&) {}
