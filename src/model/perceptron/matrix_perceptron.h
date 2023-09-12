@@ -20,6 +20,7 @@ class MatrixPerceptron final : public IPerceptron {
   void Train(int epochs) override;
   void LoadWeights(const std::string &file_path) override;
   void ExportWeights(const std::string &file_path) override;
+  double TestMatrixPerceptron(const Dataset& test_dataset);
 
   void PrintPerceptronSetting() {
     std::cout << "===================PERCEPTRON SETTING=================="

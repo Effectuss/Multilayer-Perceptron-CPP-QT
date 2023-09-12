@@ -141,25 +141,48 @@ void MatrixPerceptron::UpdateBiases(double learning_rate) {
   }
 }
 
-void MatrixPerceptron::LoadWeights(const std::string& file_path) {}
+void MatrixPerceptron::LoadWeights(const std::string& file_path) {
+  std::ifstream file_in;
+  file_in.open(file_path);
+
+  if (!file_in.is_open()) {
+    throw std::runtime_error("Can't read from file");
+  }
+
+  for (int i = 0; i < number_of_layers_ - 1; ++i) {
+    file_in >> weights_[i];
+  }
+
+  for (int i = 0; i < number_of_layers_ - 1; ++i) {
+    for (int j = 0; j < size_layers_[i + 1]; ++j) {
+      if (!(file_in >> biases_[i][j])) {
+        throw std::runtime_error("Error input!");
+      }
+    }
+  }
+}
 
 void MatrixPerceptron::ExportWeights(const std::string& file_path) {
   std::ofstream file_out;
   file_out.open(file_path);
 
   if (!file_out.is_open()) {
-    throw std::runtime_error("Can't open file");
+    throw std::runtime_error("Can't write to file");
   }
 
   for (int i = 0; i < number_of_layers_ - 1; ++i) {
-    file_out << weights_[i] << " ";
+    file_out << weights_[i];
   }
 
   for (int i = 0; i < number_of_layers_ - 1; ++i) {
     for (int j = 0; j < size_layers_[i + 1]; ++j) {
       file_out << biases_[i][j] << " ";
+      if (file_out.fail()) {
+        throw std::runtime_error("Error write!");
+      }
     }
   }
+  file_out.close();
 }
 
 void MatrixPerceptron::Train(int num_epochs) {
@@ -169,16 +192,32 @@ void MatrixPerceptron::Train(int num_epochs) {
     for (int i = 0; i < dataset_.GetDataSize(); ++i) {
       SetInput(dataset_.GetData()[i].first);
       int max_index = ForwardFeed();
-      if ((max_index + 1) == dataset_.GetData()[i].second) {
+      if (max_index != dataset_.GetData()[i].second) {
         BackPropagation(max_index);
         UpdateWeights(kStartLearningRate * std::pow(kDecayRate, epoch - 1));
         UpdateBiases(kStartLearningRate * std::pow(kDecayRate, epoch - 1));
       } else {
         ++right_answer;
       }
-      std::cout << "right answer: "
-                << right_answer / dataset_.GetDataSize() * 100.0;
     }
+    std::cout << "Learning rate: "
+              << kStartLearningRate * std::pow(kDecayRate, epoch - 1)
+              << std::endl;
+    std::cout << "right answer: "
+              << (double)right_answer / (double)dataset_.GetDataSize() * 100.0
+              << std::endl;
     ++epoch;
   }
+}
+
+double MatrixPerceptron::TestMatrixPerceptron(const Dataset& test_dataset) {
+  int right_answer = 0;
+  for (int i = 0; i < dataset_.GetDataSize(); ++i) {
+    SetInput(dataset_.GetData()[i].first);
+    int max_index = ForwardFeed();
+    if (max_index == dataset_.GetData()[i].second) {
+      ++right_answer;
+    }
+  }
+  return (double)right_answer / (double)dataset_.GetDataSize() * 100.0;
 }
