@@ -113,8 +113,8 @@ void MatrixPerceptron::BackPropagation(int expect) {
   }
 
   for (int k = number_of_layers_ - 2; k < 0; --k) {
-    Matrix trans_weight = weights_[k];
-    neuron_errors_[k] = trans_weight.MultiplyByVector(neuron_errors_[k + 1]);
+    neuron_errors_[k] =
+        weights_[k].Transpose().MultiplyByVector(neuron_errors_[k + 1]);
     for (int j = 0; j < size_layers_[k]; ++j) {
       neuron_errors_[k][j] *=
           activation_function_->Derivative(neuron_values_[k][j]);
@@ -189,21 +189,23 @@ void MatrixPerceptron::Train(int num_epochs) {
   int epoch = 1;
   int right_answer = 0;
   while (epoch <= num_epochs) {
-    for (int i = 0; i < dataset_.GetDataSize(); ++i) {
+    int line = static_cast<int>(dataset_.GetDataSize());
+    for (int i = 0; i < line; ++i) {
       SetInput(dataset_.GetData()[i].first);
       int max_index = ForwardFeed();
-      if (max_index != dataset_.GetData()[i].second) {
+      if (max_index != (dataset_.GetData()[i].second - 1)) {
         BackPropagation(max_index);
         UpdateWeights(kStartLearningRate * std::pow(kDecayRate, epoch - 1));
         UpdateBiases(kStartLearningRate * std::pow(kDecayRate, epoch - 1));
       } else {
+        std::cout << i << std::endl;
         ++right_answer;
       }
     }
-    std::cout << "Learning rate: "
+    std::cout << "TRAIN Learning rate: "
               << kStartLearningRate * std::pow(kDecayRate, epoch - 1)
               << std::endl;
-    std::cout << "right answer: "
+    std::cout << "TRAIN right answer: "
               << (double)right_answer / (double)dataset_.GetDataSize() * 100.0
               << std::endl;
     ++epoch;
@@ -215,9 +217,15 @@ double MatrixPerceptron::TestMatrixPerceptron(const Dataset& test_dataset) {
   for (int i = 0; i < dataset_.GetDataSize(); ++i) {
     SetInput(dataset_.GetData()[i].first);
     int max_index = ForwardFeed();
-    if (max_index == dataset_.GetData()[i].second) {
+    if (max_index == dataset_.GetData()[i].second - 1) {
+      std::cout << max_index << std::endl;
       ++right_answer;
     }
   }
+
+  std::cout << "TEST right answer: "
+            << (double)right_answer / (double)dataset_.GetDataSize() * 100.0
+            << std::endl;
+
   return (double)right_answer / (double)dataset_.GetDataSize() * 100.0;
 }
