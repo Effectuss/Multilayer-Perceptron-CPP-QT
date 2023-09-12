@@ -9,7 +9,7 @@ GraphPerceptron::GraphPerceptron(IActivationFunction *activationFunction,
                                  int size_hidden_layers) {
   // todo: remove magic number
   int magic_number1 = 784;
-  Layer &last_layer = layers_.emplace_back(magic_number1);
+  Layer last_layer = layers_.emplace_back(magic_number1);
   for (std::size_t i = 0; i < hidden_layers_count; ++i) {
     last_layer = layers_.emplace_back(size_hidden_layers)
                      .ConnectLayer(last_layer)
