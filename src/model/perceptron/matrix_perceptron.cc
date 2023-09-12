@@ -1,6 +1,7 @@
 #include "matrix_perceptron.h"
 
 #include <algorithm>
+#include <fstream>
 #include <utility>
 
 MatrixPerceptron::MatrixPerceptron(Dataset dataset, Mapping mapping,
@@ -39,7 +40,7 @@ void MatrixPerceptron::InitRandomWeightsAndBiases() {
 
   std::random_device rd;
   std::mt19937 gen(rd());
-  std::uniform_real_distribution<double> bias_distribution(-0.01, 0.01);
+  std::uniform_real_distribution<double> bias_distribution(-0.05, 0.05);
 
   for (int i = 0; i < number_of_layers_ - 1; ++i) {
     weights_[i] = std::move(Matrix(size_layers_[i + 1], size_layers_[i]));
@@ -66,6 +67,10 @@ bool MatrixPerceptron::IsValidDataForPerceptron(int hidden_layers_count,
          size_hidden_layers > 0;
 }
 
+void MatrixPerceptron::SetInput(const Picture& picture) {
+  neuron_values_[0] = picture.GetData();
+}
+
 int MatrixPerceptron::ForwardFeed() {
   for (int i = 0; i < number_of_layers_ - 1; ++i) {
     neuron_values_[i + 1] = weights_[i] * neuron_values_[i];
@@ -75,10 +80,9 @@ int MatrixPerceptron::ForwardFeed() {
   return FindMaxIndex(neuron_values_[number_of_layers_ - 1]);
 }
 
-int MatrixPerceptron::Predict(Picture picture) {
-  neuron_values_[0] = picture.GetData();
+int MatrixPerceptron::Predict(const Picture& picture) {
+  SetInput(picture);
   int max_index = ForwardFeed();
-  std::cout << max_index;
   return *mapping_.GetData()[max_index + 1].begin();
 }
 
@@ -137,8 +141,44 @@ void MatrixPerceptron::UpdateBiases(double learning_rate) {
   }
 }
 
-void MatrixPerceptron::Train(int epochs) {}
+void MatrixPerceptron::LoadWeights(const std::string& file_path) {}
 
-void MatrixPerceptron::LoadWeights(const std::istream&) {}
+void MatrixPerceptron::ExportWeights(const std::string& file_path) {
+  std::ofstream file_out;
+  file_out.open(file_path);
 
-void MatrixPerceptron::ExportWeights(const std::ostream&) {}
+  if (!file_out.is_open()) {
+    throw std::runtime_error("Can't open file");
+  }
+
+  for (int i = 0; i < number_of_layers_ - 1; ++i) {
+    file_out << weights_[i] << " ";
+  }
+
+  for (int i = 0; i < number_of_layers_ - 1; ++i) {
+    for (int j = 0; j < size_layers_[i + 1]; ++j) {
+      file_out << biases_[i][j] << " ";
+    }
+  }
+}
+
+void MatrixPerceptron::Train(int num_epochs) {
+  int epoch = 1;
+  int right_answer = 0;
+  while (epoch <= num_epochs) {
+    for (int i = 0; i < dataset_.GetDataSize(); ++i) {
+      SetInput(dataset_.GetData()[i].first);
+      int max_index = ForwardFeed();
+      if ((max_index + 1) == dataset_.GetData()[i].second) {
+        BackPropagation(max_index);
+        UpdateWeights(kStartLearningRate * std::pow(kDecayRate, epoch - 1));
+        UpdateBiases(kStartLearningRate * std::pow(kDecayRate, epoch - 1));
+      } else {
+        ++right_answer;
+      }
+      std::cout << "right answer: "
+                << right_answer / dataset_.GetDataSize() * 100.0;
+    }
+    ++epoch;
+  }
+}

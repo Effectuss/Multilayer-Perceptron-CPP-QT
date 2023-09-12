@@ -15,10 +15,11 @@ class MatrixPerceptron final : public IPerceptron {
                    int size_hidden_layers);
   ~MatrixPerceptron() override = default;
 
-  int Predict(Picture picture) override;
+  int Predict(const Picture &picture) override;
+  void SetInput(const Picture &picture);
   void Train(int epochs) override;
-  void LoadWeights(const std::istream &) override;
-  void ExportWeights(const std::ostream &) override;
+  void LoadWeights(const std::string &file_path) override;
+  void ExportWeights(const std::string &file_path) override;
 
   void PrintPerceptronSetting() {
     std::cout << "===================PERCEPTRON SETTING=================="
@@ -64,6 +65,8 @@ class MatrixPerceptron final : public IPerceptron {
 
   static constexpr int kMinAmountOfHiddenLayers{2};
   static constexpr int kMaxAmountOfHiddenLayers{5};
+  static constexpr double kStartLearningRate{0.13};
+  static constexpr double kDecayRate{0.8};
 
   Dataset dataset_;
   Mapping mapping_;

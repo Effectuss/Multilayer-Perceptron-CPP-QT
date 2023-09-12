@@ -5,21 +5,9 @@
 #include "parser.h"
 
 int main() {
-  Dataset dataset = Parser::ParseDataset(
-      "/opt/goinfre/englishk/Multilayer-Perceptron-CPP-QT/datasets/"
-      "emnist-letters/emnist-letters-train.csv");
   Mapping mapping = Parser::ParseMapping(
       "/opt/goinfre/englishk/Multilayer-Perceptron-CPP-QT/datasets/"
       "emnist-letters/emnist-letters-mapping.txt");
 
-  MatrixPerceptron mat_pre(dataset, mapping, 2, 100);
-  mat_pre.PrintPerceptronSetting();
-  Picture picture;
-  picture.SetData(dataset.GetData()[0].first.GetData());
-  int i = mat_pre.Predict(picture);
-
-  std::cout << "\nRESULT: " << (char)i << std::endl;
-
-  mat_pre.PrintOutLayer();
   return 1;
 }

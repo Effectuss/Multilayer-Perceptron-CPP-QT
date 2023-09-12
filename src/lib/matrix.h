@@ -39,8 +39,8 @@ class Matrix {
   [[nodiscard]] std::vector<double> MultiplyByVector(
       const std::vector<double> &) const;
 
-  void FillMatrixRandomValues(double min_random_value = -0.5,
-                              double max_random_value = 0.5);
+  void FillMatrixRandomValues(double min_random_value = -0.2,
+                              double max_random_value = 0.2);
 
   [[nodiscard]] Matrix Transpose() const;
 

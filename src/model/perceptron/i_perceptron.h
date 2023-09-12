@@ -12,10 +12,10 @@ class IPerceptron {
   //                   int size_hidden_layers);
   virtual ~IPerceptron() = 0;
 
-  virtual int Predict(Picture picture) = 0;
+  virtual int Predict(const Picture &picture) = 0;
   virtual void Train(int epochs) = 0;
-  virtual void LoadWeights(const std::istream &) = 0;
-  virtual void ExportWeights(const std::ostream &) = 0;
+  virtual void LoadWeights(const std::string &file_path) = 0;
+  virtual void ExportWeights(const std::string &file_path) = 0;
 };
 
 inline IPerceptron::~IPerceptron() {}
