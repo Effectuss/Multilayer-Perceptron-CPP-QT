@@ -25,8 +25,8 @@ class GraphPerceptron final : IPerceptron {
     Layer() = delete;
     explicit Layer(int neuron_amount);
 
-    void ConnectLayer(Layer &previous);
-    void GenerateWeights();
+    Layer &ConnectLayer(Layer &previous);
+    Layer &GenerateWeights();
 
    private:
     // friend class GraphPerceptron;
@@ -51,6 +51,7 @@ class GraphPerceptron final : IPerceptron {
 
   // do I really need this field?
   // int layer_count_;
+  std::vector<Layer> layers_;
 };
 
 #endif  // GRAPH_PERCEPTRON_GRAPH_PERCEPTRON_H

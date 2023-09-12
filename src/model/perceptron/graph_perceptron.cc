@@ -7,7 +7,20 @@ GraphPerceptron::GraphPerceptron(IActivationFunction *activationFunction,
                                  const Dataset &dataset, const Mapping &mapping,
                                  int hidden_layers_count,
                                  int size_hidden_layers) {
-  //  layer_count_ = 2 + hidden_layers_count;
+  // todo: remove magic number
+  int magic_number1 = 784;
+  Layer &last_layer = layers_.emplace_back(magic_number1);
+  for (std::size_t i = 0; i < hidden_layers_count; ++i) {
+    last_layer = layers_.emplace_back(size_hidden_layers)
+                     .ConnectLayer(last_layer)
+                     .GenerateWeights();
+  }
+  // todo: remove magic number
+  // I know I can get it from mapping, but I wanna get rid of it
+  int magic_number2 = 26;
+  layers_.emplace_back(magic_number2)
+      .ConnectLayer(last_layer)
+      .GenerateWeights();
 }
 
 int GraphPerceptron::Predict(Picture picture) {
@@ -39,17 +52,19 @@ GraphPerceptron::Layer::Layer(int neuron_amount) {
   neurons_.resize(neuron_amount);
 }
 
-void GraphPerceptron::Layer::ConnectLayer(Layer &previous) {
+GraphPerceptron::Layer &GraphPerceptron::Layer::ConnectLayer(Layer &previous) {
   for (auto &neuron : neurons_) {
     neuron.previous_neurons_.resize(previous.neurons_.size());
     std::transform(previous.neurons_.begin(), previous.neurons_.end(),
                    neuron.previous_neurons_.begin(),
                    [](Neuron &n) { return &n; });
   }
+
+  return *this;
 }
 
 // todo: "true" randomness
-void GraphPerceptron::Layer::GenerateWeights() {
+GraphPerceptron::Layer &GraphPerceptron::Layer::GenerateWeights() {
   double lower = -0.5;
   double upper = 0.5;
 
@@ -64,4 +79,6 @@ void GraphPerceptron::Layer::GenerateWeights() {
                    neuron.previous_neurons_weights_.begin(),
                    [](double) { return 5; });
   }
+
+  return *this;
 }
