@@ -21,3 +21,5 @@ void MainWindow::on_penRadiusSlider_valueChanged(int value) {
 void MainWindow::on_penRadiusSpinbox_valueChanged(int arg1) {
   ui->penRadiusSlider->setValue(arg1);
 }
+
+void MainWindow::on_clearButton_clicked() { ui->drawArea->ClearImage(); }
