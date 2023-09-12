@@ -20,6 +20,8 @@ add_executable(graph_perceptron
         ./parser/parser.h
         ./parser/parser.cc
         ./perceptron/i_perceptron.h
+        ./perceptron/graph_perceptron.h
+        ./perceptron/graph_perceptron.cc
         )
 
 include_directories(
