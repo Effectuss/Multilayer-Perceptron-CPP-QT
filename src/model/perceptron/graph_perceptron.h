@@ -6,7 +6,7 @@
 #include "i_perceptron.h"
 #include "mapping.h"
 
-class GraphPerceptron final : IPerceptron {
+class GraphPerceptron final : public IPerceptron {
  public:
   GraphPerceptron() = delete;
   GraphPerceptron(IActivationFunction *activationFunction,
