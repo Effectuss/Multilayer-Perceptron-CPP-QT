@@ -38,10 +38,18 @@ void MatrixPerceptron::InitRandomWeightsAndBiases() {
   weights_.resize(number_of_layers_ - 1);
   biases_.resize(number_of_layers_ - 1);
 
-  // todo random bias
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::uniform_real_distribution<double> bias_distribution(-0.01, 0.01);
+
   for (int i = 0; i < number_of_layers_ - 1; ++i) {
     weights_[i] = std::move(Matrix(size_layers_[i + 1], size_layers_[i]));
     weights_[i].FillMatrixRandomValues();
+    biases_[i].resize(size_layers_[i + 1]);
+
+    for (int j = 0; j < size_layers_[i + 1]; ++j) {
+      biases_[i][j] = bias_distribution(gen);
+    }
   }
 }
 
@@ -64,6 +72,7 @@ void MatrixPerceptron::Train(int epochs) {}
 int MatrixPerceptron::ForwardFeed() {
   for (int i = 0; i < number_of_layers_ - 1; ++i) {
     neuron_values_[i + 1] = weights_[i] * neuron_values_[i];
+    Matrix::SumVector(neuron_values_[i + 1], biases_[i]);
     activation_function_->Activate(neuron_values_[i + 1]);
   }
   return FindMaxIndex(neuron_values_[number_of_layers_ - 1]);
@@ -72,7 +81,8 @@ int MatrixPerceptron::ForwardFeed() {
 int MatrixPerceptron::Predict(Picture picture) {
   neuron_values_[0] = picture.GetData();
   int max_index = ForwardFeed();
-  return *mapping_.GetData()[max_index].begin();
+  std::cout << max_index;
+  return *mapping_.GetData()[max_index + 1].begin();
 }
 
 int MatrixPerceptron::FindMaxIndex(const std::vector<double>& vector) {

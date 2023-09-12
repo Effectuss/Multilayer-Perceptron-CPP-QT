@@ -141,3 +141,10 @@ Matrix Matrix::Transpose() const {
   }
   return matrix;
 }
+
+void Matrix::SumVector(std::vector<double>& vec_a,
+                       const std::vector<double>& vec_b) {
+  for (int i = 0; i < vec_a.size(); ++i) {
+    vec_a[i] += vec_b[i];
+  }
+}

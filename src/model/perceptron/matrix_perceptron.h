@@ -62,6 +62,7 @@ class MatrixPerceptron final : public IPerceptron {
 
   static constexpr int kMinAmountOfHiddenLayers{2};
   static constexpr int kMaxAmountOfHiddenLayers{5};
+  static constexpr double learning_rate{0.05};
 
   Dataset dataset_;
   Mapping mapping_;

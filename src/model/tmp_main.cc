@@ -18,8 +18,6 @@ int main() {
   picture.SetData(dataset.GetData()[0].first.GetData());
   int i = mat_pre.Predict(picture);
 
-  std::vector<double> sd{3.3, 3.1, 0.2, -13.3, 1};
-
   std::cout << "\nRESULT: " << (char)i << std::endl;
 
   mat_pre.PrintOutLayer();
