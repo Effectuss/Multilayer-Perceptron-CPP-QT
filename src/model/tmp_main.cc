@@ -15,12 +15,13 @@ int main() {
 
   std::cout << "START" << std::endl;
 
-  MatrixPerceptron perceptron(&dataset, &mapping, 3, 144);
+  MatrixPerceptron perceptron(&dataset, &mapping, 4, 256);
 
-  std::cout << "START TRAIN" << std::endl;
-  perceptron.Train(4);
+//  std::cout << "START TRAIN" << std::endl;
+//  perceptron.Train(10);
 
-  perceptron.ExportWeights("Weight.txt");
+//  perceptron.ExportWeights("Weight.txt");
+  perceptron.LoadWeights("52%.txt");
 
   double right = perceptron.TestMatrixPerceptron(
       Parser::ParseDataset("/opt/goinfre/englishk/Multilayer-Perceptron-CPP-QT/"

@@ -40,7 +40,7 @@ void MatrixPerceptron::InitRandomWeightsAndBiases() {
 
   std::random_device rd;
   std::mt19937 gen(rd());
-  std::uniform_real_distribution<double> bias_distribution(-0.5, 0.5);
+  std::uniform_real_distribution<double> bias_distribution(-0.2, 0.2);
 
   for (int i = 0; i < number_of_layers_ - 1; ++i) {
     weights_[i] = std::move(Matrix(size_layers_[i + 1], size_layers_[i]));
@@ -189,13 +189,9 @@ void MatrixPerceptron::ExportWeights(const std::string& file_path) {
 
 void MatrixPerceptron::Train(int num_epochs) {
   int epoch = 1;
-  int right_answer = 0;
   while (epoch <= num_epochs) {
     int line = static_cast<int>(dataset_->GetDataSize());
     double curr_lr = kStartLearningRate * std::exp((-(epoch - 1)) / 20.0);
-    std::cout << curr_lr << std::endl;
-    int asd = 0;
-    std::cin >> asd;
     for (int i = 0; i < line; ++i) {
       SetInput(dataset_->GetData()[i].first);
       int max_index = ForwardFeed();
@@ -204,9 +200,6 @@ void MatrixPerceptron::Train(int num_epochs) {
         BackPropagation(expect_value);
         UpdateWeights(curr_lr);
         UpdateBiases(curr_lr);
-      } else {
-        std::cout << i << std::endl;
-        ++right_answer;
       }
     }
     ++epoch;
