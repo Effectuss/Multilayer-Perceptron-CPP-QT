@@ -27,6 +27,7 @@ class GraphPerceptron final : public IPerceptron {
 
     Layer &ConnectLayer(Layer &previous);
     Layer &GenerateWeights();
+    void SetPicture(Picture &picture);
 
    private:
     // friend class GraphPerceptron;

@@ -24,7 +24,9 @@ GraphPerceptron::GraphPerceptron(IActivationFunction *activationFunction,
 }
 
 int GraphPerceptron::Predict(Picture picture) {
-  // todo
+  layers_.front().SetPicture(picture);
+  FeedForward();
+  // todo: return max value from last layer
   return 0;
 }
 
@@ -81,4 +83,16 @@ GraphPerceptron::Layer &GraphPerceptron::Layer::GenerateWeights() {
   }
 
   return *this;
+}
+
+void GraphPerceptron::Layer::SetPicture(Picture &picture) {
+  // do I need this check here?
+  if (neurons_.size() != picture.GetSize()) {
+    throw std::logic_error(
+        "Graph perceptron first layer size != picture size!");
+  }
+
+  for (std::size_t i = 0; i < neurons_.size(); ++i) {
+    neurons_[i].value_ = picture.GetData()[i];
+  }
 }
