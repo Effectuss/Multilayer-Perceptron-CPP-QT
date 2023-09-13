@@ -7,9 +7,6 @@
 
 class IPerceptron {
  public:
-  // вот такой конструктор в своем прецептроне в интерфейсе не надо
-  //  MatrixPerceptron(Dataset, Mapping, int hidden_layers_count,
-  //                   int size_hidden_layers);
   virtual ~IPerceptron() = 0;
 
   virtual int Predict(Picture picture) = 0;

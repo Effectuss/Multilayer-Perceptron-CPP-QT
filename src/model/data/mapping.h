@@ -6,10 +6,10 @@
 
 class Mapping {
  public:
-  void AddData(int, const std::set<int> &);
+  void AddData(int, const std::set<int>&);
   [[nodiscard]] std::size_t GetDataSize() const;
-  [[nodiscard]] std::map<int, std::set<int>> GetData() const;
-  [[nodiscard]] std::set<int> GetItem(int) const;
+  [[nodiscard]] const std::map<int, std::set<int>>& GetData() const;
+  [[nodiscard]] const std::set<int>& GetItem(int) const;
 
  private:
   std::map<int, std::set<int>> data_;
