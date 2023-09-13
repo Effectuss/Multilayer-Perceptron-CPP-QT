@@ -15,15 +15,18 @@ int main() {
 
   std::cout << "START" << std::endl;
 
-  MatrixPerceptron perceptron(dataset, mapping, 2, 40);
-  std::cout << "TRAIN" << std::endl;
-  perceptron.Train(2);
+  MatrixPerceptron perceptron(&dataset, &mapping, 3, 144);
+
+  std::cout << "START TRAIN" << std::endl;
+  perceptron.Train(4);
+
   perceptron.ExportWeights("Weight.txt");
-  double procent_right = perceptron.TestMatrixPerceptron(
+
+  double right = perceptron.TestMatrixPerceptron(
       Parser::ParseDataset("/opt/goinfre/englishk/Multilayer-Perceptron-CPP-QT/"
                            "datasets/emnist-letters/emnist-letters-test.csv"));
 
-  std::cout << "FINAL RESULT: " << procent_right << std::endl;
+  std::cout << "FINAL RESULT: " << right << "%" << std::endl;
 
   return 1;
 }

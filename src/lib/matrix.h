@@ -24,7 +24,8 @@ class Matrix {
 
   ~Matrix() = default;
 
-  static void SumVector(std::vector<double> &vec_a, const std::vector<double> &vec_b);
+  static void SumVector(std::vector<double> &vec_a,
+                        const std::vector<double> &vec_b);
 
   [[nodiscard]] int GetRows() const;
 
@@ -36,17 +37,17 @@ class Matrix {
 
   [[nodiscard]] Matrix MultiplyByMatrix(const Matrix &other_matrix) const;
 
-  [[nodiscard]] std::vector<double> MultiplyByVector(
-      const std::vector<double> &) const;
+  static void MultiplyByVector(const Matrix &, const std::vector<double> &,
+                               std::vector<double> &);
 
-  void FillMatrixRandomValues(double min_random_value = -0.2,
-                              double max_random_value = 0.2);
+  static void MultiplyTransposeMatrixByVector(const Matrix &,
+                                              const std::vector<double> &,
+                                              std::vector<double> &);
 
-  [[nodiscard]] Matrix Transpose() const;
+  void FillMatrixRandomValues(double min_random_value = -0.5,
+                              double max_random_value = 0.5);
 
   Matrix operator*(const Matrix &) const;
-
-  std::vector<double> operator*(const std::vector<double> &) const;
 
   friend std::ostream &operator<<(std::ostream &, const Matrix &);
 

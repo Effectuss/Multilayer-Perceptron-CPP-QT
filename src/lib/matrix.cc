@@ -111,40 +111,47 @@ const std::vector<double>& Matrix::operator[](int row_index) const {
 
 bool Matrix::IsCorrectIndex(int rows, int cols) { return rows > 0 && cols > 0; }
 
-std::vector<double> Matrix::operator*(const std::vector<double>& vector) const {
-  return MultiplyByVector(vector);
-}
-
-std::vector<double> Matrix::MultiplyByVector(
-    const std::vector<double>& vector) const {
-  if (cols_ != vector.size()) {
-    throw std::invalid_argument("Error multiply!");
-  }
-
-  std::vector<double> result(rows_, 0.0);
-
-  for (int i = 0; i < rows_; ++i) {
-    for (int j = 0; j < cols_; ++j) {
-      result[i] += matrix_[i][j] * vector[j];
-    }
-  }
-
-  return result;
-}
-
-Matrix Matrix::Transpose() const {
-  Matrix matrix(cols_, rows_);
-  for (int i = 0; i < this->rows_; ++i) {
-    for (int j = 0; j < this->cols_; ++j) {
-      matrix(j, i) = (*this)(i, j);
-    }
-  }
-  return matrix;
-}
 
 void Matrix::SumVector(std::vector<double>& vec_a,
                        const std::vector<double>& vec_b) {
   for (int i = 0; i < vec_a.size(); ++i) {
     vec_a[i] += vec_b[i];
+  }
+}
+
+void Matrix::MultiplyByVector(const Matrix& matrix,
+                              const std::vector<double>& vec,
+                              std::vector<double>& res_vec) {
+  if (matrix.GetCols() != vec.size()) {
+    throw std::invalid_argument("Error multiply!");
+  }
+  int row = matrix.GetRows();
+  int cols = matrix.GetCols();
+
+  for (int i = 0; i < row; ++i) {
+    double res_sum = 0.0;
+    for (int j = 0; j < cols; ++j) {
+      res_sum += matrix(i, j) * vec[j];
+    }
+    res_vec[i] = res_sum;
+  }
+}
+
+void Matrix::MultiplyTransposeMatrixByVector(const Matrix& matrix,
+                                             const std::vector<double>& vec,
+                                             std::vector<double>& res) {
+  if (matrix.GetRows() != vec.size()) {
+    throw std::invalid_argument("Error multiply!");
+  }
+
+  int row = matrix.GetRows();
+  int cols = matrix.GetCols();
+
+  for (int i = 0; i < cols; ++i) {
+    double res_sum = 0.0;
+    for (int j = 0; j < row; ++j) {
+      res_sum += matrix(j, i) * vec[j];
+    }
+    res[i] = res_sum;
   }
 }

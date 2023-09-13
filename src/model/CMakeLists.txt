@@ -30,9 +30,4 @@ add_executable(model_tmp
         parser/parser.cc
         tmp_main.cc)
 
-target_compile_options(
-        ${PROJECT_NAME}
-        PRIVATE
-        -O0
-        -std=c++17
-)
+target_compile_options(model_tmp PRIVATE -O3)

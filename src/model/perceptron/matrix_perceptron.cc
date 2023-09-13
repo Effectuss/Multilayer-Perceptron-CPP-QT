@@ -4,11 +4,11 @@
 #include <fstream>
 #include <utility>
 
-MatrixPerceptron::MatrixPerceptron(Dataset dataset, Mapping mapping,
+MatrixPerceptron::MatrixPerceptron(Dataset* dataset, Mapping* mapping,
                                    int hidden_layers_count,
                                    int size_hidden_layers)
-    : dataset_{std::move(dataset)},
-      mapping_{std::move(mapping)},
+    : dataset_{dataset},
+      mapping_{mapping},
       activation_function_(std::make_unique<Sigmoid>()) {
   if (!IsValidDataForPerceptron(hidden_layers_count, size_hidden_layers)) {
     throw std::invalid_argument("Incorrect data for perceptron!");
@@ -25,9 +25,9 @@ void MatrixPerceptron::InitSizeLayers(int size_hidden) {
   for (int i = 0; i < number_of_layers_; ++i) {
     if (i == 0) {
       size_layers_.push_back(
-          static_cast<int>(dataset_.GetData()[i].first.GetSize()));
+          static_cast<int>(dataset_->GetData()[i].first.GetSize()));
     } else if (i == number_of_layers_ - 1) {
-      size_layers_.push_back(static_cast<int>(mapping_.GetDataSize()));
+      size_layers_.push_back(static_cast<int>(mapping_->GetDataSize()));
     } else {
       size_layers_.push_back(size_hidden);
     }
@@ -40,7 +40,7 @@ void MatrixPerceptron::InitRandomWeightsAndBiases() {
 
   std::random_device rd;
   std::mt19937 gen(rd());
-  std::uniform_real_distribution<double> bias_distribution(-0.05, 0.05);
+  std::uniform_real_distribution<double> bias_distribution(-0.5, 0.5);
 
   for (int i = 0; i < number_of_layers_ - 1; ++i) {
     weights_[i] = std::move(Matrix(size_layers_[i + 1], size_layers_[i]));
@@ -73,7 +73,8 @@ void MatrixPerceptron::SetInput(const Picture& picture) {
 
 int MatrixPerceptron::ForwardFeed() {
   for (int i = 0; i < number_of_layers_ - 1; ++i) {
-    neuron_values_[i + 1] = weights_[i] * neuron_values_[i];
+    Matrix::MultiplyByVector(weights_[i], neuron_values_[i],
+                             neuron_values_[i + 1]);
     Matrix::SumVector(neuron_values_[i + 1], biases_[i]);
     activation_function_->Activate(neuron_values_[i + 1]);
   }
@@ -83,18 +84,19 @@ int MatrixPerceptron::ForwardFeed() {
 int MatrixPerceptron::Predict(const Picture& picture) {
   SetInput(picture);
   int max_index = ForwardFeed();
-  return *mapping_.GetData()[max_index + 1].begin();
+  return *mapping_->GetData()[max_index + 1].begin();
 }
 
 int MatrixPerceptron::FindMaxIndex(const std::vector<double>& vector) {
-  if (vector.empty()) {
-    return 0;
+  if (vector.empty()) return 0;
+
+  int max_index = 0;
+  for (int i = 0; i < vector.size(); ++i) {
+    if (vector[i] >= vector[max_index]) {
+      max_index = i;
+    }
   }
-
-  auto max_element = std::max_element(vector.begin(), vector.end());
-  auto max_index = std::distance(vector.begin(), max_element);
-
-  return static_cast<int>(max_index);
+  return max_index;
 }
 
 void MatrixPerceptron::BackPropagation(int expect) {
@@ -113,8 +115,8 @@ void MatrixPerceptron::BackPropagation(int expect) {
   }
 
   for (int k = number_of_layers_ - 2; k < 0; --k) {
-    neuron_errors_[k] =
-        weights_[k].Transpose().MultiplyByVector(neuron_errors_[k + 1]);
+    Matrix::MultiplyTransposeMatrixByVector(weights_[k], neuron_errors_[k + 1],
+                                            neuron_errors_[k]);
     for (int j = 0; j < size_layers_[k]; ++j) {
       neuron_errors_[k][j] *=
           activation_function_->Derivative(neuron_values_[k][j]);
@@ -189,43 +191,42 @@ void MatrixPerceptron::Train(int num_epochs) {
   int epoch = 1;
   int right_answer = 0;
   while (epoch <= num_epochs) {
-    int line = static_cast<int>(dataset_.GetDataSize());
+    int line = static_cast<int>(dataset_->GetDataSize());
+    double curr_lr = kStartLearningRate * std::exp((-(epoch - 1)) / 20.0);
+    std::cout << curr_lr << std::endl;
+    int asd = 0;
+    std::cin >> asd;
     for (int i = 0; i < line; ++i) {
-      SetInput(dataset_.GetData()[i].first);
+      SetInput(dataset_->GetData()[i].first);
       int max_index = ForwardFeed();
-      if (max_index != (dataset_.GetData()[i].second - 1)) {
-        BackPropagation(max_index);
-        UpdateWeights(kStartLearningRate * std::pow(kDecayRate, epoch - 1));
-        UpdateBiases(kStartLearningRate * std::pow(kDecayRate, epoch - 1));
+      int expect_value = dataset_->GetData()[i].second - 1;
+      if (max_index != expect_value) {
+        BackPropagation(expect_value);
+        UpdateWeights(curr_lr);
+        UpdateBiases(curr_lr);
       } else {
         std::cout << i << std::endl;
         ++right_answer;
       }
     }
-    std::cout << "TRAIN Learning rate: "
-              << kStartLearningRate * std::pow(kDecayRate, epoch - 1)
-              << std::endl;
-    std::cout << "TRAIN right answer: "
-              << (double)right_answer / (double)dataset_.GetDataSize() * 100.0
-              << std::endl;
     ++epoch;
   }
 }
 
 double MatrixPerceptron::TestMatrixPerceptron(const Dataset& test_dataset) {
   int right_answer = 0;
-  for (int i = 0; i < dataset_.GetDataSize(); ++i) {
-    SetInput(dataset_.GetData()[i].first);
+  for (int i = 0; i < dataset_->GetDataSize(); ++i) {
+    SetInput(dataset_->GetData()[i].first);
     int max_index = ForwardFeed();
-    if (max_index == dataset_.GetData()[i].second - 1) {
+    if (max_index == dataset_->GetData()[i].second - 1) {
       std::cout << max_index << std::endl;
       ++right_answer;
     }
   }
 
   std::cout << "TEST right answer: "
-            << (double)right_answer / (double)dataset_.GetDataSize() * 100.0
+            << (double)right_answer / (double)dataset_->GetDataSize() * 100.0
             << std::endl;
 
-  return (double)right_answer / (double)dataset_.GetDataSize() * 100.0;
+  return (double)right_answer / (double)dataset_->GetDataSize() * 100.0;
 }

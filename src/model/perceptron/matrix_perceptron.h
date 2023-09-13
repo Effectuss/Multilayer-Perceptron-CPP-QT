@@ -11,7 +11,7 @@
 
 class MatrixPerceptron final : public IPerceptron {
  public:
-  MatrixPerceptron(Dataset, Mapping, int hidden_layers_count,
+  MatrixPerceptron(Dataset *, Mapping *, int hidden_layers_count,
                    int size_hidden_layers);
   ~MatrixPerceptron() override = default;
 
@@ -20,7 +20,7 @@ class MatrixPerceptron final : public IPerceptron {
   void Train(int epochs) override;
   void LoadWeights(const std::string &file_path) override;
   void ExportWeights(const std::string &file_path) override;
-  double TestMatrixPerceptron(const Dataset& test_dataset);
+  double TestMatrixPerceptron(const Dataset &test_dataset);
 
   void PrintPerceptronSetting() {
     std::cout << "===================PERCEPTRON SETTING=================="
@@ -51,6 +51,10 @@ class MatrixPerceptron final : public IPerceptron {
                 << " ";
     }
   }
+  int ForwardFeed();
+  void BackPropagation(int);
+  void UpdateWeights(double);
+  void UpdateBiases(double);
 
  private:
   static bool IsValidDataForPerceptron(int, int);
@@ -59,18 +63,13 @@ class MatrixPerceptron final : public IPerceptron {
   void InitSizeLayers(int size_hidden);
   void InitRandomWeightsAndBiases();
   void InitNeuronsAndErr();
-  int ForwardFeed();
-  void BackPropagation(int);
-  void UpdateWeights(double);
-  void UpdateBiases(double);
 
   static constexpr int kMinAmountOfHiddenLayers{2};
   static constexpr int kMaxAmountOfHiddenLayers{5};
-  static constexpr double kStartLearningRate{0.13};
-  static constexpr double kDecayRate{0.8};
+  static constexpr double kStartLearningRate{0.15};
 
-  Dataset dataset_;
-  Mapping mapping_;
+  Dataset *dataset_;
+  Mapping *mapping_;
   std::unique_ptr<IActivationFunction> activation_function_;
 
   int number_of_layers_{2};
