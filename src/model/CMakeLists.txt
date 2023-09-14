@@ -30,4 +30,4 @@ add_executable(model_tmp
         parser/parser.cc
         tmp_main.cc)
 
-target_compile_options(model_tmp PRIVATE -O3)
+target_compile_options(model_tmp PRIVATE -O3 -Wall -Werror -Wextra)

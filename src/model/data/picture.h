@@ -14,7 +14,7 @@ class Picture {
   [[nodiscard]] std::size_t GetSize() const;
 
   inline void PrintPicture() {
-    for (int i = 0; i < data_.size(); ++i) {
+    for (std::size_t i = 0; i < data_.size(); ++i) {
       if (i % 28 == 0) {
         std::cout << std::endl;
       }

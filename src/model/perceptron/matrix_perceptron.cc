@@ -40,10 +40,10 @@ void MatrixPerceptron::InitRandomWeightsAndBiases() {
 
   std::random_device rd;
   std::mt19937 gen(rd());
-  std::uniform_real_distribution<double> bias_distribution(-0.2, 0.2);
+  std::uniform_real_distribution<double> bias_distribution(0.0, 0.1);
 
   for (int i = 0; i < number_of_layers_ - 1; ++i) {
-    weights_[i] = std::move(Matrix(size_layers_[i + 1], size_layers_[i]));
+    weights_[i] = Matrix(size_layers_[i + 1], size_layers_[i]);
     weights_[i].FillMatrixRandomValues();
     biases_[i].resize(size_layers_[i + 1]);
 
@@ -91,7 +91,7 @@ int MatrixPerceptron::FindMaxIndex(const std::vector<double>& vector) {
   if (vector.empty()) return 0;
 
   int max_index = 0;
-  for (int i = 0; i < vector.size(); ++i) {
+  for (int i = 0; i < (int)vector.size(); ++i) {
     if (vector[i] >= vector[max_index]) {
       max_index = i;
     }
@@ -100,21 +100,32 @@ int MatrixPerceptron::FindMaxIndex(const std::vector<double>& vector) {
 }
 
 void MatrixPerceptron::BackPropagation(int expect) {
-  for (int i = 0; i < size_layers_[number_of_layers_ - 1]; ++i) {
+  int size_l = number_of_layers_;
+  for (int i = 0; i < size_layers_[size_l - 1]; ++i) {
     if (i != expect) {
-      neuron_errors_[number_of_layers_ - 1][i] =
-          -neuron_values_[number_of_layers_ - 1][i] *
-          activation_function_->Derivative(
-              neuron_values_[number_of_layers_ - 1][i]);
+      neuron_errors_[size_l - 1][i] =
+          -neuron_values_[size_l - 1][i] *
+          activation_function_->Derivative(neuron_values_[size_l - 1][i]);
     } else {
-      neuron_errors_[number_of_layers_ - 1][i] =
-          (1.0 - neuron_values_[number_of_layers_ - 1][i]) *
-          activation_function_->Derivative(
-              neuron_values_[number_of_layers_ - 1][i]);
+      neuron_errors_[size_l - 1][i] =
+          (1.0 - neuron_values_[size_l - 1][i]) *
+          activation_function_->Derivative(neuron_values_[size_l - 1][i]);
     }
+    // new method
+    //    if (i == expect) {
+    //      neuron_errors_[size_l - 1][i] = neuron_values_[size_l - 1][i] *
+    //                                      (1.0 - neuron_values_[size_l -
+    //                                      1][i]) * (1.0 -
+    //                                      neuron_values_[size_l - 1][i]);
+    //    } else {
+    //      neuron_errors_[size_l - 1][i] = neuron_values_[size_l - 1][i] *
+    //                                      (1.0 - neuron_values_[size_l -
+    //                                      1][i]) * (0.0 -
+    //                                      neuron_values_[size_l - 1][i]);
+    //    }
   }
 
-  for (int k = number_of_layers_ - 2; k < 0; --k) {
+  for (int k = number_of_layers_ - 2; k > 0; --k) {
     Matrix::MultiplyTransposeMatrixByVector(weights_[k], neuron_errors_[k + 1],
                                             neuron_errors_[k]);
     for (int j = 0; j < size_layers_[k]; ++j) {
@@ -191,7 +202,7 @@ void MatrixPerceptron::Train(int num_epochs) {
   int epoch = 1;
   while (epoch <= num_epochs) {
     int line = static_cast<int>(dataset_->GetDataSize());
-    double curr_lr = kStartLearningRate * std::exp((-(epoch - 1)) / 20.0);
+    double curr_lr = 0.1;
     for (int i = 0; i < line; ++i) {
       SetInput(dataset_->GetData()[i].first);
       int max_index = ForwardFeed();
@@ -208,11 +219,10 @@ void MatrixPerceptron::Train(int num_epochs) {
 
 double MatrixPerceptron::TestMatrixPerceptron(const Dataset& test_dataset) {
   int right_answer = 0;
-  for (int i = 0; i < dataset_->GetDataSize(); ++i) {
-    SetInput(dataset_->GetData()[i].first);
+  for (std::size_t i = 0; i < test_dataset.GetDataSize(); ++i) {
+    SetInput(test_dataset.GetData()[i].first);
     int max_index = ForwardFeed();
-    if (max_index == dataset_->GetData()[i].second - 1) {
-      std::cout << max_index << std::endl;
+    if (max_index == test_dataset.GetData()[i].second - 1) {
       ++right_answer;
     }
   }

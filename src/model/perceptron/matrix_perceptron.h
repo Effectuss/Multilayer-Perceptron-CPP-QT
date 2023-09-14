@@ -43,7 +43,7 @@ class MatrixPerceptron final : public IPerceptron {
   }
 
   void PrintInputLayer() {
-    for (int i = 0; i < neuron_values_[0].size(); ++i) {
+    for (std::size_t i = 0; i < neuron_values_[0].size(); ++i) {
       if (i % 28 == 0) {
         std::cout << std::endl;
       }

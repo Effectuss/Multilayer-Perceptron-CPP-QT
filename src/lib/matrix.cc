@@ -39,7 +39,7 @@ Matrix Matrix::MultiplyByMatrix(const Matrix& other_matrix) const {
         "The amount of cols in matrix have to equal rows in other matrix!");
   }
 
-  Matrix result_matrix = std::move(Matrix(rows_, other_matrix.cols_));
+  Matrix result_matrix = Matrix(rows_, other_matrix.cols_);
 
   for (int i = 0; i < rows_; ++i) {
     for (int j = 0; j < other_matrix.cols_; ++j) {
@@ -114,7 +114,7 @@ bool Matrix::IsCorrectIndex(int rows, int cols) { return rows > 0 && cols > 0; }
 
 void Matrix::SumVector(std::vector<double>& vec_a,
                        const std::vector<double>& vec_b) {
-  for (int i = 0; i < vec_a.size(); ++i) {
+  for (std::size_t i = 0; i < vec_a.size(); ++i) {
     vec_a[i] += vec_b[i];
   }
 }
@@ -122,7 +122,7 @@ void Matrix::SumVector(std::vector<double>& vec_a,
 void Matrix::MultiplyByVector(const Matrix& matrix,
                               const std::vector<double>& vec,
                               std::vector<double>& res_vec) {
-  if (matrix.GetCols() != vec.size()) {
+  if (matrix.GetCols() != (int)vec.size()) {
     throw std::invalid_argument("Error multiply!");
   }
   int row = matrix.GetRows();
@@ -140,7 +140,7 @@ void Matrix::MultiplyByVector(const Matrix& matrix,
 void Matrix::MultiplyTransposeMatrixByVector(const Matrix& matrix,
                                              const std::vector<double>& vec,
                                              std::vector<double>& res) {
-  if (matrix.GetRows() != vec.size()) {
+  if (matrix.GetRows() != (int)vec.size()) {
     throw std::invalid_argument("Error multiply!");
   }
 
