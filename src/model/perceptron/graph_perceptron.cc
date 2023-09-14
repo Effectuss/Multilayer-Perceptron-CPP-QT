@@ -3,34 +3,51 @@
 #include <algorithm>
 #include <random>
 
-GraphPerceptron::GraphPerceptron(IActivationFunction *activationFunction,
-                                 const Dataset &dataset, const Mapping &mapping,
-                                 int hidden_layers_count,
-                                 int size_hidden_layers) {
-  // todo: remove magic number
-  int magic_number1 = 784;
-  Layer last_layer = layers_.emplace_back(magic_number1);
+GraphPerceptron::GraphPerceptron() = default;
+
+GraphPerceptron::~GraphPerceptron() = default;
+
+void GraphPerceptron::Configure(std::size_t input_layer_size,
+                                std::size_t output_layer_size,
+                                std::size_t hidden_layers_count,
+                                std::size_t hidden_layers_size) {
+  layers_.clear();
+  Layer last_layer = layers_.emplace_back(input_layer_size);
   for (std::size_t i = 0; i < hidden_layers_count; ++i) {
-    last_layer = layers_.emplace_back(size_hidden_layers)
+    last_layer = layers_.emplace_back(hidden_layers_size)
                      .ConnectLayer(last_layer)
                      .GenerateWeights();
   }
-  // todo: remove magic number
-  // I know I can get it from mapping, but I wanna get rid of it
-  int magic_number2 = 26;
-  layers_.emplace_back(magic_number2)
+  layers_.emplace_back(output_layer_size)
       .ConnectLayer(last_layer)
       .GenerateWeights();
 }
 
-int GraphPerceptron::Predict(Picture picture) {
+void GraphPerceptron::SetTrainDataset(Dataset &dataset) {
+  train_dataset_ = dataset;
+}
+
+void GraphPerceptron::SetTestDataset(Dataset &dataset) {
+  test_dataset_ = dataset;
+}
+
+void GraphPerceptron::SetActivationFunction(
+    IActivationFunction *activationFunction) {
+  activationFunction_ = activationFunction;
+}
+
+int GraphPerceptron::Predict(Picture &picture) {
   layers_.front().SetPicture(picture);
   FeedForward();
   // todo: return max value from last layer
   return 0;
 }
 
-void GraphPerceptron::Train(int epochs) {
+void GraphPerceptron::Train(std::size_t epochs) {
+  // todo
+}
+
+void GraphPerceptron::CrossValidation(std::size_t groups) {
   // todo
 }
 

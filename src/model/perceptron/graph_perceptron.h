@@ -4,20 +4,28 @@
 #include "dataset.h"
 #include "i_activation_function.h"
 #include "i_perceptron.h"
-#include "mapping.h"
 
 class GraphPerceptron final : public IPerceptron {
  public:
-  GraphPerceptron() = delete;
-  GraphPerceptron(IActivationFunction *activationFunction,
-                  const Dataset &dataset, const Mapping &mapping,
-                  int hidden_layers_count, int size_hidden_layers);
-  ~GraphPerceptron() override = default;
+  GraphPerceptron();
+  ~GraphPerceptron() override;
 
-  int Predict(Picture picture) override;
-  void Train(int epochs) override;
-  void LoadWeights(const std::istream &) override;
-  void ExportWeights(const std::ostream &) override;
+  void Configure(std::size_t input_layer_size, std::size_t output_layer_size,
+                 std::size_t hidden_layers_count,
+                 std::size_t hidden_layers_size) override;
+
+  void SetTrainDataset(Dataset &dataset) override;
+  void SetTestDataset(Dataset &dataset) override;
+  // todo: fix in perceptron base class
+  void SetActivationFunction(IActivationFunction activationFunction) override{};
+  void SetActivationFunction(IActivationFunction *activationFunction);
+
+  int Predict(Picture &picture) override;
+  void Train(std::size_t epochs) override;
+  void CrossValidation(std::size_t groups) override;
+
+  void LoadWeights(const std::istream &istream) override;
+  void ExportWeights(const std::ostream &ostream) override;
 
  private:
   class Layer final {
@@ -50,9 +58,11 @@ class GraphPerceptron final : public IPerceptron {
   void FeedForward();
   void PropagateBackwards();
 
-  // do I really need this field?
-  // int layer_count_;
   std::vector<Layer> layers_;
+
+  Dataset train_dataset_;
+  Dataset test_dataset_;
+  IActivationFunction *activationFunction_;
 };
 
 #endif  // GRAPH_PERCEPTRON_GRAPH_PERCEPTRON_H
