@@ -9,7 +9,7 @@
 #include <vector>
 
 class Matrix {
- public:
+public:
   Matrix() = default;
 
   Matrix(int rows, int cols);
@@ -33,7 +33,11 @@ class Matrix {
   void FillMatrixRandomValues(double min_random_value = -1.0,
                               double max_random_value = 1.0);
 
- private:
+  static void MultiplyByVector(const Matrix &matrix,
+                               const std::vector<double> &vector_column,
+                               std::vector<double> &vector_res);
+
+private:
   static bool IsCorrectIndex(int, int);
 
   int rows_{};
@@ -44,4 +48,4 @@ class Matrix {
   static std::mt19937 gen_;
 };
 
-#endif  // MULTILAYER_PERCEPTRON_CPP_QT_MATRIX_H
+#endif // MULTILAYER_PERCEPTRON_CPP_QT_MATRIX_H

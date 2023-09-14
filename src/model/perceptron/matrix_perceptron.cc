@@ -52,10 +52,39 @@ void MatrixPerceptron::InitNeuronNetwork() {
 }
 
 void MatrixPerceptron::SetActivationFunction(
-    std::unique_ptr<IActivationFunction> function) {
+    std::unique_ptr<IActivationFunction>& function) {
   activation_function_ = std::move(function);
 }
 
 void MatrixPerceptron::SetTrainDataset(Dataset& dataset) { dataset_ = dataset; }
 
 void MatrixPerceptron::Train(int epochs) {}
+
+int MatrixPerceptron::ForwardFeed() {
+  for (int i = 0; i < number_of_layers_ - 1; ++i) {
+    Matrix::MultiplyByVector(weights_[i], neuron_values_[i],
+                             neuron_values_[i + 1]);
+    activation_function_->Activate(neuron_values_[i + 1]);
+  }
+  return FindMaxIndex(neuron_values_[number_of_layers_ - 1]);
+}
+
+int MatrixPerceptron::FindMaxIndex(const std::vector<double>& vector) {
+  if (vector.empty()) return 0;
+
+  int max_index = 0;
+  for (int i = 0; i < vector.size(); ++i) {
+    if (vector[i] >= vector[max_index]) {
+      max_index = i;
+    }
+  }
+  return max_index;
+}
+
+void MatrixPerceptron::SetInputLayer(const Picture& picture) {
+  if (picture.GetSize() != neuron_values_[0].size()) {
+    throw std::runtime_error("Invalid picture for input layer!");
+  }
+
+  neuron_values_[0] = picture.GetData();
+}
