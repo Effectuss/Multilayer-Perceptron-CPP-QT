@@ -3,6 +3,7 @@
 
 #include <iostream>
 
+#include "dataset.h"
 #include "i_activation_function.h"
 #include "picture.h"
 
@@ -18,10 +19,10 @@ class IPerceptron {
   virtual void SetTrainDataset(Dataset &dataset) = 0;
   virtual void SetTestDataset(Dataset &dataset) = 0;
   virtual void SetActivationFunction(
-      IActivationFunction activationFunction) = 0;
+      std::unique_ptr<IActivationFunction> function) = 0;
 
   virtual int Predict(Picture &picture) = 0;
-  virtual void Train(std::size_t epochs) = 0;
+  virtual void Train(int epochs) = 0;
   virtual void CrossValidation(std::size_t groups) = 0;
 
   virtual void LoadWeights(const std::istream &istream) = 0;

@@ -1,5 +1,7 @@
 #include <iostream>
 
-#include "./parser/parser.h"
+#include "parser.h"
 
-int main() { return 1; }
+int main() {
+  return 1;
+}
