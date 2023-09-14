@@ -13,4 +13,5 @@ void Picture::SetData(const std::vector<double> &data) {
 
   data_ = data;
 }
+
 std::size_t Picture::GetSize() const { return data_.size(); }
