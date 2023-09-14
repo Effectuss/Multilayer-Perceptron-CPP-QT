@@ -9,14 +9,15 @@ Matrix::Matrix(int rows, int cols) : rows_(rows), cols_(cols) {
   if (!IsCorrectIndex(rows, cols)) {
     throw std::invalid_argument("Incorrect size for matrix");
   }
+
   matrix_ = std::vector(rows, std::vector<double>(cols));
 }
 
-int Matrix::GetRows() const { return rows_; }
+std::size_t Matrix::GetRows() const { return rows_; }
 
-int Matrix::GetCols() const { return cols_; }
+std::size_t Matrix::GetCols() const { return cols_; }
 
-double &Matrix::operator()(int index_i, int index_j) {
+double &Matrix::operator()(std::size_t index_i, std::size_t index_j) {
   if (index_i >= rows_ || index_j >= cols_) {
     throw std::invalid_argument(
         "The indexes cannot be negative or bigger than amount of cols or "
@@ -25,7 +26,8 @@ double &Matrix::operator()(int index_i, int index_j) {
   return matrix_[index_i][index_j];
 }
 
-const double &Matrix::operator()(int index_i, int index_j) const {
+const double &Matrix::operator()(std::size_t index_i,
+                                 std::size_t index_j) const {
   if (index_i >= rows_ || index_j >= cols_) {
     throw std::invalid_argument(
         "The indexes cannot be negative or bigger than amount of cols or "
@@ -61,4 +63,11 @@ void Matrix::MultiplyByVector(const Matrix &matrix,
       vector_res[i] += matrix(i, j) * vector_column[j];
     }
   }
+}
+const std::vector<double> &Matrix::GetVectorByRows(std::size_t row) const {
+  if (row >= rows_) {
+    throw std::runtime_error("Incorrect number of row");
+  }
+
+  return matrix_[row];
 }

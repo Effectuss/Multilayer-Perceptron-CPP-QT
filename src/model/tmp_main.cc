@@ -7,21 +7,21 @@
 int main() {
   std::unique_ptr<IActivationFunction> sigmoid = std::make_unique<Sigmoid>();
 
-  Dataset dataset = Parser::ParseDataset(
-      "/opt/goinfre/englishk/Multilayer-Perceptron-CPP-QT/datasets/"
-      "emnist-letters/emnist-letters-test.csv");
+  Dataset dataset =
+      Parser::ParseDataset("/Users/englishk/Desktop/emnist-letters-train.csv");
+  Dataset train_dataset =
+      Parser::ParseDataset("/Users/englishk/Desktop/emnist-letters-test.csv");
 
-  MatrixPerceptron perceptron(2, 144);
+  MatrixPerceptron perceptron(3, 144);
 
   perceptron.SetTrainDataset(dataset);
   perceptron.SetActivationFunction(sigmoid);
 
-  perceptron.SetInputLayer(dataset.GetData()[0].first);
+  for (int i = 0; i < 5; ++i) {
+    perceptron.Train(1);
+    double r_p = perceptron.TestMatrixPerceptron(train_dataset);
+    std::cout << "AFTER TEST: " << r_p << "%" << std::endl;
+  }
 
-  perceptron.PrintInputLayer();
-
-  perceptron.ForwardFeed();
-
-  perceptron.PrintOutLayer();
   return 1;
 }

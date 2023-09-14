@@ -95,9 +95,11 @@ void MatrixPerceptron::Train(int epochs) {
       SetInputLayer(dataset_.GetData()[i].first);
       std::size_t max_index = ForwardFeed();
       int expect_value = dataset_.GetData()[i].second - 1;
+      BackPropagation(expect_value);
     }
   }
 }
+
 void MatrixPerceptron::BackPropagation(std::size_t expect_index) {
   for (std::size_t layer_in = number_of_layers_ - 1; layer_in != 0;
        --layer_in) {
@@ -105,12 +107,20 @@ void MatrixPerceptron::BackPropagation(std::size_t expect_index) {
          ++neuron_in) {
       double error = 0.0;
       if (layer_in == number_of_layers_ - 1) {
-
         error = CalculateOutputLayerError(neuron_in, expect_index);
-
       } else {
+        for (std::size_t neuron_right = 0;
+             neuron_right < delta_weight_[layer_in + 1].size();
+             ++neuron_right) {
+          error += delta_weight_[layer_in + 1][neuron_right] *
+                   weights_[layer_in + 1](neuron_right, neuron_in);
+        }
       }
       neuron_errors_[layer_in][neuron_in] = error;
+      double delta_weight = error * activation_function_->Derivative(
+                                        neuron_values_[layer_in][neuron_in]);
+      delta_weight_[layer_in][neuron_in] = delta_weight;
+      UpdateWeights(layer_in, neuron_in, delta_weight);
     }
   }
 }
@@ -120,13 +130,38 @@ double MatrixPerceptron::CalculateOutputLayerError(double neuron_value,
   return -neuron_value * (1.0 - neuron_value) * (target - neuron_value);
 }
 
-double MatrixPerceptron::CalculateOutputLayerError(std::size_t neuron_index,
-                                                   std::size_t expect_index) {
-  if (expect_index == neuron_index) {
+double MatrixPerceptron::CalculateOutputLayerError(std::size_t neuron_in,
+                                                   std::size_t expect_in) {
+  if (expect_in == neuron_in) {
     return CalculateOutputLayerError(
-        neuron_values_[number_of_layers_ - 1][neuron_index], 1.0);
+        neuron_values_[number_of_layers_ - 1][neuron_in], 1.0);
   } else {
     return CalculateOutputLayerError(
-        neuron_values_[number_of_layers_ - 1][neuron_index], 0.0);
+        neuron_values_[number_of_layers_ - 1][neuron_in], 0.0);
   }
+}
+
+void MatrixPerceptron::UpdateWeights(std::size_t layer_in,
+                                     std::size_t neuron_in,
+                                     double delta_weight) {
+  for (std::size_t weight_in = 0;
+       weight_in < weights_[layer_in].GetVectorByRows(neuron_in).size();
+       ++weight_in) {
+    weights_[layer_in](neuron_in, weight_in) =
+        weights_[layer_in](neuron_in, weight_in) -
+        neuron_values_[layer_in - 1][weight_in] * delta_weight * kLearningRate;
+  }
+}
+
+double MatrixPerceptron::TestMatrixPerceptron(const Dataset &test_dataset) {
+  int right_answer = 0;
+  for (std::size_t i = 0; i < test_dataset.GetDataSize(); ++i) {
+    SetInputLayer(test_dataset.GetData()[i].first);
+    std::size_t max_index = ForwardFeed();
+    if (max_index == test_dataset.GetData()[i].second - 1) {
+      ++right_answer;
+    }
+  }
+
+  return (double)right_answer / (double)dataset_.GetDataSize() * 100.0;
 }

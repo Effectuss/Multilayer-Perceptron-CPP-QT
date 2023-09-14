@@ -22,13 +22,13 @@ public:
 
   Matrix &operator=(Matrix &&other_matrix) = default;
 
-  [[nodiscard]] int GetRows() const;
+  [[nodiscard]] std::size_t GetRows() const;
 
-  [[nodiscard]] int GetCols() const;
+  [[nodiscard]] std::size_t GetCols() const;
 
-  double &operator()(int index_i, int index_j);
+  double &operator()(std::size_t index_i, std::size_t index_j);
 
-  const double &operator()(int index_i, int index_j) const;
+  const double &operator()(std::size_t index_i, std::size_t index_j) const;
 
   void FillMatrixRandomValues(double min_random_value = -1.0,
                               double max_random_value = 1.0);
@@ -37,11 +37,13 @@ public:
                                const std::vector<double> &vector_column,
                                std::vector<double> &vector_res);
 
+  [[nodiscard]] const std::vector<double>& GetVectorByRows(std::size_t row) const;
+
 private:
   static bool IsCorrectIndex(int, int);
 
-  int rows_{};
-  int cols_{};
+  std::size_t rows_{};
+  std::size_t cols_{};
   std::vector<std::vector<double>> matrix_;
 
   static std::random_device rd_;

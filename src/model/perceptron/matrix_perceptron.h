@@ -50,6 +50,8 @@ public:
     }
   }
 
+  double TestMatrixPerceptron(const Dataset& test_dataset);
+
 private:
   static constexpr int kMinAmountOfHiddenLayers{2};
   static constexpr int kMaxAmountOfHiddenLayers{5};
@@ -66,6 +68,8 @@ private:
   static double CalculateOutputLayerError(double neuron_value, double target);
   double CalculateOutputLayerError(std::size_t neuron_index,
                                    std::size_t expect_index);
+  void UpdateWeights(std::size_t layer_in, std::size_t neuron_in,
+                     double delta_weight);
 
   int number_of_layers_{2};
 
