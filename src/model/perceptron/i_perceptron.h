@@ -18,7 +18,7 @@ class IPerceptron {
   virtual void SetTrainDataset(Dataset &dataset) = 0;
   virtual void SetTestDataset(Dataset &dataset) = 0;
   virtual void SetActivationFunction(
-      IActivationFunction activationFunction) = 0;
+      IActivationFunction *activationFunction) = 0;
 
   virtual int Predict(Picture &picture) = 0;
   virtual void Train(std::size_t epochs) = 0;
