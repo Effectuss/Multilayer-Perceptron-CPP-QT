@@ -26,11 +26,13 @@ set(CMAKE_AUTOUIC_SEARCH_PATHS view/forms)
 
 set(SOURCES
     ${CMAKE_SOURCE_DIR}/controller/mainwindow.cc
-    ${CMAKE_SOURCE_DIR}/controller/drawarea.cc)
+    ${CMAKE_SOURCE_DIR}/controller/drawarea.cc
+    ${CMAKE_SOURCE_DIR}/model/imagetransformer.cc)
 
 set(HEADERS
     ${CMAKE_SOURCE_DIR}/controller/mainwindow.h
-    ${CMAKE_SOURCE_DIR}/controller/drawarea.h)
+    ${CMAKE_SOURCE_DIR}/controller/drawarea.h
+    ${CMAKE_SOURCE_DIR}/model/imagetransformer.h)
 
 set(UI_FORMS ${CMAKE_SOURCE_DIR}/view/forms/mainwindow.ui)
 
