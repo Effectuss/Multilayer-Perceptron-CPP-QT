@@ -16,9 +16,8 @@ class GraphPerceptron final : public IPerceptron {
 
   void SetTrainDataset(Dataset &dataset) override;
   void SetTestDataset(Dataset &dataset) override;
-  // todo: fix in perceptron base class
-  void SetActivationFunction(IActivationFunction activationFunction) override{};
-  void SetActivationFunction(IActivationFunction *activationFunction);
+  void SetActivationFunction(
+      std::unique_ptr<IActivationFunction> &activationFunction);
 
   int Predict(Picture &picture) override;
   void Train(std::size_t epochs) override;
@@ -62,7 +61,7 @@ class GraphPerceptron final : public IPerceptron {
 
   Dataset train_dataset_;
   Dataset test_dataset_;
-  IActivationFunction *activationFunction_;
+  std::unique_ptr<IActivationFunction> activationFunction_;
 };
 
 #endif  // GRAPH_PERCEPTRON_GRAPH_PERCEPTRON_H

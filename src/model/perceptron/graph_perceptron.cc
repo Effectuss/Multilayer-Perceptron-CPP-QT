@@ -32,8 +32,8 @@ void GraphPerceptron::SetTestDataset(Dataset &dataset) {
 }
 
 void GraphPerceptron::SetActivationFunction(
-    IActivationFunction *activationFunction) {
-  activationFunction_ = activationFunction;
+    std::unique_ptr<IActivationFunction> &activationFunction) {
+  activationFunction_ = std::move(activationFunction);
 }
 
 int GraphPerceptron::Predict(Picture &picture) {
