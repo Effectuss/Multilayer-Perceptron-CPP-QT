@@ -5,6 +5,8 @@
 
 #include <QMainWindow>
 
+#include "imagetransformer.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -18,18 +20,18 @@ class MainWindow : public QMainWindow {
   MainWindow(QWidget *parent = nullptr);
   ~MainWindow();
 
+ public slots:
+  void RecognizePattern();
+
  private slots:
   void on_clearButton_clicked();
-
- private slots:
   void on_penRadiusSpinbox_valueChanged(int arg1);
-
- private slots:
   void on_penRadiusSlider_valueChanged(int value);
 
  private:
   Ui::MainWindow *ui;
   DrawArea drawarea_;
+  ImageTransformer image_transformer_;
 };
 
 #endif  // MAINWINDOW_H

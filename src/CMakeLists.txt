@@ -18,21 +18,29 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 include_directories(
-  ${CMAKE_SOURCE_DIR}/view ${CMAKE_SOURCE_DIR}/model
-  ${CMAKE_SOURCE_DIR}/controller ${CMAKE_SOURCE_DIR}/view/forms
-  ${CMAKE_SOURCE_DIR}/view/mainwindow ${CMAKE_SOURCE_DIR}/view/drawarea)
+  ${CMAKE_SOURCE_DIR}/view
+  ${CMAKE_SOURCE_DIR}/model
+  ${CMAKE_SOURCE_DIR}/model/data
+  ${CMAKE_SOURCE_DIR}/controller
+  ${CMAKE_SOURCE_DIR}/view/forms
+  ${CMAKE_SOURCE_DIR}/view/mainwindow
+  ${CMAKE_SOURCE_DIR}/view/drawarea)
 
 set(CMAKE_AUTOUIC_SEARCH_PATHS view/forms)
 
 set(SOURCES
     ${CMAKE_SOURCE_DIR}/controller/mainwindow.cc
     ${CMAKE_SOURCE_DIR}/controller/drawarea.cc
-    ${CMAKE_SOURCE_DIR}/model/imagetransformer.cc)
+    ${CMAKE_SOURCE_DIR}/model/imagetransformer.cc
+    ${CMAKE_SOURCE_DIR}/model/data/picture.cc
+    ${CMAKE_SOURCE_DIR}/view/customgraphicsview.cc)
 
 set(HEADERS
     ${CMAKE_SOURCE_DIR}/controller/mainwindow.h
     ${CMAKE_SOURCE_DIR}/controller/drawarea.h
-    ${CMAKE_SOURCE_DIR}/model/imagetransformer.h)
+    ${CMAKE_SOURCE_DIR}/model/imagetransformer.h
+    ${CMAKE_SOURCE_DIR}/model/data/picture.h
+    ${CMAKE_SOURCE_DIR}/view/customgraphicsview.h)
 
 set(UI_FORMS ${CMAKE_SOURCE_DIR}/view/forms/mainwindow.ui)
 

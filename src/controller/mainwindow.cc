@@ -3,19 +3,23 @@
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow) {
+    : QMainWindow(parent),
+      ui(new Ui::MainWindow),
+      image_transformer_({28, 28}, ImageTransformer::RotationSide::kWest,
+                         ImageTransformer::Invertion::kVertical) {
   ui->setupUi(this);
   drawarea_.SetPenRadius(ui->penRadiusSlider->value());
   ui->penRadiusSpinbox->setRange(ui->penRadiusSlider->minimum(),
                                  ui->penRadiusSlider->maximum());
   ui->penRadiusSpinbox->setValue(ui->penRadiusSlider->value());
   ui->drawAreaView->setScene(&drawarea_);
-  //  ui->drawAreaView->setSceneRect(ui->drawAreaView->rect());
-  //  ui->drawAreaView->setBackgroundBrush(QBrush(Qt::white));
-  qDebug() << ui->drawAreaView->rect();
+  connect(ui->drawAreaView, &CustomGraphicsView::MouseReleasedSignal, this,
+          &MainWindow::RecognizePattern);
 }
 
 MainWindow::~MainWindow() { delete ui; }
+
+void MainWindow::RecognizePattern() { qDebug() << "Emitted!"; }
 
 void MainWindow::on_penRadiusSlider_valueChanged(int value) {
   drawarea_.SetPenRadius(value);

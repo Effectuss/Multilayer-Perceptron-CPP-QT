@@ -31,9 +31,7 @@ void DrawArea::mouseMoveEvent(QGraphicsSceneMouseEvent* event) {
 }
 
 void DrawArea::mouseReleaseEvent(QGraphicsSceneMouseEvent* event) {
-  if (event->buttons().testFlag(Qt::NoButton)) {
-    cleared_ = false;
-  }
+  if (event->buttons().testFlag(Qt::NoButton)) cleared_ = false;
 }
 
 void DrawArea::DrawCircle(const QPointF& point, const QColor& color) {

@@ -26,7 +26,7 @@
      <x>0</x>
      <y>0</y>
      <width>1305</width>
-     <height>24</height>
+     <height>19</height>
     </rect>
    </property>
   </widget>
@@ -111,7 +111,7 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
-          <widget class="QGraphicsView" name="drawAreaView">
+          <widget class="CustomGraphicsView" name="drawAreaView">
            <property name="minimumSize">
             <size>
              <width>512</width>
@@ -123,6 +123,12 @@
              <width>512</width>
              <height>512</height>
             </size>
+           </property>
+           <property name="frameShape">
+            <enum>QFrame::NoFrame</enum>
+           </property>
+           <property name="lineWidth">
+            <number>0</number>
            </property>
            <property name="verticalScrollBarPolicy">
             <enum>Qt::ScrollBarAlwaysOff</enum>
@@ -266,6 +272,13 @@
    </widget>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>CustomGraphicsView</class>
+   <extends>QGraphicsView</extends>
+   <header>customgraphicsview.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
