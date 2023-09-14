@@ -2,7 +2,9 @@
 #define MULTILAYER_PERCEPTRON_CPP_QT_IPERCEPTRON_H
 
 #include <iostream>
+#include <memory>
 
+#include "dataset.h"
 #include "i_activation_function.h"
 #include "picture.h"
 
@@ -18,7 +20,7 @@ class IPerceptron {
   virtual void SetTrainDataset(Dataset &dataset) = 0;
   virtual void SetTestDataset(Dataset &dataset) = 0;
   virtual void SetActivationFunction(
-      IActivationFunction *activationFunction) = 0;
+      std::unique_ptr<IActivationFunction> activationFunction) = 0;
 
   virtual int Predict(Picture &picture) = 0;
   virtual void Train(std::size_t epochs) = 0;
