@@ -3,21 +3,29 @@
 
 #include <iostream>
 
+#include "i_activation_function.h"
 #include "picture.h"
 
 class IPerceptron {
  public:
-  // вот такой конструктор в своем прецептроне в интерфейсе не надо
-  //  MatrixPerceptron(Dataset, Mapping, int hidden_layers_count,
-  //                   int size_hidden_layers);
-  virtual ~IPerceptron() = 0;
+  virtual ~IPerceptron() = default;
 
-  virtual int Predict(Picture picture) = 0;
-  virtual void Train(int epochs) = 0;
-  virtual void LoadWeights(const std::istream &) = 0;
-  virtual void ExportWeights(const std::ostream &) = 0;
+  virtual void Configure(std::size_t input_layer_size,
+                         std::size_t output_layer_size,
+                         std::size_t hidden_layers_count,
+                         std::size_t hidden_layers_size) = 0;
+
+  virtual void SetTrainDataset(Dataset &dataset) = 0;
+  virtual void SetTestDataset(Dataset &dataset) = 0;
+  virtual void SetActivationFunction(
+      IActivationFunction activationFunction) = 0;
+
+  virtual int Predict(Picture &picture) = 0;
+  virtual void Train(std::size_t epochs) = 0;
+  virtual void CrossValidation(std::size_t groups) = 0;
+
+  virtual void LoadWeights(const std::istream &istream) = 0;
+  virtual void ExportWeights(const std::ostream &ostream) = 0;
 };
-
-inline IPerceptron::~IPerceptron() {}
 
 #endif  // MULTILAYER_PERCEPTRON_CPP_QT_IPERCEPTRON_H
