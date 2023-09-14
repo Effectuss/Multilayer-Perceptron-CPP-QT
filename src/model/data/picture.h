@@ -6,6 +6,8 @@
 class Picture {
  public:
   Picture();
+  explicit Picture(const std::vector<double> &data);
+  explicit Picture(std::vector<double> &&data);
 
   [[nodiscard]] const std::vector<double> &GetData() const;
   void SetData(const std::vector<double> &);
