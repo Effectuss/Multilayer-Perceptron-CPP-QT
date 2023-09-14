@@ -101,12 +101,12 @@ void MatrixPerceptron::Train(int epochs) {
 }
 
 void MatrixPerceptron::BackPropagation(std::size_t expect_index) {
-  for (std::size_t layer_in = number_of_layers_ - 1; layer_in != 0;
+  for (std::size_t layer_in = number_of_layers_ - 2; layer_in != 0;
        --layer_in) {
     for (std::size_t neuron_in = 0; neuron_in < neuron_errors_[layer_in].size();
          ++neuron_in) {
       double error = 0.0;
-      if (layer_in == number_of_layers_ - 1) {
+      if (layer_in == number_of_layers_ - 2) {
         error = CalculateOutputLayerError(neuron_in, expect_index);
       } else {
         for (std::size_t neuron_right = 0;
@@ -144,6 +144,8 @@ double MatrixPerceptron::CalculateOutputLayerError(std::size_t neuron_in,
 void MatrixPerceptron::UpdateWeights(std::size_t layer_in,
                                      std::size_t neuron_in,
                                      double delta_weight) {
+  std::cout << weights_[layer_in].GetVectorByRows(neuron_in).size() << std::endl;
+
   for (std::size_t weight_in = 0;
        weight_in < weights_[layer_in].GetVectorByRows(neuron_in).size();
        ++weight_in) {
