@@ -6,22 +6,22 @@
 #include <iomanip>
 
 class MatrixPerceptron : public IPerceptron {
- public:
+public:
   MatrixPerceptron(int hidden_layers_count, int size_hidden_layers);
 
-  void SetInputLayer(const Picture& picture);
-  void SetTrainDataset(Dataset& dataset) override;
+  void SetInputLayer(const Picture &picture);
+  void SetTrainDataset(Dataset &dataset) override;
   void SetActivationFunction(
-      std::unique_ptr<IActivationFunction>& function) override;
+      std::unique_ptr<IActivationFunction> &function) override;
 
   void Train(int epochs) override;
 
   // todo move to private
-  int ForwardFeed();
+  std::size_t ForwardFeed();
 
   // todo delete debug method
   inline void PrintOutLayer() {
-    for (const auto& el : neuron_values_[number_of_layers_ - 1]) {
+    for (const auto &el : neuron_values_[number_of_layers_ - 1]) {
       std::cout << el << std::endl;
     }
   }
@@ -35,7 +35,7 @@ class MatrixPerceptron : public IPerceptron {
     }
     std::cout << "\n======================================================"
               << std::endl;
-    for (const auto& size : neuron_values_) {
+    for (const auto &size : neuron_values_) {
       std::cout << "Size :" << size.size() << std::endl;
     }
   }
@@ -50,9 +50,10 @@ class MatrixPerceptron : public IPerceptron {
     }
   }
 
- private:
+private:
   static constexpr int kMinAmountOfHiddenLayers{2};
   static constexpr int kMaxAmountOfHiddenLayers{5};
+  static constexpr double kLearningRate{0.1};
 
   static bool IsValidDataForPerceptron(int, int);
 
@@ -60,7 +61,11 @@ class MatrixPerceptron : public IPerceptron {
   void InitNeuronNetwork();
   void InitSizeLayers(int);
 
-  static int FindMaxIndex(const std::vector<double>& vector);
+  static std::size_t FindMaxIndex(const std::vector<double> &vector);
+  void BackPropagation(std::size_t expect_index);
+  static double CalculateOutputLayerError(double neuron_value, double target);
+  double CalculateOutputLayerError(std::size_t neuron_index,
+                                   std::size_t expect_index);
 
   int number_of_layers_{2};
 
@@ -75,4 +80,4 @@ class MatrixPerceptron : public IPerceptron {
   std::vector<Matrix> weights_;
 };
 
-#endif  // MULTILAYER_PERCEPTRON_CPP_QT_MATRIX_PERCEPTRON_H
+#endif // MULTILAYER_PERCEPTRON_CPP_QT_MATRIX_PERCEPTRON_H
