@@ -35,10 +35,10 @@ void MatrixPerceptron::InitSizeLayers(int size_hidden) {
 }
 
 void MatrixPerceptron::InitRandomWeights() {
-  weights_.resize(number_of_layers_ - 1);
+  weights_.resize(number_of_layers_);
 
-  for (int i = 0; i < number_of_layers_ - 1; ++i) {
-    weights_[i] = std::move(Matrix(size_layers_[i + 1], size_layers_[i]));
+  for (int i = 1; i < number_of_layers_; ++i) {
+    weights_[i] = std::move(Matrix(size_layers_[i], size_layers_[i - 1]));
     weights_[i].FillMatrixRandomValues();
   }
 }
@@ -59,10 +59,10 @@ void MatrixPerceptron::SetActivationFunction(
 void MatrixPerceptron::SetTrainDataset(Dataset &dataset) { dataset_ = dataset; }
 
 std::size_t MatrixPerceptron::ForwardFeed() {
-  for (int i = 0; i < number_of_layers_ - 1; ++i) {
-    Matrix::MultiplyByVector(weights_[i], neuron_values_[i],
-                             neuron_values_[i + 1]);
-    activation_function_->Activate(neuron_values_[i + 1]);
+  for (int i = 1; i < number_of_layers_; ++i) {
+    Matrix::MultiplyByVector(weights_[i], neuron_values_[i - 1],
+                             neuron_values_[i]);
+    activation_function_->Activate(neuron_values_[i]);
   }
   return FindMaxIndex(neuron_values_[number_of_layers_ - 1]);
 }
@@ -101,12 +101,12 @@ void MatrixPerceptron::Train(int epochs) {
 }
 
 void MatrixPerceptron::BackPropagation(std::size_t expect_index) {
-  for (std::size_t layer_in = number_of_layers_ - 2; layer_in != 0;
+  for (std::size_t layer_in = number_of_layers_ - 1; layer_in != 0;
        --layer_in) {
     for (std::size_t neuron_in = 0; neuron_in < neuron_errors_[layer_in].size();
          ++neuron_in) {
       double error = 0.0;
-      if (layer_in == number_of_layers_ - 2) {
+      if (layer_in == number_of_layers_ - 1) {
         error = CalculateOutputLayerError(neuron_in, expect_index);
       } else {
         for (std::size_t neuron_right = 0;
@@ -116,9 +116,12 @@ void MatrixPerceptron::BackPropagation(std::size_t expect_index) {
                    weights_[layer_in + 1](neuron_right, neuron_in);
         }
       }
+
       neuron_errors_[layer_in][neuron_in] = error;
+
       double delta_weight = error * activation_function_->Derivative(
                                         neuron_values_[layer_in][neuron_in]);
+
       delta_weight_[layer_in][neuron_in] = delta_weight;
       UpdateWeights(layer_in, neuron_in, delta_weight);
     }
@@ -144,7 +147,6 @@ double MatrixPerceptron::CalculateOutputLayerError(std::size_t neuron_in,
 void MatrixPerceptron::UpdateWeights(std::size_t layer_in,
                                      std::size_t neuron_in,
                                      double delta_weight) {
-  std::cout << weights_[layer_in].GetVectorByRows(neuron_in).size() << std::endl;
 
   for (std::size_t weight_in = 0;
        weight_in < weights_[layer_in].GetVectorByRows(neuron_in).size();

@@ -17,7 +17,7 @@ int main() {
   perceptron.SetTrainDataset(dataset);
   perceptron.SetActivationFunction(sigmoid);
 
-//  for (int i = 0; i < 5; ++i) {
+//  for (int i = 0; i < 7; ++i) {
     perceptron.Train(1);
 //    double r_p = perceptron.TestMatrixPerceptron(train_dataset);
 //    std::cout << "AFTER TEST: " << r_p << "%" << std::endl;
