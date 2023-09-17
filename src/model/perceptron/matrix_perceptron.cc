@@ -111,18 +111,6 @@ void MatrixPerceptron::BackPropagation(int expect) {
           (1.0 - neuron_values_[size_l - 1][i]) *
           activation_function_->Derivative(neuron_values_[size_l - 1][i]);
     }
-    // new method
-    //    if (i == expect) {
-    //      neuron_errors_[size_l - 1][i] = neuron_values_[size_l - 1][i] *
-    //                                      (1.0 - neuron_values_[size_l -
-    //                                      1][i]) * (1.0 -
-    //                                      neuron_values_[size_l - 1][i]);
-    //    } else {
-    //      neuron_errors_[size_l - 1][i] = neuron_values_[size_l - 1][i] *
-    //                                      (1.0 - neuron_values_[size_l -
-    //                                      1][i]) * (0.0 -
-    //                                      neuron_values_[size_l - 1][i]);
-    //    }
   }
 
   for (int k = number_of_layers_ - 2; k > 0; --k) {
@@ -202,19 +190,21 @@ void MatrixPerceptron::Train(int num_epochs) {
   int epoch = 1;
   while (epoch <= num_epochs) {
     int line = static_cast<int>(dataset_->GetDataSize());
-    double curr_lr = 0.1;
+//    double curr_lr = kStartLearningRate * std::exp(-epoch_ / 20.0);
+    double curr_lr = kStartLearningRate * std::exp(-kDecayRate / epoch_);
+    std::cout << "Curr lr: " << curr_lr << std::endl;
     for (int i = 0; i < line; ++i) {
       SetInput(dataset_->GetData()[i].first);
-//      int max_index =
-          ForwardFeed();
+      int max_index = ForwardFeed();
       int expect_value = dataset_->GetData()[i].second - 1;
-//      if (max_index != expect_value) {
+      if (max_index != expect_value) {
         BackPropagation(expect_value);
         UpdateWeights(curr_lr);
         UpdateBiases(curr_lr);
-//      }
+      }
     }
     ++epoch;
+    ++epoch_;
   }
 }
 

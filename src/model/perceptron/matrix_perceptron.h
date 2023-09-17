@@ -67,13 +67,13 @@ class MatrixPerceptron final : public IPerceptron {
   static constexpr int kMinAmountOfHiddenLayers{2};
   static constexpr int kMaxAmountOfHiddenLayers{5};
   static constexpr double kStartLearningRate{0.15};
-
+  static constexpr double kDecayRate{0.1};
   Dataset *dataset_;
   Mapping *mapping_;
   std::unique_ptr<IActivationFunction> activation_function_;
 
   int number_of_layers_{2};
-
+  int epoch_ = 1;
   std::vector<int> size_layers_;
   std::vector<Matrix> weights_;
   std::vector<std::vector<double> > neuron_values_;
