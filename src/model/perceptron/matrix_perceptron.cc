@@ -91,6 +91,8 @@ void MatrixPerceptron::SetInputLayer(const Picture &picture) {
 void MatrixPerceptron::Train(int epochs) {
   while (epochs--) {
     int ra = 0;
+    double curr_lr = kLearningRate * std::exp(-kDecayRate * epoch_);
+    std::cout << curr_lr << std::endl;
     int dataset_size = static_cast<int>(dataset_.GetDataSize());
     for (int i = 0; i < dataset_size; ++i) {
       SetInputLayer(dataset_.GetData()[i].first);
@@ -103,6 +105,7 @@ void MatrixPerceptron::Train(int epochs) {
     }
     std::cout << "After one epoch: "
               << (double)ra / (double)dataset_.GetDataSize() * 100.0;
+    ++epoch_;
   }
 }
 

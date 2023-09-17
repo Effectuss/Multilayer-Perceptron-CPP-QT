@@ -63,9 +63,11 @@ public:
 private:
   static constexpr int kMinAmountOfHiddenLayers{2};
   static constexpr int kMaxAmountOfHiddenLayers{5};
-  static constexpr double kLearningRate{0.1};
+  static constexpr double kLearningRate{0.14};
+  static constexpr double kDecayRate{0.1};
 
   static bool IsValidDataForPerceptron(int, int);
+  int epoch_ = 1;
 
   void InitRandomWeights();
   void InitNeuronNetwork();
