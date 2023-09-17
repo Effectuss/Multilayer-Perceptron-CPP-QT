@@ -21,7 +21,7 @@ int main() {
   Dataset test_data =
       Parser::ParseDataset("/Users/englishk/Desktop/emnist-letters-test.csv");
 
-  for (int i = 0; i < 5; ++i) {
+  for (int i = 0; i < 10; ++i) {
     perceptron.Train(1);
     double right = perceptron.TestMatrixPerceptron(test_data);
     std::cout << "FINAL RESULT: " << right << "%" << std::endl;

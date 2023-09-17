@@ -205,13 +205,14 @@ void MatrixPerceptron::Train(int num_epochs) {
     double curr_lr = 0.1;
     for (int i = 0; i < line; ++i) {
       SetInput(dataset_->GetData()[i].first);
-      int max_index = ForwardFeed();
+//      int max_index =
+          ForwardFeed();
       int expect_value = dataset_->GetData()[i].second - 1;
-      if (max_index != expect_value) {
+//      if (max_index != expect_value) {
         BackPropagation(expect_value);
         UpdateWeights(curr_lr);
         UpdateBiases(curr_lr);
-      }
+//      }
     }
     ++epoch;
   }
@@ -227,9 +228,5 @@ double MatrixPerceptron::TestMatrixPerceptron(const Dataset& test_dataset) {
     }
   }
 
-  std::cout << "TEST right answer: "
-            << (double)right_answer / (double)dataset_->GetDataSize() * 100.0
-            << std::endl;
-
-  return (double)right_answer / (double)dataset_->GetDataSize() * 100.0;
+  return (double)right_answer / (double)test_dataset.GetDataSize() * 100.0;
 }
