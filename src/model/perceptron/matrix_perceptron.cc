@@ -90,13 +90,19 @@ void MatrixPerceptron::SetInputLayer(const Picture &picture) {
 
 void MatrixPerceptron::Train(int epochs) {
   while (epochs--) {
+    int ra = 0;
     int dataset_size = static_cast<int>(dataset_.GetDataSize());
     for (int i = 0; i < dataset_size; ++i) {
       SetInputLayer(dataset_.GetData()[i].first);
       std::size_t max_index = ForwardFeed();
       int expect_value = dataset_.GetData()[i].second - 1;
       BackPropagation(expect_value);
+      if (max_index == expect_value) {
+        ++ra;
+      }
     }
+    std::cout << "After one epoch: "
+              << (double)ra / (double)dataset_.GetDataSize() * 100.0;
   }
 }
 
@@ -121,7 +127,6 @@ void MatrixPerceptron::BackPropagation(std::size_t expect_index) {
 
       double delta_weight = error * activation_function_->Derivative(
                                         neuron_values_[layer_in][neuron_in]);
-
       delta_weight_[layer_in][neuron_in] = delta_weight;
       UpdateWeights(layer_in, neuron_in, delta_weight);
     }
@@ -130,7 +135,7 @@ void MatrixPerceptron::BackPropagation(std::size_t expect_index) {
 
 double MatrixPerceptron::CalculateOutputLayerError(double neuron_value,
                                                    double target) {
-  return -neuron_value * (1.0 - neuron_value) * (target - neuron_value);
+  return neuron_value - target;
 }
 
 double MatrixPerceptron::CalculateOutputLayerError(std::size_t neuron_in,
@@ -147,7 +152,6 @@ double MatrixPerceptron::CalculateOutputLayerError(std::size_t neuron_in,
 void MatrixPerceptron::UpdateWeights(std::size_t layer_in,
                                      std::size_t neuron_in,
                                      double delta_weight) {
-
   for (std::size_t weight_in = 0;
        weight_in < weights_[layer_in].GetVectorByRows(neuron_in).size();
        ++weight_in) {
@@ -167,5 +171,5 @@ double MatrixPerceptron::TestMatrixPerceptron(const Dataset &test_dataset) {
     }
   }
 
-  return (double)right_answer / (double)dataset_.GetDataSize() * 100.0;
+  return (double)right_answer / (double)test_dataset.GetDataSize() * 100.0;
 }

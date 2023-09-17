@@ -22,8 +22,9 @@ public:
   // todo delete debug method
   inline void PrintOutLayer() {
     for (const auto &el : neuron_values_[number_of_layers_ - 1]) {
-      std::cout << el << std::endl;
+      std::cout << el << " ";
     }
+    std::cout << std::endl;
   }
 
   void PrintPerceptronSetting() {
@@ -50,7 +51,14 @@ public:
     }
   }
 
-  double TestMatrixPerceptron(const Dataset& test_dataset);
+  inline void PrintErrorOutLayer() {
+    for (const auto &el : neuron_errors_[number_of_layers_ - 1]) {
+      std::cout << el << " ";
+    }
+    std::cout << std::endl;
+  }
+
+  double TestMatrixPerceptron(const Dataset &test_dataset);
 
 private:
   static constexpr int kMinAmountOfHiddenLayers{2};
