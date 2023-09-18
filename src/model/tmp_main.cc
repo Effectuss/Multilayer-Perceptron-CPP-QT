@@ -7,11 +7,6 @@
 int main() {
   std::unique_ptr<IActivationFunction> sigmoid = std::make_unique<Sigmoid>();
 
-  //  Dataset dataset = Parser::ParseDataset(
-  //      "/Users/englishk/Desktop/emnist-letters-test copy.csv");
-  //  Dataset train_dataset = Parser::ParseDataset(
-  //      "/Users/englishk/Desktop/emnist-letters-test copy.csv");
-
   Dataset dataset =
       Parser::ParseDataset("/Users/englishk/Desktop/emnist-letters-train.csv");
   Dataset train_dataset =

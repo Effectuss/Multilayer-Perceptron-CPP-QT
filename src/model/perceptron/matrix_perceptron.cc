@@ -1,5 +1,5 @@
 #include "matrix_perceptron.h"
-
+#include <chrono>
 bool MatrixPerceptron::IsValidDataForPerceptron(int hidden_layers_count,
                                                 int size_hidden_layers) {
   return (hidden_layers_count <= kMaxAmountOfHiddenLayers &&
@@ -90,6 +90,8 @@ void MatrixPerceptron::SetInputLayer(const Picture &picture) {
 
 void MatrixPerceptron::Train(int epochs) {
   while (epochs--) {
+    // todo delete time
+    auto start = std::chrono::high_resolution_clock::now();
     int ra = 0;
     double curr_lr = kLearningRate * std::exp(-kDecayRate * epoch_);
     std::cout << curr_lr << std::endl;
@@ -103,8 +105,14 @@ void MatrixPerceptron::Train(int epochs) {
         ++ra;
       }
     }
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> duration = end - start;
     std::cout << "After one epoch: "
-              << (double)ra / (double)dataset_.GetDataSize() * 100.0;
+              << (double)ra / (double)dataset_.GetDataSize() * 100.0
+              << std::endl;
+    std::cout << "Time execute one epoch: " << duration.count() << " sec"
+              << std::endl;
+    // todo delete
     ++epoch_;
   }
 }
@@ -176,3 +184,9 @@ double MatrixPerceptron::TestMatrixPerceptron(const Dataset &test_dataset) {
 
   return (double)right_answer / (double)test_dataset.GetDataSize() * 100.0;
 }
+
+void MatrixPerceptron::ExportWeights(const std::string &file_path) {
+
+}
+
+void MatrixPerceptron::LoadWeights(const std::string &file_path) {}

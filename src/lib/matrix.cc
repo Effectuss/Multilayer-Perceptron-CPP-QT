@@ -48,6 +48,7 @@ void Matrix::FillMatrixRandomValues(double min_random_value,
                   std::generate(inner_vec.begin(), inner_vec.end(), generate);
                 });
 }
+
 void Matrix::MultiplyByVector(const Matrix &matrix,
                               const std::vector<double> &vector_column,
                               std::vector<double> &vector_res) {
@@ -55,15 +56,16 @@ void Matrix::MultiplyByVector(const Matrix &matrix,
     throw std::invalid_argument("Error multiply!");
   }
 
-  int row = matrix.GetRows();
-  int cols = matrix.GetCols();
+  std::size_t row = matrix.GetRows();
+  std::size_t cols = matrix.GetCols();
 
-  for (int i = 0; i < row; ++i) {
-    for (int j = 0; j < cols; ++j) {
+  for (std::size_t i = 0; i < row; ++i) {
+    for (std::size_t j = 0; j < cols; ++j) {
       vector_res[i] += matrix(i, j) * vector_column[j];
     }
   }
 }
+
 const std::vector<double> &Matrix::GetVectorByRows(std::size_t row) const {
   if (row >= rows_) {
     throw std::runtime_error("Incorrect number of row");
@@ -71,3 +73,4 @@ const std::vector<double> &Matrix::GetVectorByRows(std::size_t row) const {
 
   return matrix_[row];
 }
+

@@ -13,8 +13,10 @@ public:
   void SetTrainDataset(Dataset &dataset) override;
   void SetActivationFunction(
       std::unique_ptr<IActivationFunction> &function) override;
-
   void Train(int epochs) override;
+
+  void LoadWeights(const std::string &file_path);
+  void ExportWeights(const std::string &file_path);
 
   // todo move to private
   std::size_t ForwardFeed();
@@ -67,6 +69,7 @@ private:
   static constexpr double kDecayRate{0.1};
 
   static bool IsValidDataForPerceptron(int, int);
+  // todo delete
   int epoch_ = 1;
 
   void InitRandomWeights();
