@@ -14,23 +14,20 @@ int main() {
 
   std::cout << "START" << std::endl;
 
-  MatrixPerceptron perceptron(&dataset, &mapping, 3, 144);
-  //
-  //  std::cout << dataset.GetDataSize() << std::endl;
+  MatrixPerceptron perceptron(&dataset, &mapping, 5, 70);
 
   Dataset test_data =
       Parser::ParseDataset("/Users/englishk/Desktop/emnist-letters-test.csv");
 
-  perceptron.LoadWeights(
-      "/opt/goinfre/englishk/Multilayer-Perceptron-CPP-QT/src/model/"
-      "20_epoch.txt");
-  //  for (int i = 0; i < 20; ++i) {
-  //    perceptron.Train(1);
+//  perceptron.LoadWeights(
+//      "/opt/goinfre/englishk/Multilayer-Perceptron-CPP-QT/src/model/"
+//      "20_epoch.txt");
+
+    for (int i = 0; i < 5; ++i) {
+      perceptron.Train(1);
       double right = perceptron.TestMatrixPerceptron(test_data);
       std::cout << "FINAL RESULT: " << right << "%" << std::endl;
-  //  }
-
-  //  perceptron.ExportWeights("20_epoch.txt");
+    }
 
   return 1;
 }

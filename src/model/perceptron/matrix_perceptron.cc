@@ -1,6 +1,7 @@
 #include "matrix_perceptron.h"
 
 #include <algorithm>
+#include <chrono>
 #include <fstream>
 #include <utility>
 
@@ -189,22 +190,24 @@ void MatrixPerceptron::ExportWeights(const std::string& file_path) {
 void MatrixPerceptron::Train(int num_epochs) {
   int epoch = 1;
   while (epoch <= num_epochs) {
+    auto start = std::chrono::high_resolution_clock::now();
     int line = static_cast<int>(dataset_->GetDataSize());
-//    double curr_lr = kStartLearningRate * std::exp(-epoch_ / 20.0);
-    double curr_lr = kStartLearningRate * std::exp(-kDecayRate / epoch_);
+    double curr_lr = kStartLearningRate * std::exp(-kDecayRate * epoch_);
     std::cout << "Curr lr: " << curr_lr << std::endl;
     for (int i = 0; i < line; ++i) {
       SetInput(dataset_->GetData()[i].first);
-      int max_index = ForwardFeed();
+      ForwardFeed();
       int expect_value = dataset_->GetData()[i].second - 1;
-      if (max_index != expect_value) {
         BackPropagation(expect_value);
         UpdateWeights(curr_lr);
         UpdateBiases(curr_lr);
-      }
     }
+    auto end = std::chrono::high_resolution_clock::now();
     ++epoch;
     ++epoch_;
+    std::chrono::duration<double> duration = end - start;
+    std::cout << "Time executing: " << duration.count() << " seconds"
+              << std::endl;
   }
 }
 

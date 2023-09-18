@@ -44,8 +44,8 @@ class Matrix {
                                               const std::vector<double> &,
                                               std::vector<double> &);
 
-  void FillMatrixRandomValues(double min_random_value = -1.0,
-                              double max_random_value = 1.0);
+  void FillMatrixRandomValues(double min_random_value = -0.5,
+                              double max_random_value = 0.5);
 
   Matrix operator*(const Matrix &) const;
 
