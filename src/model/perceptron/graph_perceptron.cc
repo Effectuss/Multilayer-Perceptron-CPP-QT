@@ -81,10 +81,7 @@ GraphPerceptron::Layer::Layer(int neuron_amount) {
 
 GraphPerceptron::Layer &GraphPerceptron::Layer::ConnectLayer(Layer &previous) {
   for (auto &neuron : neurons_) {
-    neuron.previous_neurons_.resize(previous.neurons_.size());
-    std::transform(previous.neurons_.begin(), previous.neurons_.end(),
-                   neuron.previous_neurons_.begin(),
-                   [](Neuron &n) { return &n; });
+    neuron.ConnectNeurons(previous.neurons_);
   }
 
   return *this;
@@ -92,19 +89,8 @@ GraphPerceptron::Layer &GraphPerceptron::Layer::ConnectLayer(Layer &previous) {
 
 // todo: "true" randomness
 GraphPerceptron::Layer &GraphPerceptron::Layer::GenerateWeights() {
-  double lower = -0.5;
-  double upper = 0.5;
-
-  std::uniform_real_distribution<double> dist(lower, upper);
-  static std::random_device rd_;
-  static std::mt19937 generator_;
-
   for (auto &neuron : neurons_) {
-    neuron.previous_neurons_weights_.resize(neuron.previous_neurons_.size());
-    std::transform(neuron.previous_neurons_weights_.begin(),
-                   neuron.previous_neurons_weights_.end(),
-                   neuron.previous_neurons_weights_.begin(),
-                   [&](double) { return dist(generator_); });
+    neuron.GenerateWeights();
   }
 
   return *this;
@@ -141,4 +127,28 @@ double GraphPerceptron::Layer::Neuron::CalculateValue() {
     sum += previous_neurons_weights_[i] * previous_neurons_[i]->value_;
   }
   return sum;
+}
+
+void GraphPerceptron::Layer::Neuron::ConnectNeurons(
+    std::vector<Neuron> &neurons) {
+  previous_neurons_.resize(previous_neurons_.size());
+
+  std::transform(neurons.begin(), neurons.end(), previous_neurons_.begin(),
+                 [](Neuron &n) { return &n; });
+}
+
+void GraphPerceptron::Layer::Neuron::GenerateWeights() {
+  double lower = -0.5;
+  double upper = 0.5;
+
+  std::uniform_real_distribution<double> dist(lower, upper);
+  static std::random_device rd_;
+  static std::mt19937 generator_;
+
+  previous_neurons_weights_.resize(previous_neurons_.size());
+
+  std::transform(previous_neurons_weights_.begin(),
+                 previous_neurons_weights_.end(),
+                 previous_neurons_weights_.begin(),
+                 [&](double) { return dist(generator_); });
 }

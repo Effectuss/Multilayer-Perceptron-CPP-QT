@@ -43,16 +43,15 @@ class GraphPerceptron final : public IPerceptron {
     std::vector<Neuron>::iterator end();
 
    private:
-    // friend class GraphPerceptron;
-
     class Neuron final {
      public:
       void SetValue(double value);
       double CalculateValue();
 
-     private:
-      friend class Layer;
+      void ConnectNeurons(std::vector<Neuron> &neurons);
+      void GenerateWeights();
 
+     private:
       double value_ = 0;
       double error_ = 0;
       double weights_delta_ = 0;
