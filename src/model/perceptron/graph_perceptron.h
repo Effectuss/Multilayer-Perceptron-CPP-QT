@@ -17,7 +17,7 @@ class GraphPerceptron final : public IPerceptron {
   void SetTrainDataset(Dataset &dataset) override;
   void SetTestDataset(Dataset &dataset) override;
   void SetActivationFunction(
-      std::unique_ptr<IActivationFunction> &activationFunction);
+      std::unique_ptr<IActivationFunction> &activationFunction) override;
 
   int Predict(Picture &picture) override;
   void Train(std::size_t epochs) override;
@@ -28,19 +28,28 @@ class GraphPerceptron final : public IPerceptron {
 
  private:
   class Layer final {
+   private:
+    class Neuron;
+
    public:
     Layer() = delete;
     explicit Layer(int neuron_amount);
 
     Layer &ConnectLayer(Layer &previous);
     Layer &GenerateWeights();
-    void SetPicture(Picture &picture);
+    void SetPicture(const Picture &picture);
+
+    std::vector<Neuron>::iterator begin();
+    std::vector<Neuron>::iterator end();
 
    private:
     // friend class GraphPerceptron;
 
     class Neuron final {
      public:
+      void SetValue(double value);
+      double CalculateValue();
+
      private:
       friend class Layer;
 
@@ -54,8 +63,8 @@ class GraphPerceptron final : public IPerceptron {
     std::vector<Neuron> neurons_;
   };
 
-  void FeedForward();
-  void PropagateBackwards();
+  void FeedForward(const Picture &picture);
+  void PropagateBackwards(std::size_t expected_index);
 
   std::vector<Layer> layers_;
 
