@@ -39,7 +39,6 @@ void GraphPerceptron::SetActivationFunction(
 
 int GraphPerceptron::Predict(Picture &picture) {
   FeedForward(picture);
-  // todo: return max value from last layer
   return 0;
 }
 
@@ -67,11 +66,21 @@ void GraphPerceptron::ExportWeights(const std::ostream &) {
 void GraphPerceptron::FeedForward(const Picture &picture) {
   layers_.front().SetData(picture.GetData());
 
-  for (auto &layer : layers_) {
-    layer.CalculateValues();
+  for (std::size_t i = 1; i < layers_.size(); ++i) {
+    layers_[i].CalculateValues();
   }
 }
 
 void GraphPerceptron::PropagateBackwards(std::size_t expected_index) {
-  // todo
+  expected_index -= starting_index;
+
+  layers_.back().UpdateErrorByExpectedIndex(expected_index);
+
+  for (std::size_t i = layers_.size() - 2; i > 0; --i) {
+    layers_[i].UpdateErrorByLayer(layers_[i + 1]);
+  }
+
+  for (std::size_t i = 1; i < layers_.size() - 1; ++i) {
+    layers_[i].UpdateWeightsByLayer(layers_[i - 1]);
+  }
 }

@@ -43,3 +43,17 @@ void Neuron::CalculateValue() {
   }
   value_ = activationFunction_->Activate(value_);
 }
+
+double Neuron::GetValue() const { return value_; }
+
+double Neuron::GetError() const { return error_; }
+
+void Neuron::SetError(double error) { error_ = error; }
+
+std::vector<double>& Neuron::GetNeuronWeights() {
+  return previous_neurons_weights_;
+}
+
+void Neuron::CalculateWeightsDelta() {
+  weights_delta_ = error_ * activationFunction_->Derivative(value_);
+}
