@@ -22,7 +22,11 @@ add_executable(graph_perceptron
         ./perceptron/i_perceptron.h
         ./perceptron/graph_perceptron.h
         ./perceptron/graph_perceptron.cc
-        )
+        ./perceptron/neuron.cc
+        ./perceptron/neuron.cc
+        ./perceptron/layer.h
+        ./perceptron/layer.cc
+)
 
 include_directories(
         ./
