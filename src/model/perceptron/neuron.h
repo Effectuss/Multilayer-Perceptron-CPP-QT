@@ -1,6 +1,7 @@
 #ifndef MLP_NEURON_H_
 #define MLP_NEURON_H_
 
+#include <memory>
 #include <vector>
 
 #include "i_activation_function.h"

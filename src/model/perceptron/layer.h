@@ -6,7 +6,7 @@
 class Layer final {
  public:
   Layer() = delete;
-  explicit Layer(int number_of_neurons);
+  explicit Layer(std::size_t number_of_neurons);
   Layer(const Layer &other) = default;
   Layer(Layer &&other) = default;
   Layer &operator=(const Layer &other) = default;

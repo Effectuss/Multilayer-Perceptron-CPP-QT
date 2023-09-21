@@ -1,6 +1,9 @@
 #include "neuron.h"
 
+#include <algorithm>
 #include <random>
+
+std::shared_ptr<IActivationFunction> Neuron::activationFunction_;
 
 Neuron::Neuron()
     : value_(0),

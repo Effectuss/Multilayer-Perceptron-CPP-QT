@@ -22,7 +22,7 @@ class IPerceptron {
   virtual void SetActivationFunction(
       std::unique_ptr<IActivationFunction> &activationFunction) = 0;
 
-  virtual int Predict(Picture &picture) = 0;
+  virtual int Predict(const Picture &picture) = 0;
   virtual void Train(std::size_t epochs) = 0;
   virtual void CrossValidation(std::size_t groups) = 0;
 

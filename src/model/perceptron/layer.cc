@@ -1,6 +1,8 @@
 #include "layer.h"
 
-Layer::Layer(int number_of_neurons) { neurons_.resize(number_of_neurons); }
+Layer::Layer(std::size_t number_of_neurons) {
+  neurons_.resize(number_of_neurons);
+}
 
 Layer& Layer::ConnectPrevious(const Layer& other) {
   for (auto& neuron : neurons_) {

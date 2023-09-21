@@ -8,8 +8,8 @@
 
 class GraphPerceptron final : public IPerceptron {
  public:
-  GraphPerceptron();
-  ~GraphPerceptron() override;
+  GraphPerceptron() = default;
+  ~GraphPerceptron() override = default;
 
   void Configure(std::size_t input_layer_size, std::size_t output_layer_size,
                  std::size_t hidden_layers_count,
@@ -20,7 +20,7 @@ class GraphPerceptron final : public IPerceptron {
   void SetActivationFunction(
       std::unique_ptr<IActivationFunction> &activationFunction) override;
 
-  int Predict(Picture &picture) override;
+  int Predict(const Picture &picture) override;
   void Train(std::size_t epochs) override;
   void CrossValidation(std::size_t groups) override;
 

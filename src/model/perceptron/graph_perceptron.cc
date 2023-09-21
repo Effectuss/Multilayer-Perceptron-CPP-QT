@@ -1,26 +1,22 @@
 #include "graph_perceptron.h"
 
 #include <algorithm>
-#include <random>
-
-GraphPerceptron::GraphPerceptron() = default;
-
-GraphPerceptron::~GraphPerceptron() = default;
 
 void GraphPerceptron::Configure(std::size_t input_layer_size,
                                 std::size_t output_layer_size,
                                 std::size_t hidden_layers_count,
                                 std::size_t hidden_layers_size) {
+
   layers_.clear();
-  Layer last_layer = layers_.emplace_back(input_layer_size);
+  layers_.emplace_back(input_layer_size);
   for (std::size_t i = 0; i < hidden_layers_count; ++i) {
-    last_layer = layers_.emplace_back(hidden_layers_size)
-                     .ConnectPrevious(last_layer)
-                     .GenerateWeights();
+    layers_.push_back(Layer(hidden_layers_size)
+                          .ConnectPrevious(layers_.back())
+                          .GenerateWeights());
   }
-  layers_.emplace_back(output_layer_size)
-      .ConnectPrevious(last_layer)
-      .GenerateWeights();
+  layers_.push_back(Layer(output_layer_size)
+                        .ConnectPrevious(layers_.back())
+                        .GenerateWeights());
 }
 
 void GraphPerceptron::SetTrainDataset(Dataset &dataset) {
@@ -37,7 +33,7 @@ void GraphPerceptron::SetActivationFunction(
   Neuron::SetActivationFunction(activationFunction_);
 }
 
-int GraphPerceptron::Predict(Picture &picture) {
+int GraphPerceptron::Predict(const Picture &picture) {
   FeedForward(picture);
   return 0;
 }
