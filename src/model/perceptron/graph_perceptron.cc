@@ -33,9 +33,10 @@ void GraphPerceptron::SetActivationFunction(
   Neuron::SetActivationFunction(activationFunction_);
 }
 
+// todo: maybe fix return type of predict
 int GraphPerceptron::Predict(const Picture &picture) {
   FeedForward(picture);
-  return 0;
+  return (int)layers_.back().GetMaxValueIndex();
 }
 
 void GraphPerceptron::Train(std::size_t epochs) {
@@ -68,7 +69,7 @@ void GraphPerceptron::FeedForward(const Picture &picture) {
 }
 
 void GraphPerceptron::PropagateBackwards(std::size_t expected_index) {
-  expected_index -= starting_index;
+  expected_index -= starting_index_;
 
   layers_.back().UpdateErrorByExpectedIndex(expected_index);
 
@@ -77,6 +78,6 @@ void GraphPerceptron::PropagateBackwards(std::size_t expected_index) {
   }
 
   for (std::size_t i = 1; i < layers_.size() - 1; ++i) {
-    layers_[i].UpdateWeightsByLayer(layers_[i - 1]);
+    layers_[i].UpdateWeightsByLayer(layers_[i - 1], learning_rate_);
   }
 }

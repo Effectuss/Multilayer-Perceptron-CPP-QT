@@ -31,7 +31,9 @@ class GraphPerceptron final : public IPerceptron {
   void FeedForward(const Picture &picture);
   void PropagateBackwards(std::size_t expected_index);
 
-  int starting_index = 1;
+  static constexpr double learning_rate_ = 0.1;
+
+  std::size_t starting_index_ = 1;
 
   std::vector<Layer> layers_;
 

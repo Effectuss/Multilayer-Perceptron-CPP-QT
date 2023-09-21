@@ -42,6 +42,7 @@ void Layer::UpdateErrorByExpectedIndex(std::size_t expected_index) {
   }
 }
 
+// layer = next layer
 void Layer::UpdateErrorByLayer(const Layer& layer) {
   for (auto& neuron : neurons_) {
     double error = 0;
@@ -54,16 +55,17 @@ void Layer::UpdateErrorByLayer(const Layer& layer) {
   }
 }
 
-// todo: extract somewhere learning rate
 // layer = prev layer
-void Layer::UpdateWeightsByLayer(Layer& layer) {
-  double learning_rate = 0.1;
-
-  for (std::size_t i = 0; i < neurons_.size(); ++i) {
-    //
+void Layer::UpdateWeightsByLayer(Layer& layer, double learning_rate) {
+  for (auto & neuron : neurons_) {
+    auto weights = neuron.GetNeuronWeights();
+    for (std::size_t j = 0; j < weights.size(); ++j) {
+      weights[j] = weights[j] - layer.neurons_[j].GetValue() *
+                                    neuron.GetWeightsDelta() *
+                                    learning_rate;
+    }
+    neuron.SetNeuronWeights(weights);
   }
-
-  // weights[i] = weights[i] - layer.neuron_[i].value * delta[i] * learning_rate
 }
 
 std::size_t Layer::GetMaxValueIndex() {
