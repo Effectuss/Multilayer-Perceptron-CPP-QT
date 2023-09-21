@@ -23,6 +23,8 @@ class Layer final {
   void UpdateErrorByLayer(const Layer &layer);
   void UpdateWeightsByLayer(Layer &layer);
 
+  std::size_t GetMaxValueIndex();
+
  private:
   std::vector<Neuron> neurons_;
 };
