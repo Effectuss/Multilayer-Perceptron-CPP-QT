@@ -43,6 +43,9 @@ void Layer::UpdateErrorByExpectedIndex(std::size_t expected_index) {
   }
 }
 
+// todo: remake on use previous layer
+// todo: maybe remove layer parameter
+// todo: move part of code to neuron
 // layer = next layer
 void Layer::UpdateErrorByLayer(Layer& layer) {
   for (std::size_t i = 0; i < neurons_.size(); ++i) {
@@ -55,6 +58,8 @@ void Layer::UpdateErrorByLayer(Layer& layer) {
   }
 }
 
+// todo: maybe remove layer parameter
+// todo: move part of code to neuron
 // layer = prev layer
 void Layer::UpdateWeightsByLayer(Layer& layer, double learning_rate) {
   for (auto& neuron : neurons_) {

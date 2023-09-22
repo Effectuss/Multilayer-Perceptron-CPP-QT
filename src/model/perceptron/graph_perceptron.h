@@ -16,14 +16,17 @@ class GraphPerceptron final : public IPerceptron {
                  std::size_t hidden_layers_size) override;
 
   void SetTrainDataset(Dataset &dataset) override;
+  // todo: maybe remove from here (if cross validation removed)
   void SetTestDataset(Dataset &dataset) override;
   void SetActivationFunction(
       std::unique_ptr<IActivationFunction> &activationFunction) override;
 
   int Predict(const Picture &picture) override;
   void Train(std::size_t epochs) override;
+  // todo: maybe remove from here
   void CrossValidation(std::size_t groups) override;
 
+  // todo: move to external parser and just pass model here
   void LoadWeights(const std::istream &istream) override;
   void ExportWeights(const std::ostream &ostream) override;
 
