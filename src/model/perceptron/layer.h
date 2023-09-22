@@ -20,7 +20,7 @@ class Layer final {
   void CalculateValues();
 
   void UpdateErrorByExpectedIndex(std::size_t expected_index);
-  void UpdateErrorByLayer(const Layer &layer);
+  void UpdateErrorByLayer(Layer &layer);
   void UpdateWeightsByLayer(Layer &layer, double learning_rate);
 
   std::size_t GetMaxValueIndex();

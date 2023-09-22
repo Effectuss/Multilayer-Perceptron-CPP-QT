@@ -39,16 +39,17 @@ void Layer::UpdateErrorByExpectedIndex(std::size_t expected_index) {
     } else {
       neurons_[i].SetError(neurons_[i].GetValue());
     }
+    neurons_[i].CalculateWeightsDelta();
   }
 }
 
 // layer = next layer
-void Layer::UpdateErrorByLayer(const Layer& layer) {
-  for (auto& neuron : neurons_) {
+void Layer::UpdateErrorByLayer(Layer& layer) {
+  for (auto& neuron : layer.neurons_) {
     double error = 0;
     auto weights = neuron.GetNeuronWeights();
-    for (std::size_t i = 0; i < layer.neurons_.size(); ++i) {
-      error += weights[i] * layer.neurons_[i].GetError();
+    for (std::size_t i = 0; i < weights.size(); ++i) {
+      error += weights[i] * neurons_[i].GetError();
     }
     neuron.SetError(error);
     neuron.CalculateWeightsDelta();
@@ -57,12 +58,11 @@ void Layer::UpdateErrorByLayer(const Layer& layer) {
 
 // layer = prev layer
 void Layer::UpdateWeightsByLayer(Layer& layer, double learning_rate) {
-  for (auto & neuron : neurons_) {
+  for (auto& neuron : neurons_) {
     auto weights = neuron.GetNeuronWeights();
     for (std::size_t j = 0; j < weights.size(); ++j) {
       weights[j] = weights[j] - layer.neurons_[j].GetValue() *
-                                    neuron.GetWeightsDelta() *
-                                    learning_rate;
+                                    neuron.GetWeightsDelta() * learning_rate;
     }
     neuron.SetNeuronWeights(weights);
   }
