@@ -45,14 +45,13 @@ void Layer::UpdateErrorByExpectedIndex(std::size_t expected_index) {
 
 // layer = next layer
 void Layer::UpdateErrorByLayer(Layer& layer) {
-  for (auto& neuron : layer.neurons_) {
+  for (std::size_t i = 0; i < neurons_.size(); ++i) {
     double error = 0;
-    auto weights = neuron.GetNeuronWeights();
-    for (std::size_t i = 0; i < weights.size(); ++i) {
-      error += weights[i] * neurons_[i].GetError();
+    for (auto& neuron : layer.neurons_) {
+      error += neuron.GetNeuronWeights()[i] * neuron.GetWeightsDelta();
     }
-    neuron.SetError(error);
-    neuron.CalculateWeightsDelta();
+    neurons_[i].SetError(error);
+    neurons_[i].CalculateWeightsDelta();
   }
 }
 

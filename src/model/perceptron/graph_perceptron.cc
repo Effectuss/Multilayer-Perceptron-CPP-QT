@@ -72,7 +72,7 @@ void GraphPerceptron::PropagateBackwards(std::size_t expected_index) {
 
   layers_.back().UpdateErrorByExpectedIndex(expected_index);
 
-  for (std::size_t i = layers_.size() - 2; i > 0; --i) {
+  for (std::size_t i = layers_.size() - 1; i > 0; --i) {
     layers_[i - 1].UpdateErrorByLayer(layers_[i]);
   }
 

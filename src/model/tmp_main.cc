@@ -7,10 +7,10 @@
 int main() {
   std::cout << "Parsing train" << std::endl;
   Dataset train_dataset =
-      Parser::ParseDataset(R"(D:\Downloads\emnist-letters-train.csv)");
+      Parser::ParseDataset(R"(D:\Downloads\archive\emnist-letters-train.csv)");
   std::cout << "Parsing test" << std::endl;
   Dataset test_dataset =
-      Parser::ParseDataset(R"(D:\Downloads\emnist-letters-test.csv)");
+      Parser::ParseDataset(R"(D:\Downloads\archive\emnist-letters-test.csv)");
 
   std::unique_ptr<IActivationFunction> activationFunction =
       std::make_unique<Sigmoid>();
@@ -20,7 +20,7 @@ int main() {
   perceptron->SetTrainDataset(train_dataset);
   perceptron->SetActivationFunction(activationFunction);
   std::cout << "Training" << std::endl;
-  perceptron->Train(3);
+  perceptron->Train(1);
 
   int max = (int)test_dataset.GetDataSize();
   int correct = 0;
