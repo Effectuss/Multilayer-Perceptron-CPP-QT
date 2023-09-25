@@ -51,8 +51,6 @@ double Neuron::GetValue() const { return value_; }
 
 void Neuron::SetValue(double value) { value_ = value; }
 
-double Neuron::GetError() const { return error_; }
-
 void Neuron::SetError(double error) { error_ = error; }
 
 void Neuron::CalculateWeightsDelta() {
@@ -61,10 +59,13 @@ void Neuron::CalculateWeightsDelta() {
 
 double Neuron::GetWeightsDelta() const { return weights_delta_; }
 
-std::vector<double>& Neuron::GetNeuronWeights() {
-  return previous_neurons_weights_;
+void Neuron::UpdateWeights(double learning_rate) {
+  for (std::size_t i = 0; i < previous_neurons_weights_.size(); ++i) {
+    previous_neurons_weights_[i] -=
+        previous_neurons_[i]->value_ * GetWeightsDelta() * learning_rate;
+  }
 }
 
-void Neuron::SetNeuronWeights(std::vector<double>& weights) {
-  previous_neurons_weights_ = weights;
+std::vector<double>& Neuron::GetNeuronWeights() {
+  return previous_neurons_weights_;
 }

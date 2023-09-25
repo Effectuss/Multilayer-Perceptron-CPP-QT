@@ -58,17 +58,9 @@ void Layer::UpdateErrorByLayer(Layer& layer) {
   }
 }
 
-// todo: maybe remove layer parameter
-// todo: move part of code to neuron
-// layer = prev layer
-void Layer::UpdateWeightsByLayer(Layer& layer, double learning_rate) {
+void Layer::UpdateWeights(double learning_rate) {
   for (auto& neuron : neurons_) {
-    auto weights = neuron.GetNeuronWeights();
-    for (std::size_t j = 0; j < weights.size(); ++j) {
-      weights[j] = weights[j] - layer.neurons_[j].GetValue() *
-                                    neuron.GetWeightsDelta() * learning_rate;
-    }
-    neuron.SetNeuronWeights(weights);
+    neuron.UpdateWeights(learning_rate);
   }
 }
 

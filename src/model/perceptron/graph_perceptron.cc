@@ -77,6 +77,6 @@ void GraphPerceptron::PropagateBackwards(std::size_t expected_index) {
   }
 
   for (std::size_t i = 1; i < layers_.size(); ++i) {
-    layers_[i].UpdateWeightsByLayer(layers_[i - 1], learning_rate_);
+    layers_[i].UpdateWeights(learning_rate_);
   }
 }

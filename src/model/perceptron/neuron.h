@@ -27,15 +27,15 @@ class Neuron final {
   double GetValue() const;
   void SetValue(double value);
 
-  double GetError() const;
   void SetError(double error);
 
   void CalculateWeightsDelta();
 
   double GetWeightsDelta() const;
 
+  void UpdateWeights(double learning_rate);
+
   std::vector<double> &GetNeuronWeights();
-  void SetNeuronWeights(std::vector<double>& weights);
 
  private:
   static std::shared_ptr<IActivationFunction> activationFunction_;
