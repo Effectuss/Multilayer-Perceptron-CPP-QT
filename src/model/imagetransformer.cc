@@ -12,7 +12,8 @@ ImageTransformer::ImageTransformer(const QSize& target_size,
 QImage ImageTransformer::Transform(const QImage& image) const {
   QImage result = image.scaled(target_size_)
                       .transformed(QTransform().rotate(90.0 * rotation_side_));
-  result.mirror(invertions_ & Invertion::kHorizontal, Invertion::kVertical);
+  result.mirror(invertions_ & Invertion::kHorizontal,
+                invertions_ & Invertion::kVertical);
   return result;
 }
 
