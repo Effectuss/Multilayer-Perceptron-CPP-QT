@@ -17,7 +17,9 @@ class DrawArea : public QGraphicsScene {
  public slots:
   void ClearImage();
   void SetPenRadius(int radius);
-  void MouseReleasedSlot();
+
+ signals:
+  void MouseReleasedSignal();
 
  protected:
   void mousePressEvent(QGraphicsSceneMouseEvent* event) override;

@@ -13,10 +13,8 @@ MainWindow::MainWindow(QWidget *parent)
                                  ui->penRadiusSlider->maximum());
   ui->penRadiusSpinbox->setValue(ui->penRadiusSlider->value());
   ui->drawAreaView->setScene(&drawarea_);
-  connect(ui->drawAreaView, &CustomGraphicsView::MouseReleasedSignal, this,
-          &MainWindow::RecognizePattern);
-  connect(ui->drawAreaView, &CustomGraphicsView::MouseReleasedSignal,
-          ui->drawAreaView->scene(), &DrawArea::MouseReleasedSlot);
+  connect(static_cast<DrawArea *>(ui->drawAreaView->scene()),
+          &DrawArea::MouseReleasedSignal, this, &MainWindow::RecognizePattern);
 }
 
 MainWindow::~MainWindow() { delete ui; }

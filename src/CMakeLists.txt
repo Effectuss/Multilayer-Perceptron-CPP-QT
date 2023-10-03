@@ -32,15 +32,13 @@ set(SOURCES
     ${CMAKE_SOURCE_DIR}/controller/mainwindow.cc
     ${CMAKE_SOURCE_DIR}/controller/drawarea.cc
     ${CMAKE_SOURCE_DIR}/model/imagetransformer.cc
-    ${CMAKE_SOURCE_DIR}/model/data/picture.cc
-    ${CMAKE_SOURCE_DIR}/controller/customgraphicsview.cc)
+    ${CMAKE_SOURCE_DIR}/model/data/picture.cc)
 
 set(HEADERS
     ${CMAKE_SOURCE_DIR}/controller/mainwindow.h
     ${CMAKE_SOURCE_DIR}/controller/drawarea.h
     ${CMAKE_SOURCE_DIR}/model/imagetransformer.h
-    ${CMAKE_SOURCE_DIR}/model/data/picture.h
-    ${CMAKE_SOURCE_DIR}/controller/customgraphicsview.h)
+    ${CMAKE_SOURCE_DIR}/model/data/picture.h)
 
 set(UI_FORMS ${CMAKE_SOURCE_DIR}/view/forms/mainwindow.ui)
 
