@@ -5,5 +5,5 @@ CustomGraphicsView::CustomGraphicsView(QWidget* parent)
 
 void CustomGraphicsView::mouseReleaseEvent(
     [[maybe_unused]] QMouseEvent* event) {
-  emit MouseReleasedSignal();
+  if (event->buttons().testFlag(Qt::NoButton)) emit MouseReleasedSignal();
 }

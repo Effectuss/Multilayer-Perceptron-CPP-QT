@@ -15,6 +15,8 @@ MainWindow::MainWindow(QWidget *parent)
   ui->drawAreaView->setScene(&drawarea_);
   connect(ui->drawAreaView, &CustomGraphicsView::MouseReleasedSignal, this,
           &MainWindow::RecognizePattern);
+  connect(ui->drawAreaView, &CustomGraphicsView::MouseReleasedSignal,
+          ui->drawAreaView->scene(), &DrawArea::MouseReleasedSlot);
 }
 
 MainWindow::~MainWindow() { delete ui; }
