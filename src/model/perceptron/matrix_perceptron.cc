@@ -190,8 +190,7 @@ double MatrixPerceptron::TestMatrixPerceptron(const Dataset &test_dataset) {
 }
 
 void MatrixPerceptron::ExportWeights(const std::string &file_path) {
-  std::ofstream file_out;
-  file_out.open(file_path);
+  std::ofstream file_out(file_path);
 
   if (!file_out.is_open()) {
     throw std::runtime_error("Can't write to file");
@@ -209,18 +208,17 @@ void MatrixPerceptron::ExportWeights(const std::string &file_path) {
   for (int i = 1; i < number_of_layers_; ++i) {
     file_out << weights_[i];
   }
-  file_out.close();
 }
 
 void MatrixPerceptron::LoadWeights(const std::string &file_path) {
-  std::ifstream file_in;
-  file_in.open(file_path);
+  std::ifstream file_in(file_path);
 
   if (!file_in.is_open()) {
     throw std::runtime_error("Can't read from file");
   }
   std::string check_type;
   std::getline(file_in, check_type);
+
   if (check_type != "M") {
     throw std::logic_error(
         "The file with matrix weight should be start with 'M'!");
@@ -234,8 +232,6 @@ void MatrixPerceptron::LoadWeights(const std::string &file_path) {
   for (int i = 1; i < number_of_layers_; ++i) {
     file_in >> weights_[i];
   }
-
-  file_in.close();
 }
 
 void MatrixPerceptron::InitPerceptronFromFile(const std::string &settings) {
@@ -247,18 +243,14 @@ void MatrixPerceptron::InitPerceptronFromFile(const std::string &settings) {
   delta_weight_.clear();
   weights_.clear();
 
-  std::vector<int> numbers;
-
   int number;
 
   while (iss >> number) {
-    numbers.push_back(number);
+    size_layers_.push_back(number);
   }
 
-  size_layers_ = numbers;
   number_of_layers_ = size_layers_.size();
 
   InitRandomWeights();
   InitNeuronNetwork();
-
 }
