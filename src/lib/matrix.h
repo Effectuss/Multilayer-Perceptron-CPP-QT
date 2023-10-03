@@ -30,6 +30,10 @@ public:
 
   const double &operator()(std::size_t index_i, std::size_t index_j) const;
 
+  friend std::ostream &operator<<(std::ostream &, const Matrix &);
+
+  friend std::istream &operator>>(std::istream &, Matrix &);
+
   void FillMatrixRandomValues(double min_random_value = -1.0,
                               double max_random_value = 1.0);
 
@@ -37,7 +41,8 @@ public:
                                const std::vector<double> &vector_column,
                                std::vector<double> &vector_res);
 
-  [[nodiscard]] const std::vector<double>& GetVectorByRows(std::size_t row) const;
+  [[nodiscard]] const std::vector<double> &
+  GetVectorByRows(std::size_t row) const;
 
 private:
   static bool IsCorrectIndex(int, int);

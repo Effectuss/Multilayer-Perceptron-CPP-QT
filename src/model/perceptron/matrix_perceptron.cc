@@ -1,5 +1,9 @@
 #include "matrix_perceptron.h"
+
 #include <chrono>
+#include <fstream>
+#include <sstream>
+
 bool MatrixPerceptron::IsValidDataForPerceptron(int hidden_layers_count,
                                                 int size_hidden_layers) {
   return (hidden_layers_count <= kMaxAmountOfHiddenLayers &&
@@ -186,7 +190,75 @@ double MatrixPerceptron::TestMatrixPerceptron(const Dataset &test_dataset) {
 }
 
 void MatrixPerceptron::ExportWeights(const std::string &file_path) {
+  std::ofstream file_out;
+  file_out.open(file_path);
 
+  if (!file_out.is_open()) {
+    throw std::runtime_error("Can't write to file");
+  }
+
+  file_out << "M"
+           << "\n";
+
+  for (int size_layer : size_layers_) {
+    file_out << size_layer << " ";
+  }
+
+  file_out << "\n";
+
+  for (int i = 1; i < number_of_layers_; ++i) {
+    file_out << weights_[i];
+  }
+  file_out.close();
 }
 
-void MatrixPerceptron::LoadWeights(const std::string &file_path) {}
+void MatrixPerceptron::LoadWeights(const std::string &file_path) {
+  std::ifstream file_in;
+  file_in.open(file_path);
+
+  if (!file_in.is_open()) {
+    throw std::runtime_error("Can't read from file");
+  }
+  std::string check_type;
+  std::getline(file_in, check_type);
+  if (check_type != "M") {
+    throw std::logic_error(
+        "The file with matrix weight should be start with 'M'!");
+  }
+
+  std::string settings;
+  std::getline(file_in, settings);
+
+  InitPerceptronFromFile(settings);
+
+  for (int i = 1; i < number_of_layers_; ++i) {
+    file_in >> weights_[i];
+  }
+
+  file_in.close();
+}
+
+void MatrixPerceptron::InitPerceptronFromFile(const std::string &settings) {
+  std::istringstream iss(settings);
+
+  size_layers_.clear();
+  neuron_values_.clear();
+  neuron_errors_.clear();
+  delta_weight_.clear();
+  weights_.clear();
+
+  std::vector<int> numbers;
+
+  int number;
+
+  while (iss >> number) {
+    numbers.push_back(number);
+  }
+
+  size_layers_ = numbers;
+  number_of_layers_ = size_layers_.size();
+
+  InitRandomWeights();
+  InitNeuronNetwork();
+
+}

@@ -18,9 +18,6 @@ public:
   void LoadWeights(const std::string &file_path);
   void ExportWeights(const std::string &file_path);
 
-  // todo move to private
-  std::size_t ForwardFeed();
-
   // todo delete debug method
   inline void PrintOutLayer() {
     for (const auto &el : neuron_values_[number_of_layers_ - 1]) {
@@ -75,7 +72,9 @@ private:
   void InitRandomWeights();
   void InitNeuronNetwork();
   void InitSizeLayers(int);
+  void InitPerceptronFromFile(const std::string&);
 
+  std::size_t ForwardFeed();
   static std::size_t FindMaxIndex(const std::vector<double> &vector);
   void BackPropagation(std::size_t expect_index);
   static double CalculateOutputLayerError(double neuron_value, double target);
@@ -84,7 +83,7 @@ private:
   void UpdateWeights(std::size_t layer_in, std::size_t neuron_in,
                      double delta_weight);
 
-  int number_of_layers_{2};
+  std::size_t number_of_layers_{2};
 
   Dataset dataset_;
 

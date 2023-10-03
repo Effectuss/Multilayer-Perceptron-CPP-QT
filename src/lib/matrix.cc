@@ -73,4 +73,26 @@ const std::vector<double> &Matrix::GetVectorByRows(std::size_t row) const {
 
   return matrix_[row];
 }
+std::ostream &operator<<(std::ostream &out, const Matrix &matrix) {
+  for (int i = 0; i < matrix.GetRows(); ++i) {
+    for (int j = 0; j < matrix.GetCols(); ++j) {
+      out << matrix(i, j) << " ";
+      if (out.fail()) {
+        throw std::runtime_error("Error output matrix");
+      }
+    }
+    out << "\n";
+  }
+  return out;
+}
 
+std::istream &operator>>(std::istream &input, Matrix &matrix) {
+  for (int i = 0; i < matrix.GetRows(); ++i) {
+    for (int j = 0; j < matrix.GetCols(); ++j) {
+      if (!(input >> matrix(i, j))) {
+        throw std::runtime_error("Error input matrix!");
+      }
+    }
+  }
+  return input;
+}
