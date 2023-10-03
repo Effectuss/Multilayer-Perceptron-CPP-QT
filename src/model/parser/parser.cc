@@ -55,7 +55,7 @@ Mapping Parser::ParseMapping(const std::string &file_path) {
       value.insert(temp);
     }
 
-    mapping.AddData(mapped_key, value);
+    mapping.AppendData(value);
   }
 
   return mapping;

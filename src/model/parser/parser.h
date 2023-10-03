@@ -3,8 +3,8 @@
 
 #include <string>
 
-#include "dataset.h"
-#include "mapping.h"
+#include "../data/dataset.h"
+#include "../data/mapping.h"
 
 class Parser {
  public:
