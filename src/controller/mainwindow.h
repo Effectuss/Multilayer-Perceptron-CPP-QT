@@ -21,7 +21,7 @@ class MainWindow : public QMainWindow {
   ~MainWindow();
 
  public slots:
-  void RecognizePattern();
+  void RecognizePattern(bool cleared);
 
  private slots:
   void on_clearButton_clicked();

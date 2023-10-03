@@ -19,7 +19,13 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow() { delete ui; }
 
-void MainWindow::RecognizePattern() { qDebug() << "Emitted!"; }
+void MainWindow::RecognizePattern(bool cleared) {
+  if (cleared) {
+    ui->recognizedButton->setText("-");
+    return;
+  }
+  qDebug() << "Emitted!";
+}
 
 void MainWindow::on_penRadiusSlider_valueChanged(int value) {
   drawarea_.SetPenRadius(value);
@@ -30,4 +36,7 @@ void MainWindow::on_penRadiusSpinbox_valueChanged(int arg1) {
   ui->penRadiusSlider->setValue(arg1);
 }
 
-void MainWindow::on_clearButton_clicked() { drawarea_.ClearImage(); }
+void MainWindow::on_clearButton_clicked() {
+  drawarea_.ClearImage();
+  RecognizePattern(true);
+}

@@ -34,8 +34,8 @@ void DrawArea::mouseMoveEvent(QGraphicsSceneMouseEvent* event) {
 
 void DrawArea::mouseReleaseEvent(QGraphicsSceneMouseEvent* event) {
   if (event->buttons().testFlag(Qt::NoButton)) {
+    emit MouseReleasedSignal(cleared_);
     cleared_ = false;
-    emit MouseReleasedSignal();
   }
 }
 
