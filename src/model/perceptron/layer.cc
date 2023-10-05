@@ -20,10 +20,19 @@ Layer& Layer::GenerateWeights() {
   return *this;
 }
 
-void Layer::SetData(const std::vector<double>& neurons_data) {
+void Layer::SetNeuronsData(const std::vector<double>& neurons_data) {
   for (std::size_t i = 0; i < neurons_data.size(); ++i) {
     neurons_[i].SetValue(neurons_data[i]);
   }
+}
+
+std::vector<double> Layer::GetNeuronsData() {
+  std::vector<double> result;
+  result.reserve(neurons_.size());
+  for (auto& neuron : neurons_) {
+    result.push_back(neuron.GetValue());
+  }
+  return result;
 }
 
 void Layer::CalculateValues() {
@@ -62,14 +71,4 @@ void Layer::UpdateWeights(double learning_rate) {
   for (auto& neuron : neurons_) {
     neuron.UpdateWeights(learning_rate);
   }
-}
-
-std::size_t Layer::GetMaxValueIndex() {
-  std::size_t max_value_index = 0;
-  for (std::size_t i = 0; i < neurons_.size(); ++i) {
-    if (neurons_[i].GetValue() > neurons_[max_value_index].GetValue()) {
-      max_value_index = i;
-    }
-  }
-  return max_value_index;
 }

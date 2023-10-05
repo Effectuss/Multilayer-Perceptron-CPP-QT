@@ -1,5 +1,6 @@
 // todo: remove on merge
 
+#include <algorithm>
 #include <iostream>
 
 #include "graph_perceptron.h"
@@ -17,20 +18,23 @@ int main() {
   std::unique_ptr<IActivationFunction> activationFunction =
       std::make_unique<Sigmoid>();
 
-  IPerceptron *perceptron = new GraphPerceptron();
-  perceptron->Configure(784, 26, 3, 140);
-  perceptron->SetTrainDataset(train_dataset);
-  perceptron->SetActivationFunction(activationFunction);
+  IPerceptron *perceptron = new GraphPerceptron(3, 140, 26, activationFunction);
   std::cout << "Training" << std::endl;
-  perceptron->Train(1);
+  perceptron->Train(1, train_dataset);
 
   int max = (int)test_dataset.GetDataSize();
   int correct = 0;
   int not1 = 0;
   for (auto &test : test_dataset.GetData()) {
     not1++;
-    int result = perceptron->Predict(test.first) + 1;
-    if (result == test.second) {
+    auto res = perceptron->Predict(test.first);
+    std::size_t max_value_index = 0;
+    for (std::size_t i = 0; i < res.size(); ++i) {
+      if (res[i] > res[max_value_index]) {
+        max_value_index = i;
+      }
+    }
+    if (max_value_index + 1 == test.second) {
       correct++;
     }
     if (not1 % 1000 == 0) {

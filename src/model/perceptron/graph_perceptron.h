@@ -8,30 +8,27 @@
 
 class GraphPerceptron final : public IPerceptron {
  public:
-  GraphPerceptron() = default;
+  GraphPerceptron(std::size_t hidden_layers_count,
+                  std::size_t hidden_layers_size, std::size_t output_layer_size,
+                  std::unique_ptr<IActivationFunction>& activationFunction);
+  GraphPerceptron() = delete;
   ~GraphPerceptron() override = default;
 
-  void Configure(std::size_t input_layer_size, std::size_t output_layer_size,
-                 std::size_t hidden_layers_count,
-                 std::size_t hidden_layers_size) override;
+  std::vector<double> Predict(const Picture& picture) override;
 
-  void SetTrainDataset(Dataset &dataset) override;
-  // todo: maybe remove from here (if cross validation removed)
-  void SetTestDataset(Dataset &dataset) override;
+  void Train(std::size_t epochs, const Dataset& dataset) override;
+  void Test(double segment, const Dataset& dataset) override;
+
   void SetActivationFunction(
-      std::unique_ptr<IActivationFunction> &activationFunction) override;
+      std::unique_ptr<IActivationFunction>& activationFunction) override;
 
-  int Predict(const Picture &picture) override;
-  void Train(std::size_t epochs) override;
-  // todo: maybe remove from here
-  void CrossValidation(std::size_t groups) override;
-
-  // todo: move to external parser and just pass model here
-  void LoadWeights(const std::istream &istream) override;
-  void ExportWeights(const std::ostream &ostream) override;
+  void LoadWeights(const std::string& file_name) override;
+  void ExportWeights(const std::string& file_name) override;
 
  private:
-  void FeedForward(const Picture &picture);
+  void Configure(std::size_t input_layer_size);
+
+  void FeedForward(const Picture& picture);
   void PropagateBackwards(std::size_t expected_index);
 
   static constexpr double learning_rate_ = 0.1;
@@ -40,8 +37,9 @@ class GraphPerceptron final : public IPerceptron {
 
   std::vector<Layer> layers_;
 
-  Dataset train_dataset_;
-  Dataset test_dataset_;
+  std::size_t hidden_layers_count_;
+  std::size_t hidden_layers_size_;
+  std::size_t output_layer_size_;
   std::shared_ptr<IActivationFunction> activationFunction_;
 };
 

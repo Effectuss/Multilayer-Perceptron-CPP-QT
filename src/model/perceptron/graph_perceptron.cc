@@ -2,28 +2,33 @@
 
 #include <algorithm>
 
-void GraphPerceptron::Configure(std::size_t input_layer_size,
-                                std::size_t output_layer_size,
-                                std::size_t hidden_layers_count,
-                                std::size_t hidden_layers_size) {
-  layers_.clear();
-  layers_.emplace_back(input_layer_size);
-  for (std::size_t i = 0; i < hidden_layers_count; ++i) {
-    layers_.push_back(Layer(hidden_layers_size)
-                          .ConnectPrevious(layers_.back())
-                          .GenerateWeights());
+GraphPerceptron::GraphPerceptron(
+    std::size_t hidden_layers_count, std::size_t hidden_layers_size,
+    std::size_t output_layer_size,
+    std::unique_ptr<IActivationFunction> &activationFunction) {
+  SetActivationFunction(activationFunction);
+  hidden_layers_count_ = hidden_layers_count;
+  hidden_layers_size_ = hidden_layers_size;
+  output_layer_size_ = output_layer_size;
+}
+
+std::vector<double> GraphPerceptron::Predict(const Picture &picture) {
+  FeedForward(picture);
+  return layers_.back().GetNeuronsData();
+}
+
+void GraphPerceptron::Train(std::size_t epochs, const Dataset &dataset) {
+  Configure(dataset.GetData()[0].first.GetSize());
+  for (std::size_t i = 0; i < epochs; ++i) {
+    for (auto &item : dataset.GetData()) {
+      FeedForward(item.first);
+      PropagateBackwards(item.second);
+    }
   }
-  layers_.push_back(Layer(output_layer_size)
-                        .ConnectPrevious(layers_.back())
-                        .GenerateWeights());
 }
 
-void GraphPerceptron::SetTrainDataset(Dataset &dataset) {
-  train_dataset_ = dataset;
-}
-
-void GraphPerceptron::SetTestDataset(Dataset &dataset) {
-  test_dataset_ = dataset;
+void GraphPerceptron::Test(double segment, const Dataset &dataset) {
+  // todo
 }
 
 void GraphPerceptron::SetActivationFunction(
@@ -32,35 +37,28 @@ void GraphPerceptron::SetActivationFunction(
   Neuron::SetActivationFunction(activationFunction_);
 }
 
-// todo: maybe fix return type of predict
-int GraphPerceptron::Predict(const Picture &picture) {
-  FeedForward(picture);
-  return (int)layers_.back().GetMaxValueIndex();
+void GraphPerceptron::LoadWeights(const std::string &file_name) {
+  // todo
 }
 
-void GraphPerceptron::Train(std::size_t epochs) {
-  for (std::size_t i = 0; i < epochs; ++i) {
-    for (auto &item : train_dataset_.GetData()) {
-      FeedForward(item.first);
-      PropagateBackwards(item.second);
-    }
+void GraphPerceptron::ExportWeights(const std::string &file_name) {
+  // todo
+}
+
+void GraphPerceptron::Configure(std::size_t input_layer_size) {
+  layers_.emplace_back(input_layer_size);
+  for (std::size_t i = 0; i < hidden_layers_count_; ++i) {
+    layers_.push_back(Layer(hidden_layers_size_)
+                          .ConnectPrevious(layers_.back())
+                          .GenerateWeights());
   }
-}
-
-void GraphPerceptron::CrossValidation(std::size_t groups) {
-  // todo
-}
-
-void GraphPerceptron::LoadWeights(const std::istream &) {
-  // todo
-}
-
-void GraphPerceptron::ExportWeights(const std::ostream &) {
-  // todo
+  layers_.push_back(Layer(output_layer_size_)
+                        .ConnectPrevious(layers_.back())
+                        .GenerateWeights());
 }
 
 void GraphPerceptron::FeedForward(const Picture &picture) {
-  layers_.front().SetData(picture.GetData());
+  layers_.front().SetNeuronsData(picture.GetData());
 
   for (std::size_t i = 1; i < layers_.size(); ++i) {
     layers_[i].CalculateValues();

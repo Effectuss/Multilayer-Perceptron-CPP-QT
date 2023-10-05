@@ -15,15 +15,14 @@ class Layer final {
 
   Layer &ConnectPrevious(const Layer &other);
   Layer &GenerateWeights();
-  void SetData(const std::vector<double> &neurons_values);
+  void SetNeuronsData(const std::vector<double> &neurons_values);
+  std::vector<double> GetNeuronsData();
 
   void CalculateValues();
 
   void UpdateErrorByExpectedIndex(std::size_t expected_index);
   void UpdateErrorByLayer(Layer &layer);
   void UpdateWeights(double learning_rate);
-
-  std::size_t GetMaxValueIndex();
 
  private:
   std::vector<Neuron> neurons_;
