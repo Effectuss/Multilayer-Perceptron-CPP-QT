@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 
+// todo: maybe optimize this
 Dataset Parser::ParseDataset(const std::string &file_path) {
   Dataset dataset;
   std::ifstream file(file_path);
