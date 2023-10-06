@@ -58,17 +58,21 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <widget class="QLabel" name="recognizedButton">
+         <widget class="QLabel" name="recognizedSymbol">
           <property name="minimumSize">
            <size>
-            <width>50</width>
-            <height>50</height>
+            <width>100</width>
+            <height>100</height>
            </size>
           </property>
           <property name="font">
            <font>
-            <pointsize>30</pointsize>
+            <pointsize>90</pointsize>
+            <italic>false</italic>
             <bold>true</bold>
+            <underline>false</underline>
+            <strikeout>false</strikeout>
+            <kerning>true</kerning>
            </font>
           </property>
           <property name="frameShape">
@@ -76,6 +80,12 @@
           </property>
           <property name="frameShadow">
            <enum>QFrame::Plain</enum>
+          </property>
+          <property name="lineWidth">
+           <number>1</number>
+          </property>
+          <property name="midLineWidth">
+           <number>1</number>
           </property>
           <property name="text">
            <string>-</string>
@@ -96,43 +106,51 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="penRadiusLabel">
-          <property name="text">
-           <string>Pen radius</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QSlider" name="penRadiusSlider">
-          <property name="minimum">
-           <number>10</number>
-          </property>
-          <property name="maximum">
-           <number>50</number>
-          </property>
-          <property name="value">
-           <number>25</number>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="tickPosition">
-           <enum>QSlider::TicksBothSides</enum>
-          </property>
-          <property name="tickInterval">
-           <number>5</number>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QSpinBox" name="penRadiusSpinbox"/>
-        </item>
-        <item>
-         <widget class="QPushButton" name="clearButton">
-          <property name="text">
-           <string>Clear</string>
-          </property>
-         </widget>
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <item>
+             <widget class="QLabel" name="penRadiusLabel">
+              <property name="text">
+               <string>Pen radius</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSlider" name="penRadiusSlider">
+              <property name="minimum">
+               <number>10</number>
+              </property>
+              <property name="maximum">
+               <number>50</number>
+              </property>
+              <property name="value">
+               <number>25</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="tickPosition">
+               <enum>QSlider::TicksBothSides</enum>
+              </property>
+              <property name="tickInterval">
+               <number>5</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="penRadiusSpinbox"/>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QPushButton" name="clearButton">
+            <property name="text">
+             <string>Clear</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </item>
@@ -237,6 +255,12 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QDockWidget" name="settingsAreaDock">
+   <property name="minimumSize">
+    <size>
+     <width>527</width>
+     <height>300</height>
+    </size>
+   </property>
    <property name="features">
     <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
    </property>
@@ -244,50 +268,327 @@
     <string>Settings</string>
    </property>
    <attribute name="dockWidgetArea">
-    <number>8</number>
+    <number>2</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_3">
     <layout class="QGridLayout" name="gridLayout">
      <item row="0" column="0">
-      <widget class="QGroupBox" name="groupBox">
-       <property name="title">
-        <string>Info</string>
+      <widget class="QScrollArea" name="scrollArea">
+       <property name="widgetResizable">
+        <bool>true</bool>
        </property>
-       <layout class="QGridLayout" name="gridLayout_2"/>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QGroupBox" name="groupBox_2">
-       <property name="title">
-        <string>Controls</string>
-       </property>
-       <layout class="QGridLayout" name="gridLayout_3">
-        <item row="0" column="0">
-         <widget class="QPushButton" name="pushButton_6">
-          <property name="text">
-           <string>PushButton</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QPushButton" name="pushButton_7">
-          <property name="text">
-           <string>PushButton</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QPushButton" name="pushButton_8">
-          <property name="text">
-           <string>PushButton</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
+       <widget class="QWidget" name="scrollAreaWidgetContents">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>486</width>
+          <height>462</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <widget class="QGroupBox" name="controlsGroupBox">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="title">
+            <string>Controls</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,0,0">
+            <property name="sizeConstraint">
+             <enum>QLayout::SetDefaultConstraint</enum>
+            </property>
+            <item row="6" column="0" colspan="2">
+             <widget class="QPushButton" name="updateModelButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Update model</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>Hidden layers count</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="2">
+             <widget class="QPushButton" name="resetMappingPathButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Reset</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QComboBox" name="perceptronTypeComboBox">
+              <property name="currentIndex">
+               <number>-1</number>
+              </property>
+              <property name="placeholderText">
+               <string>None</string>
+              </property>
+              <item>
+               <property name="text">
+                <string>Graph</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Matrix</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QLabel" name="loadedMappingPathLabel">
+              <property name="text">
+               <string>-</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0">
+             <widget class="QPushButton" name="pushButton_2">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Load dataset</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="2">
+             <widget class="QPushButton" name="resetHiddenLayersSizeButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Reset</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_3">
+              <property name="text">
+               <string>Hidden layer size</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QSpinBox" name="hiddenLayersCountSpinBox">
+              <property name="minimum">
+               <number>2</number>
+              </property>
+              <property name="maximum">
+               <number>5</number>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QLabel" name="loadedDatasetPathLabel">
+              <property name="text">
+               <string>-</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>Perceptron type</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QSpinBox" name="hiddenLayersSizeSpinBox">
+              <property name="minimum">
+               <number>50</number>
+              </property>
+              <property name="maximum">
+               <number>512</number>
+              </property>
+              <property name="value">
+               <number>256</number>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QPushButton" name="resetPerceptronTypeButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Reset</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QPushButton" name="resetHiddenLayersCountButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Reset</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="2">
+             <widget class="QPushButton" name="resetAllSettingsButton">
+              <property name="text">
+               <string>Reset all</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QPushButton" name="pushButton">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Load mapping</string>
+              </property>
+              <property name="checkable">
+               <bool>false</bool>
+              </property>
+              <property name="autoDefault">
+               <bool>false</bool>
+              </property>
+              <property name="default">
+               <bool>false</bool>
+              </property>
+              <property name="flat">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="2">
+             <widget class="QPushButton" name="resetDatasetPathButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Reset</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="trainingGroupBox">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="title">
+            <string>Training</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_3">
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_4">
+              <property name="text">
+               <string>Dataset percentage</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0" colspan="2">
+             <widget class="QPushButton" name="pushButton_9">
+              <property name="text">
+               <string>Train</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox">
+              <property name="suffix">
+               <string> %</string>
+              </property>
+              <property name="minimum">
+               <double>0.010000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>100.000000000000000</double>
+              </property>
+              <property name="value">
+               <double>80.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_5">
+              <property name="text">
+               <string>Epochs count</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QSpinBox" name="spinBox"/>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="weightsGroupBox">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="title">
+            <string>Weights</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_4">
+            <item row="0" column="0">
+             <widget class="QPushButton" name="pushButton_10">
+              <property name="text">
+               <string>Export weights</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </widget>
       </widget>
      </item>
     </layout>
    </widget>
+  </widget>
+  <widget class="QDockWidget" name="plotsDock">
+   <property name="minimumSize">
+    <size>
+     <width>527</width>
+     <height>709</height>
+    </size>
+   </property>
+   <property name="features">
+    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
+   </property>
+   <property name="windowTitle">
+    <string>Plots</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents"/>
   </widget>
  </widget>
  <resources/>

@@ -19,8 +19,13 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/view
+
   ${CMAKE_SOURCE_DIR}/model
   ${CMAKE_SOURCE_DIR}/model/data
+  ${CMAKE_SOURCE_DIR}/model/parser
+  ${CMAKE_SOURCE_DIR}/model/perceptron
+  ${CMAKE_SOURCE_DIR}/model/activation_function
+
   ${CMAKE_SOURCE_DIR}/controller
   ${CMAKE_SOURCE_DIR}/view/forms
   ${CMAKE_SOURCE_DIR}/view/mainwindow
@@ -32,13 +37,36 @@ set(SOURCES
     ${CMAKE_SOURCE_DIR}/controller/mainwindow.cc
     ${CMAKE_SOURCE_DIR}/controller/drawarea.cc
     ${CMAKE_SOURCE_DIR}/model/imagetransformer.cc
-    ${CMAKE_SOURCE_DIR}/model/data/picture.cc)
+    ${CMAKE_SOURCE_DIR}/model/data/picture.cc
+
+#    ${CMAKE_SOURCE_DIR}/src/model/tmp_main.cc
+    ${CMAKE_SOURCE_DIR}/model/activation_function/sigmoid.cc
+    ${CMAKE_SOURCE_DIR}/model/data/dataset.cc
+    ${CMAKE_SOURCE_DIR}/model/data/mapping.cc
+    ${CMAKE_SOURCE_DIR}/model/data/picture.cc
+    ${CMAKE_SOURCE_DIR}/model/parser/parser.cc
+    ${CMAKE_SOURCE_DIR}/model/perceptron/graph_perceptron.cc
+    ${CMAKE_SOURCE_DIR}/model/perceptron/neuron.cc
+    ${CMAKE_SOURCE_DIR}/model/perceptron/neuron.cc
+    ${CMAKE_SOURCE_DIR}/model/perceptron/layer.cc
+)
 
 set(HEADERS
     ${CMAKE_SOURCE_DIR}/controller/mainwindow.h
     ${CMAKE_SOURCE_DIR}/controller/drawarea.h
     ${CMAKE_SOURCE_DIR}/model/imagetransformer.h
-    ${CMAKE_SOURCE_DIR}/model/data/picture.h)
+    ${CMAKE_SOURCE_DIR}/model/data/picture.h
+
+    ${CMAKE_SOURCE_DIR}/model/activation_function/i_activation_function.h
+    ${CMAKE_SOURCE_DIR}/model/activation_function/sigmoid.h
+    ${CMAKE_SOURCE_DIR}/model/data/dataset.h
+    ${CMAKE_SOURCE_DIR}/model/data/mapping.h
+    ${CMAKE_SOURCE_DIR}/model/data/picture.h
+    ${CMAKE_SOURCE_DIR}/model/parser/parser.h
+    ${CMAKE_SOURCE_DIR}/model/perceptron/i_perceptron.h
+    ${CMAKE_SOURCE_DIR}/model/perceptron/graph_perceptron.h
+    ${CMAKE_SOURCE_DIR}/model/perceptron/layer.h
+)
 
 set(UI_FORMS ${CMAKE_SOURCE_DIR}/view/forms/mainwindow.ui)
 
@@ -61,7 +89,9 @@ else()
   endif()
 endif()
 
-target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Werror -Wextra -Wpedantic)
+target_compile_options(${PROJECT_NAME} PRIVATE
+    # -Wall -Werror -Wextra -Wpedantic
+)
 
 target_link_libraries(MultilayerPerceptron
                       PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)

@@ -1,12 +1,15 @@
 #include "mainwindow.h"
 
+#include <QFontDatabase>
+
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
       ui(new Ui::MainWindow),
       image_transformer_({28, 28}, ImageTransformer::RotationSide::kWest,
-                         ImageTransformer::Invertion::kVertical) {
+                         ImageTransformer::Invertion::kVertical),
+      perceptron_(nullptr) {
   ui->setupUi(this);
   drawarea_.SetPenRadius(ui->penRadiusSlider->value());
   ui->penRadiusSpinbox->setRange(ui->penRadiusSlider->minimum(),
@@ -17,11 +20,14 @@ MainWindow::MainWindow(QWidget *parent)
           &DrawArea::MouseReleasedSignal, this, &MainWindow::RecognizePattern);
 }
 
-MainWindow::~MainWindow() { delete ui; }
+MainWindow::~MainWindow() {
+  delete ui;
+  delete perceptron_;
+}
 
 void MainWindow::RecognizePattern(bool cleared) {
   if (cleared) {
-    ui->recognizedButton->setText("-");
+    ui->recognizedSymbol->setText("-");
     return;
   }
   qDebug() << "Emitted!";
@@ -30,6 +36,14 @@ void MainWindow::RecognizePattern(bool cleared) {
 void MainWindow::on_penRadiusSlider_valueChanged(int value) {
   drawarea_.SetPenRadius(value);
   ui->penRadiusSpinbox->setValue(value);
+}
+
+void MainWindow::ConfigureFont() {
+  QFont fixed_font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
+  fixed_font.setBold(true);
+  fixed_font.setCapitalization(QFont::Capitalization::AllUppercase);
+  fixed_font.setPointSize(90);
+  ui->recognizedSymbol->setFont(fixed_font);
 }
 
 void MainWindow::on_penRadiusSpinbox_valueChanged(int arg1) {
