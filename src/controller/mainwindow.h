@@ -14,6 +14,16 @@ class MainWindow;
 }
 QT_END_NAMESPACE
 
+struct PerceptronParams {
+  enum Type { kNone = -1, kGraph, kMatrix } type;
+
+  int hidden_layers_count;
+  int hidden_layers_size;
+
+  QString mapping_path;
+  QString dataset_path;
+};
+
 class MainWindow : public QMainWindow {
   Q_OBJECT
 
@@ -25,17 +35,31 @@ class MainWindow : public QMainWindow {
   void RecognizePattern(bool cleared);
 
  private slots:
+  void on_resetAllSettingsButton_clicked();
+  void on_resetDatasetPathButton_clicked();
+  void on_resetMappingPathButton_clicked();
+  void on_resetHiddenLayersSizeButton_clicked();
+  void on_hiddenLayersSizeSpinBox_valueChanged(int arg1);
+  void on_resetHiddenLayersCountButton_clicked();
+  void on_hiddenLayersCountSpinBox_valueChanged(int arg1);
+  void on_resetPerceptronTypeButton_clicked();
+  void on_perceptronTypeComboBox_currentIndexChanged(int index);
+  void on_loadDatasetButton_clicked();
+  void on_loadMappingButton_clicked();
   void on_clearButton_clicked();
   void on_penRadiusSpinbox_valueChanged(int arg1);
   void on_penRadiusSlider_valueChanged(int value);
 
-  void ConfigureFont();
-
  private:
+  void ConfigureFont();
+  void ConfigureStartingPerceptronParams();
+  void CheckResetAllButtonAndUpdateButtonConditions();
+
   Ui::MainWindow *ui;
   DrawArea drawarea_;
   ImageTransformer image_transformer_;
   IPerceptron *perceptron_;
+  PerceptronParams perceptron_params_;
 };
 
 #endif  // MAINWINDOW_H
