@@ -14,7 +14,7 @@ void DrawArea::mousePressEvent(QGraphicsSceneMouseEvent* event) {
     } else if (event->buttons().testFlag(Qt::LeftButton)) {
       DrawCircle(event->scenePos(), kPenColor);
     } else if (event->buttons().testFlag(Qt::RightButton)) {
-      DrawCircle(event->pos(), kEraserColor);
+      DrawCircle(event->scenePos(), kEraserColor);
     }
   }
   previous_point_ = event->scenePos();

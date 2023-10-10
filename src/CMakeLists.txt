@@ -90,7 +90,7 @@ else()
 endif()
 
 target_compile_options(${PROJECT_NAME} PRIVATE
-    # -Wall -Werror -Wextra -Wpedantic
+    -O3 # -Wall -Werror -Wextra -Wpedantic
 )
 
 target_link_libraries(MultilayerPerceptron

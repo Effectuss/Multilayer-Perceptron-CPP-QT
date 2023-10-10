@@ -3,7 +3,14 @@
 #include <QDir>
 #include <QFileDialog>
 #include <QFontDatabase>
+#include <QMessageBox>
+#include <algorithm>
 
+#include "dataset.h"
+#include "graph_perceptron.h"
+#include "mapping.h"
+#include "parser.h"
+#include "sigmoid.h"
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -11,7 +18,8 @@ MainWindow::MainWindow(QWidget *parent)
       ui(new Ui::MainWindow),
       image_transformer_({28, 28}, ImageTransformer::RotationSide::kWest,
                          ImageTransformer::Invertion::kVertical),
-      perceptron_(nullptr) {
+      perceptron_(nullptr),
+      mapping_(nullptr) {
   ui->setupUi(this);
   drawarea_.SetPenRadius(ui->penRadiusSlider->value());
   ui->penRadiusSpinbox->setRange(ui->penRadiusSlider->minimum(),
@@ -31,11 +39,26 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::RecognizePattern(bool cleared) {
-  if (cleared) {
+  if (cleared || !mapping_) {
     ui->recognizedSymbol->setText("-");
     return;
   }
-  qDebug() << "Emitted!";
+  try {
+    auto data =
+        image_transformer_.ImageToDoubleMatrix(image_transformer_.Transform(
+            ui->drawAreaView->grab(ui->drawAreaView->sceneRect().toRect())
+                .toImage()));
+    auto result = perceptron_->Predict(data);
+    qDebug() << result;
+    std::vector<int> indices(result.size());
+    std::iota(indices.begin(), indices.end(), 0);
+    std::sort(indices.begin(), indices.end(),
+              [&result](int a, int b) { return result[a] > result[b]; });
+    QString sym(QChar(*mapping_->GetData()[indices.front()].begin()));
+    ui->recognizedSymbol->setText(sym);
+  } catch (const std::exception &err) {
+    QMessageBox::information(this, "Sus", err.what());
+  }
 }
 
 void MainWindow::on_penRadiusSlider_valueChanged(int value) {
@@ -55,8 +78,11 @@ void MainWindow::ConfigureStartingPerceptronParams() {
   perceptron_params_ = PerceptronParams{
       PerceptronParams::Type(ui->perceptronTypeComboBox->currentIndex()),
       ui->hiddenLayersCountSpinBox->value(),
-      ui->hiddenLayersSizeSpinBox->value(), ui->loadedMappingPathLabel->text(),
-      ui->loadedDatasetPathLabel->text()};
+      ui->hiddenLayersSizeSpinBox->value(),
+      ui->loadedMappingPathLineEdit->text(),
+      ui->loadedDatasetPathLineEdit->text(),
+      ui->epochsCountSpinBox->value(),
+      ui->datasetPercentageDoubleSpinBox->value()};
 }
 
 void MainWindow::CheckResetAllButtonAndUpdateButtonConditions() {
@@ -65,10 +91,26 @@ void MainWindow::CheckResetAllButtonAndUpdateButtonConditions() {
       ui->resetMappingPathButton->isEnabled() ||
       ui->resetHiddenLayersCountButton->isEnabled() ||
       ui->resetHiddenLayersSizeButton->isEnabled() ||
-      ui->resetPerceptronTypeButton->isEnabled());
+      ui->resetPerceptronTypeButton->isEnabled() ||
+      ui->resetEpochsCountButton->isEnabled() ||
+      ui->resetDatasetPercentageButton->isEnabled());
 
-  ui->updateModelButton->setEnabled(
-      ui->perceptronTypeComboBox->currentIndex() != -1);
+  ui->trainModelButton->setEnabled(
+      (ui->perceptronTypeComboBox->currentIndex() != perceptron_params_.type ||
+       ui->hiddenLayersCountSpinBox->value() !=
+           perceptron_params_.hidden_layers_count ||
+       ui->hiddenLayersSizeSpinBox->value() !=
+           perceptron_params_.hidden_layers_size ||
+       ui->loadedDatasetPathLineEdit->text() !=
+           perceptron_params_.dataset_path ||
+       ui->loadedMappingPathLineEdit->text() !=
+           perceptron_params_.mapping_path ||
+       ui->epochsCountSpinBox->value() != perceptron_params_.epochs_count ||
+       ui->datasetPercentageDoubleSpinBox->value() !=
+           perceptron_params_.dataset_percentage) &&
+      ui->perceptronTypeComboBox->currentIndex() != -1 &&
+      !ui->loadedMappingPathLineEdit->text().isEmpty() &&
+      !ui->loadedDatasetPathLineEdit->text().isEmpty());
 }
 
 void MainWindow::on_penRadiusSpinbox_valueChanged(int arg1) {
@@ -84,7 +126,7 @@ void MainWindow::on_loadMappingButton_clicked() {
   QString path = QFileDialog::getOpenFileName(this, "Choose mapping file",
                                               QDir::currentPath());
   if (!path.isEmpty()) {
-    ui->loadedMappingPathLabel->setText(path);
+    ui->loadedMappingPathLineEdit->setText(path);
     ui->resetMappingPathButton->setEnabled(path !=
                                            perceptron_params_.mapping_path);
     CheckResetAllButtonAndUpdateButtonConditions();
@@ -95,7 +137,7 @@ void MainWindow::on_loadDatasetButton_clicked() {
   QString path = QFileDialog::getOpenFileName(this, "Choose dataset file",
                                               QDir::currentPath());
   if (!path.isEmpty()) {
-    ui->loadedDatasetPathLabel->setText(path);
+    ui->loadedDatasetPathLineEdit->setText(path);
     ui->resetDatasetPathButton->setEnabled(path !=
                                            perceptron_params_.dataset_path);
     CheckResetAllButtonAndUpdateButtonConditions();
@@ -137,13 +179,13 @@ void MainWindow::on_resetHiddenLayersSizeButton_clicked() {
 }
 
 void MainWindow::on_resetMappingPathButton_clicked() {
-  ui->loadedMappingPathLabel->setText(perceptron_params_.mapping_path);
+  ui->loadedMappingPathLineEdit->setText(perceptron_params_.mapping_path);
   ui->resetMappingPathButton->setDisabled(true);
   CheckResetAllButtonAndUpdateButtonConditions();
 }
 
 void MainWindow::on_resetDatasetPathButton_clicked() {
-  ui->loadedDatasetPathLabel->setText(perceptron_params_.dataset_path);
+  ui->loadedDatasetPathLineEdit->setText(perceptron_params_.dataset_path);
   ui->resetDatasetPathButton->setDisabled(true);
   CheckResetAllButtonAndUpdateButtonConditions();
 }
@@ -154,5 +196,53 @@ void MainWindow::on_resetAllSettingsButton_clicked() {
   on_resetHiddenLayersCountButton_clicked();
   on_resetHiddenLayersSizeButton_clicked();
   on_resetPerceptronTypeButton_clicked();
+  on_resetEpochsCountButton_clicked();
+  on_resetDatasetPercentageButton_clicked();
   ui->resetAllSettingsButton->setDisabled(true);
+}
+
+void MainWindow::on_epochsCountSpinBox_valueChanged(int arg1) {
+  ui->resetEpochsCountButton->setEnabled(ui->epochsCountSpinBox->value() !=
+                                         perceptron_params_.epochs_count);
+  CheckResetAllButtonAndUpdateButtonConditions();
+}
+
+void MainWindow::on_datasetPercentageDoubleSpinBox_valueChanged(double arg1) {
+  ui->resetDatasetPercentageButton->setEnabled(
+      ui->datasetPercentageDoubleSpinBox->value() !=
+      perceptron_params_.dataset_percentage);
+  CheckResetAllButtonAndUpdateButtonConditions();
+}
+
+void MainWindow::on_resetEpochsCountButton_clicked() {
+  ui->epochsCountSpinBox->setValue(perceptron_params_.epochs_count);
+}
+
+void MainWindow::on_resetDatasetPercentageButton_clicked() {
+  ui->datasetPercentageDoubleSpinBox->setValue(
+      perceptron_params_.dataset_percentage);
+}
+
+void MainWindow::on_trainModelButton_clicked() {
+  Parser parser;
+  IPerceptron *new_perceptron = nullptr;
+  try {
+    Mapping mapping = parser.ParseMapping(
+        ui->loadedMappingPathLineEdit->text().toStdString());
+    Dataset dataset = parser.ParseDataset(
+        ui->loadedDatasetPathLineEdit->text().toStdString());
+
+    std::unique_ptr<IActivationFunction> func(new Sigmoid());
+    new_perceptron = new GraphPerceptron(ui->hiddenLayersCountSpinBox->value(),
+                                         ui->hiddenLayersSizeSpinBox->value(),
+                                         mapping.GetDataSize(), func);
+    new_perceptron->Train(ui->epochsCountSpinBox->value(), dataset);
+    delete perceptron_;
+    perceptron_ = new_perceptron;
+    delete mapping_;
+    mapping_ = new Mapping(std::move(mapping));
+  } catch (const std::exception &err) {
+    delete new_perceptron;
+    QMessageBox::critical(this, "Error", err.what());
+  }
 }

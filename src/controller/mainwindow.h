@@ -7,6 +7,7 @@
 
 #include "i_perceptron.h"
 #include "imagetransformer.h"
+#include "mapping.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -22,6 +23,9 @@ struct PerceptronParams {
 
   QString mapping_path;
   QString dataset_path;
+
+  int epochs_count;
+  double dataset_percentage;
 };
 
 class MainWindow : public QMainWindow {
@@ -33,6 +37,21 @@ class MainWindow : public QMainWindow {
 
  public slots:
   void RecognizePattern(bool cleared);
+
+ private slots:
+  void on_trainModelButton_clicked();
+
+ private slots:
+  void on_resetDatasetPercentageButton_clicked();
+
+ private slots:
+  void on_resetEpochsCountButton_clicked();
+
+ private slots:
+  void on_datasetPercentageDoubleSpinBox_valueChanged(double arg1);
+
+ private slots:
+  void on_epochsCountSpinBox_valueChanged(int arg1);
 
  private slots:
   void on_resetAllSettingsButton_clicked();
@@ -59,6 +78,7 @@ class MainWindow : public QMainWindow {
   DrawArea drawarea_;
   ImageTransformer image_transformer_;
   IPerceptron *perceptron_;
+  Mapping *mapping_;
   PerceptronParams perceptron_params_;
 };
 

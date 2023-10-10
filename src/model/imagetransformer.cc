@@ -1,5 +1,6 @@
 #include "imagetransformer.h"
 
+#include <QDebug>
 #include <QRgb>
 
 ImageTransformer::ImageTransformer(const QSize& target_size,
@@ -10,8 +11,12 @@ ImageTransformer::ImageTransformer(const QSize& target_size,
       invertions_(invertions) {}
 
 QImage ImageTransformer::Transform(const QImage& image) const {
-  QImage result = image.scaled(target_size_)
-                      .transformed(QTransform().rotate(90.0 * rotation_side_));
+  QImage result =
+      image
+          .scaled(target_size_, Qt::AspectRatioMode::KeepAspectRatio,
+                  Qt::TransformationMode::SmoothTransformation)
+          .transformed(QTransform().rotate(90.0 * rotation_side_));
+  qDebug() << result.size();
   result.mirror(invertions_ & Invertion::kHorizontal,
                 invertions_ & Invertion::kVertical);
   return result;
@@ -22,5 +27,11 @@ Picture ImageTransformer::ImageToDoubleMatrix(const QImage& image) const {
   for (unsigned i = 0; i < (unsigned)image.height(); ++i)
     for (unsigned j = 0; j < (unsigned)image.width(); ++j)
       result[i * image.width() + j] = image.pixelColor(i, j).valueF();
+
+  for (int i = 0; i < int(sqrt(result.size())); ++i)
+    qDebug() << QVector<double>(
+        result.begin() + i * int(sqrt(result.size())),
+        result.begin() + (i + 1) * int(sqrt(result.size())));
+
   return Picture(std::move(result));
 }

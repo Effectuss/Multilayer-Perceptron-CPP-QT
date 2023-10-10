@@ -275,7 +275,7 @@
    <property name="minimumSize">
     <size>
      <width>527</width>
-     <height>300</height>
+     <height>372</height>
     </size>
    </property>
    <property name="features">
@@ -300,7 +300,7 @@
           <x>0</x>
           <y>0</y>
           <width>486</width>
-          <height>496</height>
+          <height>433</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -315,37 +315,10 @@
            <property name="title">
             <string>Controls</string>
            </property>
-           <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,0,0">
+           <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,1,0">
             <property name="sizeConstraint">
              <enum>QLayout::SetDefaultConstraint</enum>
             </property>
-            <item row="6" column="0" colspan="2">
-             <widget class="QPushButton" name="updateModelButton">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string>Update model</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="label_2">
-              <property name="text">
-               <string>Hidden layers count</string>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="2">
-             <widget class="QPushButton" name="resetMappingPathButton">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string>Reset</string>
-              </property>
-             </widget>
-            </item>
             <item row="0" column="1">
              <widget class="QComboBox" name="perceptronTypeComboBox">
               <property name="currentIndex">
@@ -367,9 +340,84 @@
              </widget>
             </item>
             <item row="4" column="1">
-             <widget class="QLabel" name="loadedMappingPathLabel">
-              <property name="text">
+             <widget class="QLineEdit" name="loadedMappingPathLineEdit">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+              <property name="placeholderText">
                <string>-</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QPushButton" name="resetPerceptronTypeButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Reset</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QLineEdit" name="loadedDatasetPathLineEdit">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+              <property name="placeholderText">
+               <string>-</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="2">
+             <widget class="QPushButton" name="resetHiddenLayersSizeButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Reset</string>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="2">
+             <widget class="QPushButton" name="resetAllSettingsButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Reset all</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QSpinBox" name="hiddenLayersCountSpinBox">
+              <property name="suffix">
+               <string> layers</string>
+              </property>
+              <property name="minimum">
+               <number>2</number>
+              </property>
+              <property name="maximum">
+               <number>5</number>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>Perceptron type</string>
               </property>
              </widget>
             </item>
@@ -389,99 +437,6 @@
               </property>
               <property name="text">
                <string>Load dataset</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="2">
-             <widget class="QPushButton" name="resetHiddenLayersSizeButton">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string>Reset</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="label_3">
-              <property name="text">
-               <string>Hidden layer size</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QSpinBox" name="hiddenLayersCountSpinBox">
-              <property name="suffix">
-               <string> layers</string>
-              </property>
-              <property name="minimum">
-               <number>2</number>
-              </property>
-              <property name="maximum">
-               <number>5</number>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="1">
-             <widget class="QLabel" name="loadedDatasetPathLabel">
-              <property name="text">
-               <string>-</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="label">
-              <property name="text">
-               <string>Perceptron type</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="QSpinBox" name="hiddenLayersSizeSpinBox">
-              <property name="suffix">
-               <string> neurons</string>
-              </property>
-              <property name="prefix">
-               <string/>
-              </property>
-              <property name="minimum">
-               <number>50</number>
-              </property>
-              <property name="maximum">
-               <number>512</number>
-              </property>
-              <property name="value">
-               <number>256</number>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="2">
-             <widget class="QPushButton" name="resetPerceptronTypeButton">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string>Reset</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="2">
-             <widget class="QPushButton" name="resetHiddenLayersCountButton">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string>Reset</string>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="2">
-             <widget class="QPushButton" name="resetAllSettingsButton">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string>Reset all</string>
               </property>
              </widget>
             </item>
@@ -520,39 +475,85 @@
               </property>
              </widget>
             </item>
-           </layout>
-          </widget>
-         </item>
-         <item>
-          <widget class="QGroupBox" name="trainingGroupBox">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="title">
-            <string>Training</string>
-           </property>
-           <layout class="QGridLayout" name="gridLayout_3">
+            <item row="6" column="1">
+             <widget class="QSpinBox" name="epochsCountSpinBox">
+              <property name="wrapping">
+               <bool>false</bool>
+              </property>
+              <property name="frame">
+               <bool>true</bool>
+              </property>
+              <property name="suffix">
+               <string> epochs</string>
+              </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>20</number>
+              </property>
+             </widget>
+            </item>
             <item row="1" column="0">
-             <widget class="QLabel" name="label_4">
+             <widget class="QLabel" name="label_2">
               <property name="text">
-               <string>Dataset percentage</string>
+               <string>Hidden layers count</string>
               </property>
              </widget>
             </item>
-            <item row="3" column="0" colspan="2">
-             <widget class="QPushButton" name="pushButton_9">
-              <property name="text">
-               <string>Train</string>
+            <item row="3" column="1">
+             <widget class="QSpinBox" name="hiddenLayersSizeSpinBox">
+              <property name="suffix">
+               <string> neurons</string>
+              </property>
+              <property name="prefix">
+               <string/>
+              </property>
+              <property name="minimum">
+               <number>50</number>
+              </property>
+              <property name="maximum">
+               <number>512</number>
+              </property>
+              <property name="value">
+               <number>256</number>
               </property>
              </widget>
             </item>
-            <item row="1" column="1">
-             <widget class="QDoubleSpinBox" name="doubleSpinBox">
+            <item row="1" column="2">
+             <widget class="QPushButton" name="resetHiddenLayersCountButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Reset</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="2">
+             <widget class="QPushButton" name="resetMappingPathButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Reset</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_3">
+              <property name="text">
+               <string>Hidden layer size</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="1">
+             <widget class="QDoubleSpinBox" name="datasetPercentageDoubleSpinBox">
               <property name="suffix">
                <string> %</string>
               </property>
               <property name="minimum">
-               <double>0.010000000000000</double>
+               <double>1.000000000000000</double>
               </property>
               <property name="maximum">
                <double>100.000000000000000</double>
@@ -562,20 +563,47 @@
               </property>
              </widget>
             </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="label_5">
+            <item row="8" column="0" colspan="2">
+             <widget class="QPushButton" name="trainModelButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Train</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="2">
+             <widget class="QPushButton" name="resetEpochsCountButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Reset</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="2">
+             <widget class="QPushButton" name="resetDatasetPercentageButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Reset</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="0">
+             <widget class="QLabel" name="label_4">
               <property name="text">
                <string>Epochs count</string>
               </property>
              </widget>
             </item>
-            <item row="2" column="1">
-             <widget class="QSpinBox" name="spinBox">
-              <property name="minimum">
-               <number>1</number>
-              </property>
-              <property name="maximum">
-               <number>20</number>
+            <item row="7" column="0">
+             <widget class="QLabel" name="label_5">
+              <property name="text">
+               <string>Dataset percentage</string>
               </property>
              </widget>
             </item>
@@ -619,7 +647,7 @@
    <property name="minimumSize">
     <size>
      <width>527</width>
-     <height>709</height>
+     <height>385</height>
     </size>
    </property>
    <property name="features">
