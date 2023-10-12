@@ -16,22 +16,17 @@ QImage ImageTransformer::Transform(const QImage& image) const {
           .scaled(target_size_, Qt::AspectRatioMode::KeepAspectRatio,
                   Qt::TransformationMode::SmoothTransformation)
           .transformed(QTransform().rotate(90.0 * rotation_side_));
-  qDebug() << result.size();
   result.mirror(invertions_ & Invertion::kHorizontal,
                 invertions_ & Invertion::kVertical);
   return result;
 }
 
 Picture ImageTransformer::ImageToDoubleMatrix(const QImage& image) const {
-  std::vector<double> result(image.height() * image.width(), 1.0);
+  std::vector<double> result;
+  result.reserve(image.height() * image.width());
   for (unsigned i = 0; i < (unsigned)image.height(); ++i)
     for (unsigned j = 0; j < (unsigned)image.width(); ++j)
-      result[i * image.width() + j] = image.pixelColor(i, j).valueF();
-
-  for (int i = 0; i < int(sqrt(result.size())); ++i)
-    qDebug() << QVector<double>(
-        result.begin() + i * int(sqrt(result.size())),
-        result.begin() + (i + 1) * int(sqrt(result.size())));
+      result.push_back(1.0 - image.pixelColor(j, i).valueF());
 
   return Picture(std::move(result));
 }

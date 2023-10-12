@@ -49,6 +49,7 @@ set(SOURCES
     ${CMAKE_SOURCE_DIR}/model/perceptron/neuron.cc
     ${CMAKE_SOURCE_DIR}/model/perceptron/neuron.cc
     ${CMAKE_SOURCE_DIR}/model/perceptron/layer.cc
+    ${CMAKE_SOURCE_DIR}/controller/waitingwindowmanager.cc
 )
 
 set(HEADERS
@@ -66,6 +67,7 @@ set(HEADERS
     ${CMAKE_SOURCE_DIR}/model/perceptron/i_perceptron.h
     ${CMAKE_SOURCE_DIR}/model/perceptron/graph_perceptron.h
     ${CMAKE_SOURCE_DIR}/model/perceptron/layer.h
+    ${CMAKE_SOURCE_DIR}/controller/waitingwindowmanager.h
 )
 
 set(UI_FORMS ${CMAKE_SOURCE_DIR}/view/forms/mainwindow.ui)

@@ -40,20 +40,10 @@ class MainWindow : public QMainWindow {
 
  private slots:
   void on_trainModelButton_clicked();
-
- private slots:
   void on_resetDatasetPercentageButton_clicked();
-
- private slots:
   void on_resetEpochsCountButton_clicked();
-
- private slots:
   void on_datasetPercentageDoubleSpinBox_valueChanged(double arg1);
-
- private slots:
   void on_epochsCountSpinBox_valueChanged(int arg1);
-
- private slots:
   void on_resetAllSettingsButton_clicked();
   void on_resetDatasetPathButton_clicked();
   void on_resetMappingPathButton_clicked();
@@ -73,6 +63,8 @@ class MainWindow : public QMainWindow {
   void ConfigureFont();
   void ConfigureStartingPerceptronParams();
   void CheckResetAllButtonAndUpdateButtonConditions();
+
+  void TrainModel(IPerceptron **new_perceptron);
 
   Ui::MainWindow *ui;
   DrawArea drawarea_;

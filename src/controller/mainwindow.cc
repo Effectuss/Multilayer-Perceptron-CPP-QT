@@ -4,6 +4,7 @@
 #include <QFileDialog>
 #include <QFontDatabase>
 #include <QMessageBox>
+#include <QThread>
 #include <algorithm>
 
 #include "dataset.h"
@@ -43,22 +44,19 @@ void MainWindow::RecognizePattern(bool cleared) {
     ui->recognizedSymbol->setText("-");
     return;
   }
-  try {
-    auto data =
-        image_transformer_.ImageToDoubleMatrix(image_transformer_.Transform(
-            ui->drawAreaView->grab(ui->drawAreaView->sceneRect().toRect())
-                .toImage()));
-    auto result = perceptron_->Predict(data);
-    qDebug() << result;
-    std::vector<int> indices(result.size());
-    std::iota(indices.begin(), indices.end(), 0);
-    std::sort(indices.begin(), indices.end(),
-              [&result](int a, int b) { return result[a] > result[b]; });
-    QString sym(QChar(*mapping_->GetData()[indices.front()].begin()));
-    ui->recognizedSymbol->setText(sym);
-  } catch (const std::exception &err) {
-    QMessageBox::information(this, "Sus", err.what());
-  }
+  auto picture =
+      image_transformer_.ImageToDoubleMatrix(image_transformer_.Transform(
+          ui->drawAreaView->grab(ui->drawAreaView->sceneRect().toRect())
+              .toImage()));
+  auto result = perceptron_->Predict(picture);
+
+  std::vector<int> indices(result.size());
+  std::iota(indices.begin(), indices.end(), 0);
+  std::sort(indices.begin(), indices.end(),
+            [&result](int a, int b) { return result[a] > result[b]; });
+
+  QString sym(QChar(*mapping_->GetData()[indices.front()].begin()));
+  ui->recognizedSymbol->setText(sym);
 }
 
 void MainWindow::on_penRadiusSlider_valueChanged(int value) {
@@ -111,6 +109,32 @@ void MainWindow::CheckResetAllButtonAndUpdateButtonConditions() {
       ui->perceptronTypeComboBox->currentIndex() != -1 &&
       !ui->loadedMappingPathLineEdit->text().isEmpty() &&
       !ui->loadedDatasetPathLineEdit->text().isEmpty());
+}
+
+void MainWindow::TrainModel(IPerceptron **new_perceptron) {
+  Parser parser;
+  Mapping mapping =
+      parser.ParseMapping(ui->loadedMappingPathLineEdit->text().toStdString());
+  Dataset dataset =
+      parser.ParseDataset(ui->loadedDatasetPathLineEdit->text().toStdString());
+
+  std::unique_ptr<IActivationFunction> func(new Sigmoid());
+  *new_perceptron = new GraphPerceptron(ui->hiddenLayersCountSpinBox->value(),
+                                        ui->hiddenLayersSizeSpinBox->value(),
+                                        mapping.GetDataSize(), func);
+  (*new_perceptron)->Train(ui->epochsCountSpinBox->value(), dataset);
+  delete perceptron_;
+  perceptron_ = *new_perceptron;
+  delete mapping_;
+  mapping_ = new Mapping(std::move(mapping));
+  perceptron_params_ = PerceptronParams{
+      PerceptronParams::Type(ui->perceptronTypeComboBox->currentIndex()),
+      ui->hiddenLayersCountSpinBox->value(),
+      ui->hiddenLayersSizeSpinBox->value(),
+      ui->loadedMappingPathLineEdit->text(),
+      ui->loadedDatasetPathLineEdit->text(),
+      ui->epochsCountSpinBox->value(),
+      ui->datasetPercentageDoubleSpinBox->value()};
 }
 
 void MainWindow::on_penRadiusSpinbox_valueChanged(int arg1) {
@@ -224,23 +248,9 @@ void MainWindow::on_resetDatasetPercentageButton_clicked() {
 }
 
 void MainWindow::on_trainModelButton_clicked() {
-  Parser parser;
   IPerceptron *new_perceptron = nullptr;
   try {
-    Mapping mapping = parser.ParseMapping(
-        ui->loadedMappingPathLineEdit->text().toStdString());
-    Dataset dataset = parser.ParseDataset(
-        ui->loadedDatasetPathLineEdit->text().toStdString());
-
-    std::unique_ptr<IActivationFunction> func(new Sigmoid());
-    new_perceptron = new GraphPerceptron(ui->hiddenLayersCountSpinBox->value(),
-                                         ui->hiddenLayersSizeSpinBox->value(),
-                                         mapping.GetDataSize(), func);
-    new_perceptron->Train(ui->epochsCountSpinBox->value(), dataset);
-    delete perceptron_;
-    perceptron_ = new_perceptron;
-    delete mapping_;
-    mapping_ = new Mapping(std::move(mapping));
+    TrainModel(&new_perceptron);
   } catch (const std::exception &err) {
     delete new_perceptron;
     QMessageBox::critical(this, "Error", err.what());
