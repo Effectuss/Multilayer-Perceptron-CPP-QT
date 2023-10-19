@@ -71,7 +71,7 @@ Mapping Parser::ParseMapping(const std::string &file_path) {
     mapping.AppendData(value);
   }
 
-  mapping.SetMinIndex(max_index - mapping.GetDataSize())
+  mapping.SetMinIndex(max_index - mapping.GetDataSize());
 
-      return mapping;
+  return mapping;
 }
