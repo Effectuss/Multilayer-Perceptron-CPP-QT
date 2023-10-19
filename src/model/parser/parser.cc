@@ -3,7 +3,8 @@
 #include <fstream>
 #include <sstream>
 
-Dataset Parser::ParseDataset(const std::string &file_path) {
+Dataset Parser::ParseDataset(const std::string &file_path,
+                             std::size_t index_offset) {
   Dataset dataset;
   std::ifstream file(file_path);
 
@@ -18,14 +19,16 @@ Dataset Parser::ParseDataset(const std::string &file_path) {
     std::pair<Picture, int> tmp_data;
     std::vector<double> pixels;
     std::string pixel;
+    std::size_t index;
 
-    string_stream >> tmp_data.second;
+    string_stream >> index;
     string_stream.ignore(1);
 
     while (std::getline(string_stream, pixel, ',')) {
       pixels.push_back(std::stoi(pixel) / 255.0);
     }
 
+    tmp_data.second = index - index_offset;
     tmp_data.first.SetData(pixels);
     dataset.AppendDataToVector(tmp_data);
   }
@@ -65,5 +68,5 @@ Mapping Parser::ParseMapping(const std::string &file_path) {
 
   mapping.SetMinIndex(max_index - mapping.GetDataSize())
 
-  return mapping;
+      return mapping;
 }
