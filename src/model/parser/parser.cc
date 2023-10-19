@@ -29,6 +29,11 @@ Dataset Parser::ParseDataset(const std::string &file_path,
     }
 
     tmp_data.second = index - index_offset;
+
+    if (tmp_data.second < 0) {
+      throw std::logic_error("Wrong mapping loaded or wrong index offset");
+    }
+
     tmp_data.first.SetData(pixels);
     dataset.AppendDataToVector(tmp_data);
   }
