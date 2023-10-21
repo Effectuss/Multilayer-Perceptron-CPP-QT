@@ -8,7 +8,7 @@
 
 class Parser {
  public:
-  static Dataset ParseDataset(const std::string &);
+  static Dataset ParseDataset(const std::string &, std::size_t);
   static Mapping ParseMapping(const std::string &);
 };
 

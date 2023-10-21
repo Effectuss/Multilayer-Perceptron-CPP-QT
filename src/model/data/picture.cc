@@ -1,5 +1,6 @@
 #include "picture.h"
 
+#include <cmath>
 #include <stdexcept>
 
 Picture::Picture() : data_(kMaxPictureSize) {}
@@ -27,3 +28,5 @@ void Picture::SetData(const std::vector<double> &data) {
 }
 
 std::size_t Picture::GetSize() const { return data_.size(); }
+
+std::size_t Picture::GetSideSize() const { return std::sqrt(data_.size()); }
