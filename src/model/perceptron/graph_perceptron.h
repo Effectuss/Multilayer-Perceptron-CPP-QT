@@ -33,8 +33,6 @@ class GraphPerceptron final : public IPerceptron {
 
   static constexpr double learning_rate_ = 0.1;
 
-  std::size_t starting_index_ = 1;
-
   std::vector<Layer> layers_;
 
   std::size_t hidden_layers_count_;
