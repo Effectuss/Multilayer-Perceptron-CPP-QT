@@ -116,7 +116,8 @@ void MainWindow::TrainModel(IPerceptron **new_perceptron) {
   Mapping mapping =
       parser.ParseMapping(ui->loadedMappingPathLineEdit->text().toStdString());
   Dataset dataset =
-      parser.ParseDataset(ui->loadedDatasetPathLineEdit->text().toStdString());
+      parser.ParseDataset(ui->loadedDatasetPathLineEdit->text().toStdString(),
+                          mapping.GetMinIndex());
 
   std::unique_ptr<IActivationFunction> func(new Sigmoid());
   *new_perceptron = new GraphPerceptron(ui->hiddenLayersCountSpinBox->value(),
