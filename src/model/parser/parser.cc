@@ -51,7 +51,7 @@ Mapping Parser::ParseMapping(const std::string &file_path) {
 
   std::string buffer_line;
 
-  std::size_t max_index = -1;
+  std::size_t max_index = 0;
 
   while (std::getline(file, buffer_line)) {
     std::stringstream string_stream(buffer_line);
@@ -71,7 +71,7 @@ Mapping Parser::ParseMapping(const std::string &file_path) {
     mapping.AppendData(value);
   }
 
-  mapping.SetMinIndex(max_index - mapping.GetDataSize());
+  mapping.SetMinIndex(max_index + 1 - mapping.GetDataSize());
 
   return mapping;
 }
