@@ -16,7 +16,7 @@ class IPerceptron {
   // std::size_t hidden_layers_count,
   // std::size_t hidden_layers_size,
   // const Mapping &mapping
-  // std::unique_ptr<IActivationFunction> &activationFunction)
+  // std::unique_ptr<IActivationFunction> &activation_function)
   virtual ~IPerceptron() = default;
 
   virtual std::vector<double> Predict(const Picture& picture) = 0;
@@ -25,7 +25,7 @@ class IPerceptron {
   virtual void Test(double segment, const Dataset& dataset) = 0;
 
   virtual void SetActivationFunction(
-      std::unique_ptr<IActivationFunction>& activationFunction) = 0;
+      std::unique_ptr<IActivationFunction>& activation_function) = 0;
 
   virtual void LoadWeights(const std::string& file_name) = 0;
   virtual void ExportWeights(const std::string& file_name) = 0;
