@@ -177,6 +177,7 @@ void MainWindow::on_perceptronTypeComboBox_currentIndexChanged(int index) {
 
 void MainWindow::on_resetPerceptronTypeButton_clicked() {
   ui->perceptronTypeComboBox->setCurrentIndex(perceptron_params_.type);
+  ui->resetPerceptronTypeButton->setDisabled(true);
   CheckResetAllButtonAndUpdateButtonConditions();
 }
 
@@ -189,6 +190,7 @@ void MainWindow::on_hiddenLayersCountSpinBox_valueChanged(int arg1) {
 void MainWindow::on_resetHiddenLayersCountButton_clicked() {
   ui->hiddenLayersCountSpinBox->setValue(
       perceptron_params_.hidden_layers_count);
+  ui->resetHiddenLayersCountButton->setDisabled(true);
   CheckResetAllButtonAndUpdateButtonConditions();
 }
 
@@ -200,6 +202,7 @@ void MainWindow::on_hiddenLayersSizeSpinBox_valueChanged(int arg1) {
 
 void MainWindow::on_resetHiddenLayersSizeButton_clicked() {
   ui->hiddenLayersSizeSpinBox->setValue(perceptron_params_.hidden_layers_size);
+  ui->resetHiddenLayersSizeButton->setDisabled(true);
   CheckResetAllButtonAndUpdateButtonConditions();
 }
 
@@ -241,17 +244,22 @@ void MainWindow::on_datasetPercentageDoubleSpinBox_valueChanged(double arg1) {
 
 void MainWindow::on_resetEpochsCountButton_clicked() {
   ui->epochsCountSpinBox->setValue(perceptron_params_.epochs_count);
+  ui->resetEpochsCountButton->setDisabled(true);
+  CheckResetAllButtonAndUpdateButtonConditions();
 }
 
 void MainWindow::on_resetDatasetPercentageButton_clicked() {
   ui->datasetPercentageDoubleSpinBox->setValue(
       perceptron_params_.dataset_percentage);
+  ui->resetDatasetPercentageButton->setDisabled(true);
+  CheckResetAllButtonAndUpdateButtonConditions();
 }
 
 void MainWindow::on_trainModelButton_clicked() {
   IPerceptron *new_perceptron = nullptr;
   try {
     TrainModel(&new_perceptron);
+    on_resetAllSettingsButton_clicked();
   } catch (const std::exception &err) {
     delete new_perceptron;
     QMessageBox::critical(this, "Error", err.what());
