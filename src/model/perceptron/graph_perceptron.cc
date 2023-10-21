@@ -66,8 +66,6 @@ void GraphPerceptron::FeedForward(const Picture &picture) {
 }
 
 void GraphPerceptron::PropagateBackwards(std::size_t expected_index) {
-  expected_index -= starting_index_;
-
   layers_.back().UpdateErrorByExpectedIndex(expected_index);
 
   for (std::size_t i = layers_.size() - 1; i > 0; --i) {
