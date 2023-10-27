@@ -18,6 +18,9 @@ class Layer final {
   void SetNeuronsData(const std::vector<double> &neurons_values);
   std::vector<double> GetNeuronsData();
 
+  std::size_t GetLayerSize();
+  std::vector<Neuron>& GetRawNeuronsData();
+
   void CalculateValues();
 
   void UpdateErrorByExpectedIndex(std::size_t expected_index);
