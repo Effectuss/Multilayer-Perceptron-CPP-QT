@@ -1,6 +1,8 @@
 #include "graph_perceptron.h"
 
 #include <algorithm>
+#include <fstream>
+#include <sstream>
 
 GraphPerceptron::GraphPerceptron(
     std::size_t hidden_layers_count, std::size_t hidden_layers_size,
@@ -38,11 +40,58 @@ void GraphPerceptron::SetActivationFunction(
 }
 
 void GraphPerceptron::LoadWeights(const std::string &file_name) {
-  // todo
+  std::ifstream file(file_name);
+
+  if (!file.is_open()) {
+    throw std::ios_base::failure("Cannot open for read file for weights");
+  }
+
+  layers_.clear();
+  std::size_t input_layer_size;
+  file >> input_layer_size;
+  file >> hidden_layers_size_;
+  file >> hidden_layers_count_;
+  file >> output_layer_size_;
+  Configure(input_layer_size);
+  Neuron::SetActivationFunction(activationFunction_);
+
+  for (std::size_t i = 1; i < layers_.size(); ++i) {
+    for (auto &neuron : layers_[i].GetRawNeuronsData()) {
+      std::vector<double> temp_weights;
+      for (std::size_t j = 0; j < layers_[i - 1].GetLayerSize(); ++j) {
+        double temp_weight;
+        file >> temp_weight;
+        if (file.fail()) {
+          throw std::ios_base::failure("Error in weights file!");
+        }
+        temp_weights.push_back(temp_weight);
+      }
+      neuron.SetNeuronsWeights(temp_weights);
+    }
+  }
 }
 
 void GraphPerceptron::ExportWeights(const std::string &file_name) {
-  // todo
+  std::ofstream file(file_name);
+
+  if (!file.is_open()) {
+    throw std::ios_base::failure(
+        "Cannot create or open for write file for weights");
+  }
+
+  file << layers_[0].GetLayerSize() << " ";
+  file << hidden_layers_size_ << " ";
+  file << hidden_layers_count_ << " ";
+  file << output_layer_size_ << " ";
+
+  for (std::size_t i = 1; i < layers_.size(); ++i) {
+    file << std::endl;
+    for (auto &neuron : layers_[i].GetRawNeuronsData()) {
+      for (auto &weight : neuron.GetNeuronWeights()) {
+        file << weight << " ";
+      }
+    }
+  }
 }
 
 void GraphPerceptron::Configure(std::size_t input_layer_size) {

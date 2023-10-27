@@ -35,6 +35,14 @@ std::vector<double> Layer::GetNeuronsData() {
   return result;
 }
 
+std::size_t Layer::GetLayerSize() {
+  return neurons_.size();
+}
+
+std::vector<Neuron>& Layer::GetRawNeuronsData() {
+  return neurons_;
+}
+
 void Layer::CalculateValues() {
   for (auto& neuron : neurons_) {
     neuron.CalculateValue();

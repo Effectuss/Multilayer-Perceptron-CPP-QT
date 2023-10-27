@@ -69,3 +69,9 @@ void Neuron::UpdateWeights(double learning_rate) {
 std::vector<double>& Neuron::GetNeuronWeights() {
   return previous_neurons_weights_;
 }
+
+void Neuron::SetNeuronsWeights(std::vector<double>& weights) {
+  for (std::size_t i = 0; i < previous_neurons_weights_.size(); ++i) {
+    previous_neurons_weights_[i] = weights[i];
+  }
+}
