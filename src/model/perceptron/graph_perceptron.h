@@ -1,6 +1,8 @@
 #ifndef GRAPH_PERCEPTRON_GRAPH_PERCEPTRON_H
 #define GRAPH_PERCEPTRON_GRAPH_PERCEPTRON_H
 
+#include <fstream>
+
 #include "dataset.h"
 #include "i_activation_function.h"
 #include "i_perceptron.h"
@@ -10,7 +12,10 @@ class GraphPerceptron final : public IPerceptron {
  public:
   GraphPerceptron(std::size_t hidden_layers_count,
                   std::size_t hidden_layers_size, std::size_t output_layer_size,
-                  std::unique_ptr<IActivationFunction>& activationFunction);
+                  std::unique_ptr<IActivationFunction>& activation_function);
+  explicit GraphPerceptron(
+      std::ifstream& weights,
+      std::unique_ptr<IActivationFunction>& activation_function);
   GraphPerceptron() = delete;
   ~GraphPerceptron() override = default;
 
