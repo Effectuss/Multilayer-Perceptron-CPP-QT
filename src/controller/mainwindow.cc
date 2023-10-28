@@ -92,10 +92,9 @@ void MainWindow::CheckResetAllButtonAndUpdateButtonConditions() {
       ui->resetHiddenLayersCountButton->isEnabled() ||
       ui->resetHiddenLayersSizeButton->isEnabled() ||
       ui->resetPerceptronTypeButton->isEnabled() ||
-      ui->resetEpochsCountButton->isEnabled() ||
-      ui->resetDatasetPercentageButton->isEnabled());
+      ui->resetEpochsCountButton->isEnabled());
 
-  ui->trainModelButton->setEnabled(
+  bool train_enabled_condition =
       (ui->perceptronTypeComboBox->currentIndex() != perceptron_params_.type ||
        ui->hiddenLayersCountSpinBox->value() !=
            perceptron_params_.hidden_layers_count ||
@@ -110,7 +109,10 @@ void MainWindow::CheckResetAllButtonAndUpdateButtonConditions() {
            perceptron_params_.dataset_percentage) &&
       ui->perceptronTypeComboBox->currentIndex() != -1 &&
       !ui->loadedMappingPathLineEdit->text().isEmpty() &&
-      !ui->loadedDatasetPathLineEdit->text().isEmpty());
+      !ui->loadedDatasetPathLineEdit->text().isEmpty();
+
+  ui->trainModelButton->setEnabled(train_enabled_condition);
+  ui->crossValidateButton->setEnabled(train_enabled_condition);
 }
 
 void MainWindow::TrainModel(IPerceptron **new_perceptron) {
@@ -227,7 +229,6 @@ void MainWindow::on_resetAllSettingsButton_clicked() {
   on_resetHiddenLayersSizeButton_clicked();
   on_resetPerceptronTypeButton_clicked();
   on_resetEpochsCountButton_clicked();
-  on_resetDatasetPercentageButton_clicked();
   ui->resetAllSettingsButton->setDisabled(true);
 }
 
@@ -237,23 +238,9 @@ void MainWindow::on_epochsCountSpinBox_valueChanged(int arg1) {
   CheckResetAllButtonAndUpdateButtonConditions();
 }
 
-void MainWindow::on_datasetPercentageDoubleSpinBox_valueChanged(double arg1) {
-  ui->resetDatasetPercentageButton->setEnabled(
-      ui->datasetPercentageDoubleSpinBox->value() !=
-      perceptron_params_.dataset_percentage);
-  CheckResetAllButtonAndUpdateButtonConditions();
-}
-
 void MainWindow::on_resetEpochsCountButton_clicked() {
   ui->epochsCountSpinBox->setValue(perceptron_params_.epochs_count);
   ui->resetEpochsCountButton->setDisabled(true);
-  CheckResetAllButtonAndUpdateButtonConditions();
-}
-
-void MainWindow::on_resetDatasetPercentageButton_clicked() {
-  ui->datasetPercentageDoubleSpinBox->setValue(
-      perceptron_params_.dataset_percentage);
-  ui->resetDatasetPercentageButton->setDisabled(true);
   CheckResetAllButtonAndUpdateButtonConditions();
 }
 

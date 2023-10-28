@@ -40,9 +40,7 @@ class MainWindow : public QMainWindow {
 
  private slots:
   void on_trainModelButton_clicked();
-  void on_resetDatasetPercentageButton_clicked();
   void on_resetEpochsCountButton_clicked();
-  void on_datasetPercentageDoubleSpinBox_valueChanged(double arg1);
   void on_epochsCountSpinBox_valueChanged(int arg1);
   void on_resetAllSettingsButton_clicked();
   void on_resetDatasetPathButton_clicked();
