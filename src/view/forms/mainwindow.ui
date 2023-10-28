@@ -305,9 +305,9 @@
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>0</y>
+          <y>-50</y>
           <width>493</width>
-          <height>426</height>
+          <height>471</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -620,19 +620,12 @@
          <item>
           <widget class="QGroupBox" name="weightsGroupBox">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="title">
             <string>Weights</string>
            </property>
            <layout class="QGridLayout" name="gridLayout_4">
-            <item row="1" column="0">
-             <widget class="QPushButton" name="exportWeightsButton">
-              <property name="text">
-               <string>Export weights</string>
-              </property>
-             </widget>
-            </item>
             <item row="0" column="0">
              <widget class="QPushButton" name="loadWeightsButton">
               <property name="text">
@@ -640,7 +633,31 @@
               </property>
              </widget>
             </item>
+            <item row="0" column="1">
+             <widget class="QLineEdit" name="loadedWeightsPath">
+              <property name="placeholderText">
+               <string>-</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0" colspan="2">
+             <widget class="QPushButton" name="exportWeightsButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Export weights</string>
+              </property>
+             </widget>
+            </item>
            </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="crossValidationGroupBox">
+           <property name="title">
+            <string>Cross-validation</string>
+           </property>
           </widget>
          </item>
         </layout>
@@ -670,10 +687,21 @@
     <layout class="QGridLayout" name="gridLayout_3">
      <item row="0" column="0">
       <widget class="QTabWidget" name="tabWidget">
-       <widget class="QWidget" name="tab_3">
+       <property name="tabsClosable">
+        <bool>false</bool>
+       </property>
+       <property name="movable">
+        <bool>true</bool>
+       </property>
+       <widget class="QWidget" name="probabilityTab">
         <attribute name="title">
-         <string>Tab 1</string>
+         <string>Probabilities</string>
         </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_6">
+         <item>
+          <widget class="HistogramPlot" name="probabilityPlot" native="true"/>
+         </item>
+        </layout>
        </widget>
        <widget class="QWidget" name="tab_4">
         <attribute name="title">
@@ -686,6 +714,14 @@
    </widget>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>HistogramPlot</class>
+   <extends>QWidget</extends>
+   <header>histogramplot.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

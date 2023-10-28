@@ -4,8 +4,10 @@
 #include <QFileDialog>
 #include <QFontDatabase>
 #include <QMessageBox>
-#include <QThread>
 #include <algorithm>
+#include <chrono>
+#include <future>
+#include <thread>
 
 #include "dataset.h"
 #include "graph_perceptron.h"
@@ -256,12 +258,32 @@ void MainWindow::on_resetDatasetPercentageButton_clicked() {
 }
 
 void MainWindow::on_trainModelButton_clicked() {
+  using namespace std::chrono_literals;
+
   IPerceptron *new_perceptron = nullptr;
+  auto train_result =
+      std::async(&MainWindow::TrainModel, this, &new_perceptron);
+  while (true) {
+    train_result.wait_for(100ms);
+    if (train_result.valid()) break;
+  }
+
   try {
-    TrainModel(&new_perceptron);
-    on_resetAllSettingsButton_clicked();
+    train_result.get();
   } catch (const std::exception &err) {
     delete new_perceptron;
-    QMessageBox::critical(this, "Error", err.what());
+    QMessageBox::critical(this, "Loading error",
+                          "Error occured while training model");
   }
+  on_resetAllSettingsButton_clicked();
+}
+
+void MainWindow::on_loadWeightsButton_clicked() {
+  QString weights_path = QFileDialog::getOpenFileName(
+      this, "Select weights file", QDir::currentPath());
+  if (weights_path.isEmpty()) return;
+
+  //  try {
+  //    IPerceptron* new_perceptron = new GraphPerceptron()
+  //  }
 }

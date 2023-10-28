@@ -59,6 +59,8 @@ class MainWindow : public QMainWindow {
   void on_penRadiusSpinbox_valueChanged(int arg1);
   void on_penRadiusSlider_valueChanged(int value);
 
+  void on_loadWeightsButton_clicked();
+
  private:
   void ConfigureFont();
   void ConfigureStartingPerceptronParams();
