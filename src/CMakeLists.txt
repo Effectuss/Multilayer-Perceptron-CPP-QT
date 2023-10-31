@@ -18,59 +18,64 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets PrintSupport)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets PrintSupport)
 
 include_directories(
-  ${CMAKE_SOURCE_DIR}/view
-  ${CMAKE_SOURCE_DIR}/model
-  ${CMAKE_SOURCE_DIR}/model/data
-  ${CMAKE_SOURCE_DIR}/model/parser
-  ${CMAKE_SOURCE_DIR}/model/perceptron
-  ${CMAKE_SOURCE_DIR}/model/activation_function
-  ${CMAKE_SOURCE_DIR}/controller
-  ${CMAKE_SOURCE_DIR}/view/forms
-  ${CMAKE_SOURCE_DIR}/view/mainwindow
-  ${CMAKE_SOURCE_DIR}/view/drawarea
-  ${CMAKE_SOURCE_DIR}/view/qcustomplot)
+  controller
+  #
+  model
+  model/data
+  model/parser
+  model/perceptron
+  model/activation_function
+  #
+  external
+  external/qcustomplot)
 
-set(CMAKE_AUTOUIC_SEARCH_PATHS view/forms)
+set(CMAKE_AUTOUIC_SEARCH_PATHS forms)
 
 set(SOURCES
-    ${CMAKE_SOURCE_DIR}/controller/mainwindow.cc
-    ${CMAKE_SOURCE_DIR}/controller/drawarea.cc
-    ${CMAKE_SOURCE_DIR}/model/imagetransformer.cc
-    ${CMAKE_SOURCE_DIR}/model/data/picture.cc
-    ${CMAKE_SOURCE_DIR}/view/histogramplot.cc
-    # ${CMAKE_SOURCE_DIR}/src/model/tmp_main.cc
-    ${CMAKE_SOURCE_DIR}/model/activation_function/sigmoid.cc
-    ${CMAKE_SOURCE_DIR}/model/data/dataset.cc
-    ${CMAKE_SOURCE_DIR}/model/data/mapping.cc
-    ${CMAKE_SOURCE_DIR}/model/data/picture.cc
-    ${CMAKE_SOURCE_DIR}/model/parser/parser.cc
-    ${CMAKE_SOURCE_DIR}/model/perceptron/graph_perceptron.cc
-    ${CMAKE_SOURCE_DIR}/model/perceptron/neuron.cc
-    ${CMAKE_SOURCE_DIR}/model/perceptron/neuron.cc
-    ${CMAKE_SOURCE_DIR}/model/perceptron/layer.cc
-    ${CMAKE_SOURCE_DIR}/view/qcustomplot/qcustomplot.cpp)
+    controller/mainwindow.cc
+    controller/drawarea.cc
+    controller/trainingdialog.cc
+    controller/histogramplot.cc
+    controller/modeltrainer.cc
+    #
+    model/imagetransformer.cc
+    model/data/picture.cc
+    model/activation_function/sigmoid.cc
+    model/data/dataset.cc
+    model/data/mapping.cc
+    model/data/picture.cc
+    model/parser/parser.cc
+    model/perceptron/graph_perceptron.cc
+    model/perceptron/neuron.cc
+    model/perceptron/neuron.cc
+    model/perceptron/layer.cc
+    #
+    external/qcustomplot/qcustomplot.cpp)
 
 set(HEADERS
-    ${CMAKE_SOURCE_DIR}/controller/mainwindow.h
-    ${CMAKE_SOURCE_DIR}/controller/drawarea.h
-    ${CMAKE_SOURCE_DIR}/model/imagetransformer.h
-    ${CMAKE_SOURCE_DIR}/model/data/picture.h
-    ${CMAKE_SOURCE_DIR}/view/histogramplot.h
-    ${CMAKE_SOURCE_DIR}/model/activation_function/i_activation_function.h
-    ${CMAKE_SOURCE_DIR}/model/activation_function/sigmoid.h
-    ${CMAKE_SOURCE_DIR}/model/data/dataset.h
-    ${CMAKE_SOURCE_DIR}/model/data/mapping.h
-    ${CMAKE_SOURCE_DIR}/model/data/picture.h
-    ${CMAKE_SOURCE_DIR}/model/parser/parser.h
-    ${CMAKE_SOURCE_DIR}/model/perceptron/i_perceptron.h
-    ${CMAKE_SOURCE_DIR}/model/perceptron/graph_perceptron.h
-    ${CMAKE_SOURCE_DIR}/model/perceptron/layer.h
-    ${CMAKE_SOURCE_DIR}/view/qcustomplot/qcustomplot.h)
+    controller/mainwindow.h
+    controller/drawarea.h
+    controller/trainingdialog.h
+    controller/histogramplot.h
+    controller/modeltrainer.h
+    #
+    model/imagetransformer.h
+    model/data/picture.h
+    model/activation_function/i_activation_function.h
+    model/activation_function/sigmoid.h
+    model/data/dataset.h
+    model/data/mapping.h
+    model/data/picture.h
+    model/parser/parser.h
+    model/perceptron/i_perceptron.h
+    model/perceptron/graph_perceptron.h
+    model/perceptron/layer.h
+    #
+    external/qcustomplot/qcustomplot.h)
 
-set(UI_FORMS ${CMAKE_SOURCE_DIR}/view/forms/mainwindow.ui)
+set(UI_FORMS forms/mainwindow.ui forms/trainingdialog.ui)
 
-set(PROJECT_SOURCES ${SOURCES} ${HEADERS} ${UI_FORMS}
-                    ${CMAKE_SOURCE_DIR}/main.cc)
+set(PROJECT_SOURCES ${SOURCES} ${HEADERS} ${UI_FORMS} main.cc)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
   qt_add_executable(MultilayerPerceptron MANUAL_FINALIZATION ${PROJECT_SOURCES})

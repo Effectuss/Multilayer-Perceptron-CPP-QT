@@ -4,16 +4,15 @@
 #include <QFileDialog>
 #include <QFontDatabase>
 #include <QMessageBox>
+#include <QThread>
 #include <algorithm>
-#include <chrono>
-#include <future>
-#include <thread>
 
 #include "dataset.h"
 #include "graph_perceptron.h"
 #include "mapping.h"
 #include "parser.h"
 #include "sigmoid.h"
+#include "trainingdialog.h"
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -245,24 +244,7 @@ void MainWindow::on_resetEpochsCountButton_clicked() {
 }
 
 void MainWindow::on_trainModelButton_clicked() {
-  using namespace std::chrono_literals;
-
   IPerceptron *new_perceptron = nullptr;
-  auto train_result =
-      std::async(&MainWindow::TrainModel, this, &new_perceptron);
-  while (true) {
-    train_result.wait_for(100ms);
-    if (train_result.valid()) break;
-  }
-
-  try {
-    train_result.get();
-  } catch (const std::exception &err) {
-    delete new_perceptron;
-    QMessageBox::critical(this, "Loading error",
-                          "Error occured while training model");
-  }
-  on_resetAllSettingsButton_clicked();
 }
 
 void MainWindow::on_loadWeightsButton_clicked() {
