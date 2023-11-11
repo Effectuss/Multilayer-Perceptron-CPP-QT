@@ -5,27 +5,29 @@
 #include "sigmoid.h"
 
 int main() {
-  std::unique_ptr<IActivationFunction> sigmoid = std::make_unique<Sigmoid>();
+    std::unique_ptr<IActivationFunction> sigmoid = std::make_unique<Sigmoid>();
 
-  Dataset dataset = Parser::ParseDataset(
-      "/Users/englishk/goinfre/emnist-letters/emnist-letters-train.csv");
-  Dataset train_dataset = Parser::ParseDataset(
-      "/Users/englishk/goinfre/emnist-letters/emnist-letters-test.csv");
+    Dataset dataset = Parser::ParseDataset(
+            "/Users/englishk/goinfre/emnist-letters/emnist-letters-train.csv");
+    Dataset test_dataset = Parser::ParseDataset(
+            "/Users/englishk/goinfre/emnist-letters/emnist-letters-test.csv");
 
-  MatrixPerceptron perceptron(3, 144);
+    Mapping mapping = Parser::ParseMapping(
+            "/Users/englishk/goinfre/emnist-letters/emnist-letters-mapping.txt"
+    );
 
-  perceptron.SetTrainDataset(dataset);
-  perceptron.SetActivationFunction(sigmoid);
+    MatrixPerceptron perceptron(3, 144, mapping, sigmoid);
 
     perceptron.LoadWeights("/Users/englishk/goinfre/weight.txt");
 
-  //  for (int i = 0; i < 1; ++i) {
-//      perceptron.Train(1);
-  double r_p = perceptron.TestMatrixPerceptron(train_dataset);
-  std::cout << "AFTER TEST: " << r_p << "%" << std::endl;
-  //  }
+//    for (int i = 0; i < 3; ++i) {
+//        perceptron.Train(1, dataset);
+        double r_p = perceptron.TestMatrixPerceptron(test_dataset);
+        std::cout << "AFTER TEST: " << r_p << "%" << std::endl;
+//    }
 
-//  perceptron.ExportWeights("/Users/englishk/goinfre/weight.txt");
 
-  return 1;
+//    perceptron.ExportWeights("/Users/englishk/goinfre/weight.txt");
+
+    return 1;
 }
