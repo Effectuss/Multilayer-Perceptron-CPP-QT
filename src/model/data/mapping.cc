@@ -1,13 +1,11 @@
 #include "mapping.h"
 
-void Mapping::AddData(int key, const std::set<int>& value) {
-  data_[key] = value;
-}
+void Mapping::AppendData(const std::set<int>& value) { data_.push_back(value); }
 
-const std::map<int, std::set<int>>& Mapping::GetData() const { return data_; }
+const std::vector<std::set<int>>& Mapping::GetData() const { return data_; }
 
 std::size_t Mapping::GetDataSize() const { return data_.size(); }
 
-const std::set<int>& Mapping::GetItem(int key) const {
-  return data_.find(key)->second;
-}
+void Mapping::SetMinIndex(std::size_t min_index) { min_index_ = min_index; }
+
+std::size_t Mapping::GetMinIndex() const { return min_index_; }
