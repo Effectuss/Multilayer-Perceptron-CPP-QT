@@ -27,7 +27,9 @@ include_directories(
   model/activation_function
   #
   external
-  external/qcustomplot)
+  external/qcustomplot
+  #
+  lib)
 
 set(CMAKE_AUTOUIC_SEARCH_PATHS forms)
 
@@ -46,11 +48,14 @@ set(SOURCES
     model/data/picture.cc
     model/parser/parser.cc
     model/perceptron/graph_perceptron.cc
+    model/perceptron/matrix_perceptron.cc
     model/perceptron/neuron.cc
     model/perceptron/neuron.cc
     model/perceptron/layer.cc
     #
-    external/qcustomplot/qcustomplot.cpp)
+    external/qcustomplot/qcustomplot.cpp
+    #
+    lib/matrix.cc)
 
 set(HEADERS
     controller/mainwindow.h
@@ -68,10 +73,13 @@ set(HEADERS
     model/data/picture.h
     model/parser/parser.h
     model/perceptron/i_perceptron.h
+    model/perceptron/matrix_perceptron.h
     model/perceptron/graph_perceptron.h
     model/perceptron/layer.h
     #
-    external/qcustomplot/qcustomplot.h)
+    external/qcustomplot/qcustomplot.h
+    #
+    lib/matrix.h)
 
 set(UI_FORMS forms/mainwindow.ui forms/trainingdialog.ui)
 
