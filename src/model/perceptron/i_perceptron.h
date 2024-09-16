@@ -31,4 +31,4 @@ class IPerceptron {
   virtual void ExportWeights(const std::string& file_name) = 0;
 };
 
-#endif // MULTILAYER_PERCEPTRON_CPP_QT_IPERCEPTRON_H
+#endif  // MULTILAYER_PERCEPTRON_CPP_QT_IPERCEPTRON_H

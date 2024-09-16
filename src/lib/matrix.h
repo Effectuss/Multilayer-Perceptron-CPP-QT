@@ -9,7 +9,7 @@
 #include <vector>
 
 class Matrix {
-public:
+ public:
   Matrix() = default;
 
   Matrix(int rows, int cols);
@@ -41,10 +41,10 @@ public:
                                const std::vector<double> &vector_column,
                                std::vector<double> &vector_res);
 
-  [[nodiscard]] const std::vector<double> &
-  GetVectorByRows(std::size_t row) const;
+  [[nodiscard]] const std::vector<double> &GetVectorByRows(
+      std::size_t row) const;
 
-private:
+ private:
   static bool IsCorrectIndex(int, int);
 
   std::size_t rows_{};
@@ -55,4 +55,4 @@ private:
   static std::mt19937 gen_;
 };
 
-#endif // MULTILAYER_PERCEPTRON_CPP_QT_MATRIX_H
+#endif  // MULTILAYER_PERCEPTRON_CPP_QT_MATRIX_H

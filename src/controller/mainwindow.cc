@@ -9,8 +9,8 @@
 
 #include "dataset.h"
 #include "graph_perceptron.h"
-#include "matrix_perceptron.h"
 #include "mapping.h"
+#include "matrix_perceptron.h"
 #include "parser.h"
 #include "sigmoid.h"
 #include "ui_mainwindow.h"
@@ -102,8 +102,7 @@ void MainWindow::CheckResetAllButtonAndUpdateButtonConditions() {
            perceptron_params_.dataset_path ||
        ui->loadedMappingPathLineEdit->text() !=
            perceptron_params_.mapping_path ||
-       ui->epochsCountSpinBox->value() != perceptron_params_.epochs_count
-       ) &&
+       ui->epochsCountSpinBox->value() != perceptron_params_.epochs_count) &&
       ui->perceptronTypeComboBox->currentIndex() != -1 &&
       !ui->loadedMappingPathLineEdit->text().isEmpty() &&
       !ui->loadedDatasetPathLineEdit->text().isEmpty();
@@ -125,9 +124,9 @@ void MainWindow::TrainModel(IPerceptron **new_perceptron) {
                                           ui->hiddenLayersSizeSpinBox->value(),
                                           mapping.GetDataSize(), func);
   } else {
-    *new_perceptron = new MatrixPerceptron(ui->hiddenLayersCountSpinBox->value(),
-                                           ui->hiddenLayersSizeSpinBox->value(),
-                                           mapping, func);
+    *new_perceptron = new MatrixPerceptron(
+        ui->hiddenLayersCountSpinBox->value(),
+        ui->hiddenLayersSizeSpinBox->value(), mapping, func);
   }
   (*new_perceptron)->Train(ui->epochsCountSpinBox->value(), dataset);
 
