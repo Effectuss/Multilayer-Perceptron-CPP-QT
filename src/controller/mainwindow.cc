@@ -9,10 +9,10 @@
 
 #include "dataset.h"
 #include "graph_perceptron.h"
+#include "matrix_perceptron.h"
 #include "mapping.h"
 #include "parser.h"
 #include "sigmoid.h"
-#include "trainingdialog.h"
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -80,8 +80,7 @@ void MainWindow::ConfigureStartingPerceptronParams() {
       ui->hiddenLayersSizeSpinBox->value(),
       ui->loadedMappingPathLineEdit->text(),
       ui->loadedDatasetPathLineEdit->text(),
-      ui->epochsCountSpinBox->value(),
-      ui->datasetPercentageDoubleSpinBox->value()};
+      ui->epochsCountSpinBox->value()};
 }
 
 void MainWindow::CheckResetAllButtonAndUpdateButtonConditions() {
@@ -103,15 +102,13 @@ void MainWindow::CheckResetAllButtonAndUpdateButtonConditions() {
            perceptron_params_.dataset_path ||
        ui->loadedMappingPathLineEdit->text() !=
            perceptron_params_.mapping_path ||
-       ui->epochsCountSpinBox->value() != perceptron_params_.epochs_count ||
-       ui->datasetPercentageDoubleSpinBox->value() !=
-           perceptron_params_.dataset_percentage) &&
+       ui->epochsCountSpinBox->value() != perceptron_params_.epochs_count
+       ) &&
       ui->perceptronTypeComboBox->currentIndex() != -1 &&
       !ui->loadedMappingPathLineEdit->text().isEmpty() &&
       !ui->loadedDatasetPathLineEdit->text().isEmpty();
 
   ui->trainModelButton->setEnabled(train_enabled_condition);
-  ui->crossValidateButton->setEnabled(train_enabled_condition);
 }
 
 void MainWindow::TrainModel(IPerceptron **new_perceptron) {
@@ -123,10 +120,17 @@ void MainWindow::TrainModel(IPerceptron **new_perceptron) {
                           mapping.GetMinIndex());
 
   std::unique_ptr<IActivationFunction> func(new Sigmoid());
-  *new_perceptron = new GraphPerceptron(ui->hiddenLayersCountSpinBox->value(),
-                                        ui->hiddenLayersSizeSpinBox->value(),
-                                        mapping.GetDataSize(), func);
+  if (ui->perceptronTypeComboBox->currentText() == "Graph") {
+    *new_perceptron = new GraphPerceptron(ui->hiddenLayersCountSpinBox->value(),
+                                          ui->hiddenLayersSizeSpinBox->value(),
+                                          mapping.GetDataSize(), func);
+  } else {
+    *new_perceptron = new MatrixPerceptron(ui->hiddenLayersCountSpinBox->value(),
+                                           ui->hiddenLayersSizeSpinBox->value(),
+                                           mapping, func);
+  }
   (*new_perceptron)->Train(ui->epochsCountSpinBox->value(), dataset);
+
   delete perceptron_;
   perceptron_ = *new_perceptron;
   delete mapping_;
@@ -137,8 +141,7 @@ void MainWindow::TrainModel(IPerceptron **new_perceptron) {
       ui->hiddenLayersSizeSpinBox->value(),
       ui->loadedMappingPathLineEdit->text(),
       ui->loadedDatasetPathLineEdit->text(),
-      ui->epochsCountSpinBox->value(),
-      ui->datasetPercentageDoubleSpinBox->value()};
+      ui->epochsCountSpinBox->value()};
 }
 
 void MainWindow::on_penRadiusSpinbox_valueChanged(int arg1) {
@@ -245,6 +248,7 @@ void MainWindow::on_resetEpochsCountButton_clicked() {
 
 void MainWindow::on_trainModelButton_clicked() {
   IPerceptron *new_perceptron = nullptr;
+  TrainModel(&new_perceptron);
 }
 
 void MainWindow::on_loadWeightsButton_clicked() {
