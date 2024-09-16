@@ -27,7 +27,6 @@ include_directories(
   model/activation_function
   #
   external
-  external/qcustomplot
   #
   lib)
 
@@ -51,8 +50,6 @@ set(SOURCES
     model/perceptron/neuron.cc
     model/perceptron/layer.cc
     #
-    external/qcustomplot/qcustomplot.cpp
-    #
     lib/matrix.cc)
 
 set(HEADERS
@@ -72,8 +69,6 @@ set(HEADERS
     model/perceptron/matrix_perceptron.h
     model/perceptron/graph_perceptron.h
     model/perceptron/layer.h
-    #
-    external/qcustomplot/qcustomplot.h
     #
     lib/matrix.h)
 
