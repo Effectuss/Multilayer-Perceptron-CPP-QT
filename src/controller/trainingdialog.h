@@ -1,9 +1,11 @@
 #ifndef TRAININGDIALOG_H
 #define TRAININGDIALOG_H
 
+#include <QAbstractButton>
 #include <QDialog>
 #include <QThread>
 #include <QTimer>
+#include <atomic>
 
 namespace Ui {
 class TrainingDialog;
@@ -16,20 +18,14 @@ class TrainingDialog : public QDialog {
   explicit TrainingDialog(QWidget *parent = nullptr);
   ~TrainingDialog();
 
- public slots:
-  void Exec();
-  void Close();
+  bool IsCancelled() const;
 
  private slots:
-  void ChangeText();
+  void on_cancelDialogButtonBox_clicked(QAbstractButton *button);
 
  private:
-  int dots_count_;
-  QString default_message_;
-  QThread *change_thread_;
-  QTimer *change_timer_;
-
   Ui::TrainingDialog *ui;
+  std::atomic<bool> is_cancelled_ = false;
 };
 
 #endif  // TRAININGDIALOG_H

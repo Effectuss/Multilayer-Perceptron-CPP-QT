@@ -37,6 +37,7 @@ class MainWindow : public QMainWindow {
 
  public slots:
   void RecognizePattern(bool cleared);
+  void Delay(int milliseconds);
 
  private slots:
   void on_trainModelButton_clicked();
