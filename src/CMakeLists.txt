@@ -36,6 +36,7 @@ set(SOURCES
     controller/mainwindow.cc
     controller/drawarea.cc
     controller/trainingdialog.cc
+    controller/drawareaview.cc
     #
     model/imagetransformer.cc
     model/data/picture.cc
@@ -56,6 +57,7 @@ set(HEADERS
     controller/mainwindow.h
     controller/drawarea.h
     controller/trainingdialog.h
+    controller/drawareaview.h
     #
     model/imagetransformer.h
     model/data/picture.h

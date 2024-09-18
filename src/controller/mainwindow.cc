@@ -8,6 +8,7 @@
 #include <algorithm>
 
 #include "dataset.h"
+#include "drawareaview.h"
 #include "graph_perceptron.h"
 #include "mapping.h"
 #include "matrix_perceptron.h"
@@ -18,8 +19,10 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
       ui(new Ui::MainWindow),
-      image_transformer_({28, 28}, ImageTransformer::RotationSide::kWest,
-                         ImageTransformer::Invertion::kVertical),
+      predict_image_transformer_({28, 28},
+                                 ImageTransformer::RotationSide::kWest,
+                                 ImageTransformer::Invertion::kVertical),
+      load_image_transformer_({512, 512}),
       perceptron_(nullptr),
       mapping_(nullptr) {
   ui->setupUi(this);
@@ -28,8 +31,14 @@ MainWindow::MainWindow(QWidget *parent)
                                  ui->penRadiusSlider->maximum());
   ui->penRadiusSpinbox->setValue(ui->penRadiusSlider->value());
   ui->drawAreaView->setScene(&drawarea_);
+
   connect(static_cast<DrawArea *>(ui->drawAreaView->scene()),
           &DrawArea::MouseReleasedSignal, this, &MainWindow::RecognizePattern);
+
+  connect(ui->drawAreaView, &DrawAreaView::FileDroppedSignal, this,
+          &MainWindow::LoadAndRecognizeImage);
+  connect(ui->drawAreaView, &DrawAreaView::ImageDroppedSignal, this,
+          &MainWindow::LoadImage);
 
   ConfigureStartingPerceptronParams();
   ConfigureFont();
@@ -40,13 +49,23 @@ MainWindow::~MainWindow() {
   delete perceptron_;
 }
 
+void MainWindow::LoadAndRecognizeImage(const QString &path) {
+  QImage image(path, "bmp");
+  if (image.isNull()) {
+    ShowIncorrectImagePathDialogWindow(path);
+    return;
+  }
+
+  LoadImage(image);
+}
+
 void MainWindow::RecognizePattern(bool cleared) {
   if (cleared || !mapping_) {
     ui->recognizedSymbol->setText("-");
     return;
   }
-  auto picture =
-      image_transformer_.ImageToDoubleMatrix(image_transformer_.Transform(
+  auto picture = predict_image_transformer_.ImageToDoubleMatrix(
+      predict_image_transformer_.Transform(
           ui->drawAreaView->grab(ui->drawAreaView->sceneRect().toRect())
               .toImage()));
   auto result = perceptron_->Predict(picture);
@@ -58,6 +77,17 @@ void MainWindow::RecognizePattern(bool cleared) {
 
   QString sym(QChar(*mapping_->GetData()[indices.front()].begin()));
   ui->recognizedSymbol->setText(sym);
+}
+
+void MainWindow::ShowIncorrectImagePathDialogWindow(const QString &path) {
+  QMessageBox::critical(this, "Load symbol",
+                        "Error while loading image at" + path);
+}
+
+void MainWindow::LoadImage(const QImage &image) {
+  drawarea_.SetPixmap(
+      QPixmap::fromImage(load_image_transformer_.Transform(image)));
+  RecognizePattern(false);
 }
 
 void MainWindow::on_penRadiusSlider_valueChanged(int value) {
@@ -108,6 +138,7 @@ void MainWindow::CheckResetAllButtonAndUpdateButtonConditions() {
       !ui->loadedDatasetPathLineEdit->text().isEmpty();
 
   ui->trainModelButton->setEnabled(train_enabled_condition);
+  ui->actionLoad_bmp->setEnabled(train_enabled_condition);
 }
 
 void MainWindow::TrainModel(IPerceptron **new_perceptron) {
@@ -258,4 +289,12 @@ void MainWindow::on_loadWeightsButton_clicked() {
   //  try {
   //    IPerceptron* new_perceptron = new GraphPerceptron()
   //  }
+}
+
+void MainWindow::on_actionLoad_bmp_triggered() {
+  QString image_path = QFileDialog::getOpenFileName(this, "Load symbol",
+                                                    QDir::currentPath(), "bmp");
+  if (image_path.isEmpty()) return;
+
+  LoadAndRecognizeImage(image_path);
 }

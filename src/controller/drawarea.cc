@@ -2,6 +2,16 @@
 
 DrawArea::DrawArea(QWidget* parent) : QGraphicsScene(parent) { ClearImage(); }
 
+bool DrawArea::SetPixmap(const QPixmap& pixmap) {
+  if (pixmap.size() != QSize(512, 512)) {
+    return false;
+  }
+
+  ClearImage();
+  addPixmap(pixmap);
+  return true;
+}
+
 void DrawArea::ClearImage() { clear(); }
 
 void DrawArea::SetPenRadius(int radius) { radius_ = radius; }

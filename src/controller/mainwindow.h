@@ -25,7 +25,6 @@ struct PerceptronParams {
   QString dataset_path;
 
   int epochs_count;
-  double dataset_percentage;
 };
 
 class MainWindow : public QMainWindow {
@@ -36,7 +35,10 @@ class MainWindow : public QMainWindow {
   ~MainWindow();
 
  public slots:
+  void LoadAndRecognizeImage(const QString &path);
   void RecognizePattern(bool cleared);
+  void ShowIncorrectImagePathDialogWindow(const QString &path);
+  void LoadImage(const QImage &image);
 
  private slots:
   void on_trainModelButton_clicked();
@@ -59,6 +61,8 @@ class MainWindow : public QMainWindow {
 
   void on_loadWeightsButton_clicked();
 
+  void on_actionLoad_bmp_triggered();
+
  private:
   void ConfigureFont();
   void ConfigureStartingPerceptronParams();
@@ -68,7 +72,8 @@ class MainWindow : public QMainWindow {
 
   Ui::MainWindow *ui;
   DrawArea drawarea_;
-  ImageTransformer image_transformer_;
+  ImageTransformer predict_image_transformer_;
+  ImageTransformer load_image_transformer_;
   IPerceptron *perceptron_;
   Mapping *mapping_;
   PerceptronParams perceptron_params_;
