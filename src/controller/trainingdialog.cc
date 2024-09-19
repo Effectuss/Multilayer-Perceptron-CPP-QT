@@ -6,40 +6,18 @@
 #include "ui_trainingdialog.h"
 
 TrainingDialog::TrainingDialog(QWidget *parent)
-    : QDialog(parent),
-      dots_count_(0),
-      default_message_(),
-      change_thread_(new QThread()),
-      change_timer_(new QTimer()),
-      ui(new Ui::TrainingDialog) {
+    : QDialog(parent), ui(new Ui::TrainingDialog) {
   ui->setupUi(this);
-  default_message_ = ui->trainingLabel->text();
-
-  change_timer_->setInterval(250);
-  connect(change_timer_, &QTimer::timeout, this, &TrainingDialog::ChangeText);
-  change_timer_->moveToThread(change_thread_);
+  setModal(true);
 }
 
-TrainingDialog::~TrainingDialog() {
-  delete ui;
-  delete change_thread_;
-  delete change_timer_;
-}
+TrainingDialog::~TrainingDialog() { delete ui; }
 
-void TrainingDialog::Exec() {
-  change_thread_->start();
-  exec();
-}
+bool TrainingDialog::IsCancelled() const { return is_cancelled_; }
 
-void TrainingDialog::Close() {
-  change_thread_->exit();
-  close();
-}
+void TrainingDialog::on_cancelDialogButtonBox_clicked(QAbstractButton *button) {
+  ui->trainingLabel->setText("Cancelling...");
+  ui->cancelDialogButtonBox->setDisabled(true);
 
-void TrainingDialog::ChangeText() {
-  QString dots;
-  dots.reserve(dots_count_);
-  for (int i = 0; i < dots_count_; ++i) dots.push_back('.');
-  ui->trainingLabel->setText(default_message_ + dots);
-  dots_count_ = (dots_count_ + 1) % 7;
+  is_cancelled_ = true;
 }

@@ -7,6 +7,7 @@
 #include <QMimeData>
 #include <QThread>
 #include <algorithm>
+#include <thread>
 
 #include "dataset.h"
 #include "graph_perceptron.h"
@@ -14,6 +15,7 @@
 #include "matrix_perceptron.h"
 #include "parser.h"
 #include "sigmoid.h"
+#include "trainingdialog.h"
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -72,6 +74,13 @@ void MainWindow::RecognizePattern(bool cleared) {
 
   QString sym(QChar(*mapping_->GetData()[indices.front()].begin()));
   ui->recognizedSymbol->setText(sym);
+}
+
+void MainWindow::Delay(int milliseconds) {
+  QTime deadline = QTime::currentTime().addMSecs(milliseconds);
+  while (QTime::currentTime() < deadline) {
+    QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+  }
 }
 
 void MainWindow::ShowIncorrectImagePathDialogWindow(const QString &path) {
@@ -180,19 +189,38 @@ void MainWindow::TrainModel(IPerceptron **new_perceptron) {
         ui->hiddenLayersCountSpinBox->value(),
         ui->hiddenLayersSizeSpinBox->value(), mapping, func);
   }
-  (*new_perceptron)->Train(ui->epochsCountSpinBox->value(), dataset);
+  std::thread train_thread(&IPerceptron::Train, *new_perceptron,
+                           ui->epochsCountSpinBox->value(), std::ref(dataset));
 
-  delete perceptron_;
-  perceptron_ = *new_perceptron;
-  delete mapping_;
-  mapping_ = new Mapping(std::move(mapping));
-  perceptron_params_ = PerceptronParams{
-      PerceptronParams::Type(ui->perceptronTypeComboBox->currentIndex()),
-      ui->hiddenLayersCountSpinBox->value(),
-      ui->hiddenLayersSizeSpinBox->value(),
-      ui->loadedMappingPathLineEdit->text(),
-      ui->loadedDatasetPathLineEdit->text(),
-      ui->epochsCountSpinBox->value()};
+  TrainingDialog *training_dialog = new TrainingDialog(this);
+  training_dialog->show();
+
+  while (!(*new_perceptron)->IsFinished() && !training_dialog->IsCancelled()) {
+    Delay(100);
+  }
+  if (training_dialog->IsCancelled()) {
+    (*new_perceptron)->Cancel();
+  }
+
+  train_thread.join();
+  training_dialog->close();
+  delete training_dialog;
+
+  if ((*new_perceptron)->IsFinished()) {
+    delete perceptron_;
+    perceptron_ = *new_perceptron;
+    delete mapping_;
+    mapping_ = new Mapping(std::move(mapping));
+    perceptron_params_ = PerceptronParams{
+        PerceptronParams::Type(ui->perceptronTypeComboBox->currentIndex()),
+        ui->hiddenLayersCountSpinBox->value(),
+        ui->hiddenLayersSizeSpinBox->value(),
+        ui->loadedMappingPathLineEdit->text(),
+        ui->loadedDatasetPathLineEdit->text(),
+        ui->epochsCountSpinBox->value()};
+  } else {
+    delete *new_perceptron;
+  }
 }
 
 void MainWindow::on_penRadiusSpinbox_valueChanged(int arg1) {

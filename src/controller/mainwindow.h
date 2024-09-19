@@ -37,6 +37,7 @@ class MainWindow : public QMainWindow {
  public slots:
   void LoadAndRecognizeImage(const QString &path);
   void RecognizePattern(bool cleared);
+  void Delay(int milliseconds);
   void ShowIncorrectImagePathDialogWindow(const QString &path = "");
   void LoadImage(const QImage &image);
 

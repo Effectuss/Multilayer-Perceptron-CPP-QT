@@ -14,7 +14,8 @@ bool MatrixPerceptron::IsValidDataForPerceptron(int hidden_layers_count,
 
 MatrixPerceptron::MatrixPerceptron(
     int hidden_layers_count, int size_hidden_layers, const Mapping &mapping,
-    std::unique_ptr<IActivationFunction> &activationFunction) {
+    std::unique_ptr<IActivationFunction> &activationFunction)
+    : IPerceptron() {
   if (!IsValidDataForPerceptron(hidden_layers_count, size_hidden_layers)) {
     throw std::invalid_argument("Incorrect data for perceptron!");
   }
@@ -63,7 +64,7 @@ void MatrixPerceptron::SetActivationFunction(
 }
 
 std::size_t MatrixPerceptron::ForwardFeed() {
-  for (int i = 1; i < number_of_layers_; ++i) {
+  for (int i = 1; !IsCancelled() && i < number_of_layers_; ++i) {
     Matrix::MultiplyByVector(weights_[i], neuron_values_[i - 1],
                              neuron_values_[i]);
     activation_function_->Activate(neuron_values_[i]);
@@ -92,10 +93,10 @@ void MatrixPerceptron::SetInputLayer(const Picture &picture) {
 }
 
 void MatrixPerceptron::Train(std::size_t epochs, const Dataset &dataset) {
-  while (epochs--) {
+  while (!IsCancelled() && epochs--) {
     int ra = 0;
     int dataset_size = static_cast<int>(dataset.GetDataSize());
-    for (int i = 0; i < dataset_size; ++i) {
+    for (int i = 0; !IsCancelled() && i < dataset_size; ++i) {
       SetInputLayer(dataset.GetData()[i].first);
       std::size_t max_index = ForwardFeed();
       int expect_value = dataset.GetData()[i].second - 1;
@@ -109,18 +110,24 @@ void MatrixPerceptron::Train(std::size_t epochs, const Dataset &dataset) {
               << (double)ra / (double)dataset.GetDataSize() * 100.0
               << std::endl;
   }
+
+  if (!IsCancelled()) {
+    Finish();
+  }
 }
 
 void MatrixPerceptron::BackPropagation(std::size_t expect_index) {
   for (std::size_t layer_in = number_of_layers_ - 1; layer_in != 0;
        --layer_in) {
-    for (std::size_t neuron_in = 0; neuron_in < neuron_errors_[layer_in].size();
+    for (std::size_t neuron_in = 0;
+         !IsCancelled() && neuron_in < neuron_errors_[layer_in].size();
          ++neuron_in) {
       double error = 0.0;
       if (layer_in == number_of_layers_ - 1) {
         error = CalculateOutputLayerError(neuron_in, expect_index);
       } else {
         for (std::size_t neuron_right = 0;
+             !IsCancelled() &&
              neuron_right < delta_weight_[layer_in + 1].size();
              ++neuron_right) {
           error += delta_weight_[layer_in + 1][neuron_right] *
@@ -194,8 +201,7 @@ void MatrixPerceptron::ExportWeights(const std::string &file_path) {
     throw std::runtime_error("Can't write to file");
   }
 
-  file_out << "M"
-           << "\n";
+  file_out << "M" << "\n";
 
   for (std::size_t size_layer : size_layers_) {
     file_out << size_layer << " ";
