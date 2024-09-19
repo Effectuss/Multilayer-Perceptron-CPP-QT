@@ -4,16 +4,17 @@
 #include <QFileDialog>
 #include <QFontDatabase>
 #include <QMessageBox>
+#include <QThread>
 #include <algorithm>
-#include <chrono>
-#include <future>
 #include <thread>
 
 #include "dataset.h"
 #include "graph_perceptron.h"
 #include "mapping.h"
+#include "matrix_perceptron.h"
 #include "parser.h"
 #include "sigmoid.h"
+#include "trainingdialog.h"
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -61,6 +62,13 @@ void MainWindow::RecognizePattern(bool cleared) {
   ui->recognizedSymbol->setText(sym);
 }
 
+void MainWindow::Delay(int milliseconds) {
+  QTime deadline = QTime::currentTime().addMSecs(milliseconds);
+  while (QTime::currentTime() < deadline) {
+    QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+  }
+}
+
 void MainWindow::on_penRadiusSlider_valueChanged(int value) {
   drawarea_.SetPenRadius(value);
   ui->penRadiusSpinbox->setValue(value);
@@ -81,8 +89,7 @@ void MainWindow::ConfigureStartingPerceptronParams() {
       ui->hiddenLayersSizeSpinBox->value(),
       ui->loadedMappingPathLineEdit->text(),
       ui->loadedDatasetPathLineEdit->text(),
-      ui->epochsCountSpinBox->value(),
-      ui->datasetPercentageDoubleSpinBox->value()};
+      ui->epochsCountSpinBox->value()};
 }
 
 void MainWindow::CheckResetAllButtonAndUpdateButtonConditions() {
@@ -104,15 +111,12 @@ void MainWindow::CheckResetAllButtonAndUpdateButtonConditions() {
            perceptron_params_.dataset_path ||
        ui->loadedMappingPathLineEdit->text() !=
            perceptron_params_.mapping_path ||
-       ui->epochsCountSpinBox->value() != perceptron_params_.epochs_count ||
-       ui->datasetPercentageDoubleSpinBox->value() !=
-           perceptron_params_.dataset_percentage) &&
+       ui->epochsCountSpinBox->value() != perceptron_params_.epochs_count) &&
       ui->perceptronTypeComboBox->currentIndex() != -1 &&
       !ui->loadedMappingPathLineEdit->text().isEmpty() &&
       !ui->loadedDatasetPathLineEdit->text().isEmpty();
 
   ui->trainModelButton->setEnabled(train_enabled_condition);
-  ui->crossValidateButton->setEnabled(train_enabled_condition);
 }
 
 void MainWindow::TrainModel(IPerceptron **new_perceptron) {
@@ -124,22 +128,47 @@ void MainWindow::TrainModel(IPerceptron **new_perceptron) {
                           mapping.GetMinIndex());
 
   std::unique_ptr<IActivationFunction> func(new Sigmoid());
-  *new_perceptron = new GraphPerceptron(ui->hiddenLayersCountSpinBox->value(),
-                                        ui->hiddenLayersSizeSpinBox->value(),
-                                        mapping.GetDataSize(), func);
-  (*new_perceptron)->Train(ui->epochsCountSpinBox->value(), dataset);
-  delete perceptron_;
-  perceptron_ = *new_perceptron;
-  delete mapping_;
-  mapping_ = new Mapping(std::move(mapping));
-  perceptron_params_ = PerceptronParams{
-      PerceptronParams::Type(ui->perceptronTypeComboBox->currentIndex()),
-      ui->hiddenLayersCountSpinBox->value(),
-      ui->hiddenLayersSizeSpinBox->value(),
-      ui->loadedMappingPathLineEdit->text(),
-      ui->loadedDatasetPathLineEdit->text(),
-      ui->epochsCountSpinBox->value(),
-      ui->datasetPercentageDoubleSpinBox->value()};
+  if (ui->perceptronTypeComboBox->currentText() == "Graph") {
+    *new_perceptron = new GraphPerceptron(ui->hiddenLayersCountSpinBox->value(),
+                                          ui->hiddenLayersSizeSpinBox->value(),
+                                          mapping.GetDataSize(), func);
+  } else {
+    *new_perceptron = new MatrixPerceptron(
+        ui->hiddenLayersCountSpinBox->value(),
+        ui->hiddenLayersSizeSpinBox->value(), mapping, func);
+  }
+  std::thread train_thread(&IPerceptron::Train, *new_perceptron,
+                           ui->epochsCountSpinBox->value(), std::ref(dataset));
+
+  TrainingDialog *training_dialog = new TrainingDialog(this);
+  training_dialog->show();
+
+  while (!(*new_perceptron)->IsFinished() && !training_dialog->IsCancelled()) {
+    Delay(100);
+  }
+  if (training_dialog->IsCancelled()) {
+    (*new_perceptron)->Cancel();
+  }
+
+  train_thread.join();
+  training_dialog->close();
+  delete training_dialog;
+
+  if ((*new_perceptron)->IsFinished()) {
+    delete perceptron_;
+    perceptron_ = *new_perceptron;
+    delete mapping_;
+    mapping_ = new Mapping(std::move(mapping));
+    perceptron_params_ = PerceptronParams{
+        PerceptronParams::Type(ui->perceptronTypeComboBox->currentIndex()),
+        ui->hiddenLayersCountSpinBox->value(),
+        ui->hiddenLayersSizeSpinBox->value(),
+        ui->loadedMappingPathLineEdit->text(),
+        ui->loadedDatasetPathLineEdit->text(),
+        ui->epochsCountSpinBox->value()};
+  } else {
+    delete *new_perceptron;
+  }
 }
 
 void MainWindow::on_penRadiusSpinbox_valueChanged(int arg1) {
@@ -245,24 +274,8 @@ void MainWindow::on_resetEpochsCountButton_clicked() {
 }
 
 void MainWindow::on_trainModelButton_clicked() {
-  using namespace std::chrono_literals;
-
   IPerceptron *new_perceptron = nullptr;
-  auto train_result =
-      std::async(&MainWindow::TrainModel, this, &new_perceptron);
-  while (true) {
-    train_result.wait_for(100ms);
-    if (train_result.valid()) break;
-  }
-
-  try {
-    train_result.get();
-  } catch (const std::exception &err) {
-    delete new_perceptron;
-    QMessageBox::critical(this, "Loading error",
-                          "Error occured while training model");
-  }
-  on_resetAllSettingsButton_clicked();
+  TrainModel(&new_perceptron);
 }
 
 void MainWindow::on_loadWeightsButton_clicked() {

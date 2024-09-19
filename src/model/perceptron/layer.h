@@ -19,7 +19,7 @@ class Layer final {
   std::vector<double> GetNeuronsData();
 
   std::size_t GetLayerSize();
-  std::vector<Neuron>& GetRawNeuronsData();
+  std::vector<Neuron> &GetRawNeuronsData();
 
   void CalculateValues();
 
