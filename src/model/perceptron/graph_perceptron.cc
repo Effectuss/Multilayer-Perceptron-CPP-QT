@@ -2,10 +2,13 @@
 
 #include <algorithm>
 
+#include "model/perceptron/i_perceptron.h"
+
 GraphPerceptron::GraphPerceptron(
     std::size_t hidden_layers_count, std::size_t hidden_layers_size,
     std::size_t output_layer_size,
-    std::unique_ptr<IActivationFunction> &activation_function) {
+    std::unique_ptr<IActivationFunction> &activation_function)
+    : IPerceptron() {
   SetActivationFunction(activation_function);
   hidden_layers_count_ = hidden_layers_count;
   hidden_layers_size_ = hidden_layers_size;
@@ -14,7 +17,8 @@ GraphPerceptron::GraphPerceptron(
 
 GraphPerceptron::GraphPerceptron(
     std::ifstream &weights,
-    std::unique_ptr<IActivationFunction> &activation_function) {
+    std::unique_ptr<IActivationFunction> &activation_function)
+    : IPerceptron() {
   SetActivationFunction(activation_function);
   layers_.clear();
   std::size_t input_layer_size;
@@ -48,11 +52,15 @@ std::vector<double> GraphPerceptron::Predict(const Picture &picture) {
 
 void GraphPerceptron::Train(std::size_t epochs, const Dataset &dataset) {
   Configure(dataset.GetData()[0].first.GetSize());
-  for (std::size_t i = 0; i < epochs; ++i) {
+  for (std::size_t i = 0; !IsCancelled() && i < epochs; ++i) {
     for (auto &item : dataset.GetData()) {
       FeedForward(item.first);
       PropagateBackwards(item.second);
     }
+  }
+
+  if (!IsCancelled()) {
+    Finish();
   }
 }
 
@@ -109,7 +117,7 @@ void GraphPerceptron::Configure(std::size_t input_layer_size) {
 void GraphPerceptron::FeedForward(const Picture &picture) {
   layers_.front().SetNeuronsData(picture.GetData());
 
-  for (std::size_t i = 1; i < layers_.size(); ++i) {
+  for (std::size_t i = 1; !IsCancelled() && i < layers_.size(); ++i) {
     layers_[i].CalculateValues();
   }
 }
@@ -117,11 +125,11 @@ void GraphPerceptron::FeedForward(const Picture &picture) {
 void GraphPerceptron::PropagateBackwards(std::size_t expected_index) {
   layers_.back().UpdateErrorByExpectedIndex(expected_index);
 
-  for (std::size_t i = layers_.size() - 1; i > 0; --i) {
+  for (std::size_t i = layers_.size() - 1; !IsCancelled() && i > 0; --i) {
     layers_[i - 1].UpdateErrorByLayer(layers_[i]);
   }
 
-  for (std::size_t i = 1; i < layers_.size(); ++i) {
+  for (std::size_t i = 1; !IsCancelled() && i < layers_.size(); ++i) {
     layers_[i].UpdateWeights(learning_rate_);
   }
 }
