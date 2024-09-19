@@ -37,8 +37,12 @@ class MainWindow : public QMainWindow {
  public slots:
   void LoadAndRecognizeImage(const QString &path);
   void RecognizePattern(bool cleared);
-  void ShowIncorrectImagePathDialogWindow(const QString &path);
+  void ShowIncorrectImagePathDialogWindow(const QString &path = "");
   void LoadImage(const QImage &image);
+
+ protected:
+  virtual void dragEnterEvent(QDragEnterEvent *event) override;
+  virtual void dropEvent(QDropEvent *event) override;
 
  private slots:
   void on_trainModelButton_clicked();

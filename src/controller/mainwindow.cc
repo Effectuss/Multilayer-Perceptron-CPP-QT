@@ -4,11 +4,11 @@
 #include <QFileDialog>
 #include <QFontDatabase>
 #include <QMessageBox>
+#include <QMimeData>
 #include <QThread>
 #include <algorithm>
 
 #include "dataset.h"
-#include "drawareaview.h"
 #include "graph_perceptron.h"
 #include "mapping.h"
 #include "matrix_perceptron.h"
@@ -35,11 +35,6 @@ MainWindow::MainWindow(QWidget *parent)
   connect(static_cast<DrawArea *>(ui->drawAreaView->scene()),
           &DrawArea::MouseReleasedSignal, this, &MainWindow::RecognizePattern);
 
-  connect(ui->drawAreaView, &DrawAreaView::FileDroppedSignal, this,
-          &MainWindow::LoadAndRecognizeImage);
-  connect(ui->drawAreaView, &DrawAreaView::ImageDroppedSignal, this,
-          &MainWindow::LoadImage);
-
   ConfigureStartingPerceptronParams();
   ConfigureFont();
 }
@@ -50,7 +45,7 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::LoadAndRecognizeImage(const QString &path) {
-  QImage image(path, "bmp");
+  QImage image(path);
   if (image.isNull()) {
     ShowIncorrectImagePathDialogWindow(path);
     return;
@@ -80,14 +75,40 @@ void MainWindow::RecognizePattern(bool cleared) {
 }
 
 void MainWindow::ShowIncorrectImagePathDialogWindow(const QString &path) {
+  QString message = "Error while loading image";
+  if (!path.isEmpty()) {
+    message += " at " + path;
+  }
+
   QMessageBox::critical(this, "Load symbol",
                         "Error while loading image at" + path);
 }
 
 void MainWindow::LoadImage(const QImage &image) {
-  drawarea_.SetPixmap(
-      QPixmap::fromImage(load_image_transformer_.Transform(image)));
+  if (!drawarea_.SetPixmap(
+          QPixmap::fromImage(load_image_transformer_.Transform(image)))) {
+    ShowIncorrectImagePathDialogWindow();
+  }
+  update();
   RecognizePattern(false);
+}
+
+void MainWindow::dragEnterEvent(QDragEnterEvent *event) {
+  if (QList<QUrl> urls = event->mimeData()->urls();
+      (urls.size() == 1 && urls.front().isLocalFile()) ||
+      event->mimeData()->hasImage()) {
+    event->acceptProposedAction();
+  }
+}
+
+void MainWindow::dropEvent(QDropEvent *event) {
+  if (event->mimeData()->hasImage()) {
+    QImage image = event->mimeData()->imageData().value<QImage>();
+    LoadImage(image);
+  } else if (QList<QUrl> urls = event->mimeData()->urls();
+             urls.size() == 1 && urls.front().isLocalFile()) {
+    LoadAndRecognizeImage(urls.front().toLocalFile());
+  }
 }
 
 void MainWindow::on_penRadiusSlider_valueChanged(int value) {
@@ -292,8 +313,9 @@ void MainWindow::on_loadWeightsButton_clicked() {
 }
 
 void MainWindow::on_actionLoad_bmp_triggered() {
-  QString image_path = QFileDialog::getOpenFileName(this, "Load symbol",
-                                                    QDir::currentPath(), "bmp");
+  QString image_path =
+      QFileDialog::getOpenFileName(this, "Load symbol", QDir::currentPath(),
+                                   tr("Images (*.png *.xpm *.jpg)"));
   if (image_path.isEmpty()) return;
 
   LoadAndRecognizeImage(image_path);

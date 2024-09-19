@@ -6,13 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1124</width>
+    <width>1161</width>
     <height>831</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>1124</width>
+    <width>1161</width>
     <height>831</height>
    </size>
   </property>
@@ -24,10 +24,10 @@
     <item>
      <spacer name="horizontalSpacer">
       <property name="orientation">
-       <enum>Qt::Horizontal</enum>
+       <enum>Qt::Orientation::Horizontal</enum>
       </property>
       <property name="sizeType">
-       <enum>QSizePolicy::Fixed</enum>
+       <enum>QSizePolicy::Policy::MinimumExpanding</enum>
       </property>
       <property name="sizeHint" stdset="0">
        <size>
@@ -40,12 +40,12 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <property name="sizeConstraint">
-       <enum>QLayout::SetDefaultConstraint</enum>
+       <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
       </property>
       <item>
        <spacer name="verticalSpacer">
         <property name="orientation">
-         <enum>Qt::Vertical</enum>
+         <enum>Qt::Orientation::Vertical</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
@@ -70,7 +70,7 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
-            <widget class="DrawAreaView" name="drawAreaView">
+            <widget class="QGraphicsView" name="drawAreaView">
              <property name="minimumSize">
               <size>
                <width>512</width>
@@ -84,16 +84,16 @@
               </size>
              </property>
              <property name="frameShape">
-              <enum>QFrame::NoFrame</enum>
+              <enum>QFrame::Shape::NoFrame</enum>
              </property>
              <property name="lineWidth">
               <number>0</number>
              </property>
              <property name="verticalScrollBarPolicy">
-              <enum>Qt::ScrollBarAsNeeded</enum>
+              <enum>Qt::ScrollBarPolicy::ScrollBarAsNeeded</enum>
              </property>
              <property name="horizontalScrollBarPolicy">
-              <enum>Qt::ScrollBarAsNeeded</enum>
+              <enum>Qt::ScrollBarPolicy::ScrollBarAsNeeded</enum>
              </property>
              <property name="backgroundBrush">
               <brush brushstyle="SolidPattern">
@@ -119,7 +119,7 @@
          <item>
           <widget class="Line" name="line_2">
            <property name="orientation">
-            <enum>Qt::Vertical</enum>
+            <enum>Qt::Orientation::Vertical</enum>
            </property>
           </widget>
          </item>
@@ -142,7 +142,6 @@
                 <property name="font">
                  <font>
                   <pointsize>90</pointsize>
-                  <weight>75</weight>
                   <italic>false</italic>
                   <bold>true</bold>
                   <underline>false</underline>
@@ -151,7 +150,7 @@
                  </font>
                 </property>
                 <property name="frameShape">
-                 <enum>QFrame::NoFrame</enum>
+                 <enum>QFrame::Shape::NoFrame</enum>
                 </property>
                 <property name="lineWidth">
                  <number>1</number>
@@ -166,14 +165,14 @@
                  <bool>false</bool>
                 </property>
                 <property name="alignment">
-                 <set>Qt::AlignCenter</set>
+                 <set>Qt::AlignmentFlag::AlignCenter</set>
                 </property>
                </widget>
               </item>
               <item>
                <widget class="Line" name="line">
                 <property name="orientation">
-                 <enum>Qt::Vertical</enum>
+                 <enum>Qt::Orientation::Vertical</enum>
                 </property>
                </widget>
               </item>
@@ -200,10 +199,10 @@
                      <number>80</number>
                     </property>
                     <property name="orientation">
-                     <enum>Qt::Horizontal</enum>
+                     <enum>Qt::Orientation::Horizontal</enum>
                     </property>
                     <property name="tickPosition">
-                     <enum>QSlider::NoTicks</enum>
+                     <enum>QSlider::TickPosition::NoTicks</enum>
                     </property>
                     <property name="tickInterval">
                      <number>5</number>
@@ -235,7 +234,7 @@
       <item>
        <spacer name="verticalSpacer_2">
         <property name="orientation">
-         <enum>Qt::Vertical</enum>
+         <enum>Qt::Orientation::Vertical</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
@@ -250,10 +249,10 @@
     <item>
      <spacer name="horizontalSpacer_2">
       <property name="orientation">
-       <enum>Qt::Horizontal</enum>
+       <enum>Qt::Orientation::Horizontal</enum>
       </property>
       <property name="sizeType">
-       <enum>QSizePolicy::Fixed</enum>
+       <enum>QSizePolicy::Policy::MinimumExpanding</enum>
       </property>
       <property name="sizeHint" stdset="0">
        <size>
@@ -270,8 +269,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1124</width>
-     <height>20</height>
+     <width>1161</width>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuOpen">
@@ -290,8 +289,14 @@
      <height>372</height>
     </size>
    </property>
+   <property name="acceptDrops">
+    <bool>true</bool>
+   </property>
    <property name="features">
-    <set>QDockWidget::DockWidgetFloatable</set>
+    <set>QDockWidget::DockWidgetFeature::DockWidgetFloatable|QDockWidget::DockWidgetFeature::DockWidgetMovable</set>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::DockWidgetArea::LeftDockWidgetArea|Qt::DockWidgetArea::RightDockWidgetArea</set>
    </property>
    <property name="windowTitle">
     <string>Settings</string>
@@ -311,8 +316,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>507</width>
-          <height>750</height>
+          <width>501</width>
+          <height>732</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -327,10 +332,56 @@
            <property name="title">
             <string>Controls</string>
            </property>
-           <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,1,0">
+           <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,0,0">
             <property name="sizeConstraint">
-             <enum>QLayout::SetDefaultConstraint</enum>
+             <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
             </property>
+            <item row="8" column="2">
+             <widget class="QPushButton" name="resetAllSettingsButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Reset all</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QLineEdit" name="loadedDatasetPathLineEdit">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+              <property name="placeholderText">
+               <string>-</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>Hidden layers count</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="0">
+             <widget class="QLabel" name="label_4">
+              <property name="text">
+               <string>Epochs count</string>
+              </property>
+             </widget>
+            </item>
             <item row="0" column="1">
              <widget class="QComboBox" name="perceptronTypeComboBox">
               <property name="currentIndex">
@@ -367,6 +418,13 @@
               </property>
              </widget>
             </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>Perceptron type</string>
+              </property>
+             </widget>
+            </item>
             <item row="0" column="2">
              <widget class="QPushButton" name="resetPerceptronTypeButton">
               <property name="enabled">
@@ -377,34 +435,11 @@
               </property>
              </widget>
             </item>
-            <item row="5" column="1">
-             <widget class="QLineEdit" name="loadedDatasetPathLineEdit">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="readOnly">
-               <bool>true</bool>
-              </property>
-              <property name="placeholderText">
-               <string>-</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="2">
-             <widget class="QPushButton" name="resetHiddenLayersSizeButton">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string>Reset</string>
-              </property>
-             </widget>
-            </item>
             <item row="1" column="1">
              <widget class="QSpinBox" name="hiddenLayersCountSpinBox">
+              <property name="correctionMode">
+               <enum>QAbstractSpinBox::CorrectionMode::CorrectToNearestValue</enum>
+              </property>
               <property name="suffix">
                <string> layers</string>
               </property>
@@ -416,29 +451,57 @@
               </property>
              </widget>
             </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="label">
+            <item row="1" column="2">
+             <widget class="QPushButton" name="resetHiddenLayersCountButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="text">
-               <string>Perceptron type</string>
+               <string>Reset</string>
               </property>
              </widget>
             </item>
-            <item row="5" column="0">
-             <widget class="QPushButton" name="loadDatasetButton">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
+            <item row="6" column="1">
+             <widget class="QSpinBox" name="epochsCountSpinBox">
+              <property name="wrapping">
+               <bool>false</bool>
               </property>
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>0</height>
-               </size>
+              <property name="frame">
+               <bool>true</bool>
               </property>
-              <property name="text">
-               <string>Load dataset</string>
+              <property name="correctionMode">
+               <enum>QAbstractSpinBox::CorrectionMode::CorrectToNearestValue</enum>
+              </property>
+              <property name="suffix">
+               <string> epochs</string>
+              </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>20</number>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QSpinBox" name="hiddenLayersSizeSpinBox">
+              <property name="correctionMode">
+               <enum>QAbstractSpinBox::CorrectionMode::CorrectToNearestValue</enum>
+              </property>
+              <property name="suffix">
+               <string> neurons</string>
+              </property>
+              <property name="prefix">
+               <string/>
+              </property>
+              <property name="minimum">
+               <number>50</number>
+              </property>
+              <property name="maximum">
+               <number>512</number>
+              </property>
+              <property name="value">
+               <number>256</number>
               </property>
              </widget>
             </item>
@@ -467,102 +530,13 @@
               </property>
              </widget>
             </item>
-            <item row="5" column="2">
-             <widget class="QPushButton" name="resetDatasetPathButton">
+            <item row="3" column="2">
+             <widget class="QPushButton" name="resetHiddenLayersSizeButton">
               <property name="enabled">
                <bool>false</bool>
               </property>
               <property name="text">
                <string>Reset</string>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="1">
-             <widget class="QSpinBox" name="epochsCountSpinBox">
-              <property name="wrapping">
-               <bool>false</bool>
-              </property>
-              <property name="frame">
-               <bool>true</bool>
-              </property>
-              <property name="suffix">
-               <string> epochs</string>
-              </property>
-              <property name="minimum">
-               <number>1</number>
-              </property>
-              <property name="maximum">
-               <number>20</number>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="label_2">
-              <property name="text">
-               <string>Hidden layers count</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="QSpinBox" name="hiddenLayersSizeSpinBox">
-              <property name="suffix">
-               <string> neurons</string>
-              </property>
-              <property name="prefix">
-               <string/>
-              </property>
-              <property name="minimum">
-               <number>50</number>
-              </property>
-              <property name="maximum">
-               <number>512</number>
-              </property>
-              <property name="value">
-               <number>256</number>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="2">
-             <widget class="QPushButton" name="resetHiddenLayersCountButton">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string>Reset</string>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="2">
-             <widget class="QPushButton" name="resetMappingPathButton">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string>Reset</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="label_3">
-              <property name="text">
-               <string>Hidden layer size</string>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="2">
-             <widget class="QPushButton" name="resetEpochsCountButton">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string>Reset</string>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="0">
-             <widget class="QLabel" name="label_4">
-              <property name="text">
-               <string>Epochs count</string>
               </property>
              </widget>
             </item>
@@ -591,19 +565,59 @@
               </layout>
              </widget>
             </item>
-            <item row="8" column="2">
-             <widget class="QPushButton" name="resetAllSettingsButton">
+            <item row="4" column="2">
+             <widget class="QPushButton" name="resetMappingPathButton">
               <property name="enabled">
                <bool>false</bool>
               </property>
+              <property name="text">
+               <string>Reset</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="2">
+             <widget class="QPushButton" name="resetDatasetPathButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Reset</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="2">
+             <widget class="QPushButton" name="resetEpochsCountButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Reset</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_3">
+              <property name="text">
+               <string>Hidden layer size</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0">
+             <widget class="QPushButton" name="loadDatasetButton">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="text">
-               <string>Reset all</string>
+               <string>Load dataset</string>
               </property>
              </widget>
             </item>
@@ -628,6 +642,9 @@
             </item>
             <item row="0" column="1">
              <widget class="QLineEdit" name="loadedWeightsPath">
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
               <property name="placeholderText">
                <string>-</string>
               </property>
@@ -658,17 +675,10 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Load .bmp</string>
+    <string>Load image</string>
    </property>
   </action>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>DrawAreaView</class>
-   <extends>QGraphicsView</extends>
-   <header>drawareaview.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>
