@@ -65,8 +65,8 @@ class MainWindow : public QMainWindow {
   void on_penRadiusSlider_valueChanged(int value);
 
   void on_loadWeightsButton_clicked();
-
   void on_actionLoad_bmp_triggered();
+  void on_exportWeightsButton_clicked();
 
  private:
   void ConfigureFont();
