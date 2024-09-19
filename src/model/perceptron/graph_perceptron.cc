@@ -92,7 +92,6 @@ GraphPerceptron::GraphPerceptron(
     std::unique_ptr<IActivationFunction> &activation_function)
     : IPerceptron() {
   SetActivationFunction(activation_function);
-  layers_.clear();
   std::size_t input_layer_size;
   weights >> input_layer_size;
   weights >> hidden_layers_size_;
