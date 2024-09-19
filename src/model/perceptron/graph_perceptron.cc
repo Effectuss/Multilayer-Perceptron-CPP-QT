@@ -44,8 +44,7 @@ void GraphPerceptron::SetActivationFunction(
   Neuron::SetActivationFunction(activationFunction_);
 }
 
-void GraphPerceptron::LoadWeights(const std::string &file_name,
-    std::unique_ptr<IActivationFunction> &activation_function) {
+void GraphPerceptron::LoadWeights(const std::string &file_name) {
   std::ifstream file(file_name);
 
   if (!file.is_open()) {
