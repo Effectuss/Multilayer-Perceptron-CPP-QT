@@ -13,9 +13,6 @@ class GraphPerceptron final : public IPerceptron {
   GraphPerceptron(std::size_t hidden_layers_count,
                   std::size_t hidden_layers_size, std::size_t output_layer_size,
                   std::unique_ptr<IActivationFunction>& activation_function);
-  explicit GraphPerceptron(
-      std::ifstream& weights,
-      std::unique_ptr<IActivationFunction>& activation_function);
   GraphPerceptron() = delete;
   ~GraphPerceptron() override = default;
 
@@ -31,6 +28,10 @@ class GraphPerceptron final : public IPerceptron {
   void ExportWeights(const std::string& file_name) override;
 
  private:
+  explicit GraphPerceptron(
+      std::ifstream& weights,
+      std::unique_ptr<IActivationFunction>& activation_function);
+
   void Configure(std::size_t input_layer_size);
 
   void FeedForward(const Picture& picture);

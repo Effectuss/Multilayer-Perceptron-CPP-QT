@@ -12,35 +12,6 @@ GraphPerceptron::GraphPerceptron(
   output_layer_size_ = output_layer_size;
 }
 
-GraphPerceptron::GraphPerceptron(
-    std::ifstream &weights,
-    std::unique_ptr<IActivationFunction> &activation_function) {
-  SetActivationFunction(activation_function);
-  layers_.clear();
-  std::size_t input_layer_size;
-  weights >> input_layer_size;
-  weights >> hidden_layers_size_;
-  weights >> hidden_layers_count_;
-  weights >> output_layer_size_;
-  Configure(input_layer_size);
-  Neuron::SetActivationFunction(activationFunction_);
-
-  for (std::size_t i = 1; i < layers_.size(); ++i) {
-    for (auto &neuron : layers_[i].GetRawNeuronsData()) {
-      std::vector<double> temp_weights;
-      for (std::size_t j = 0; j < layers_[i - 1].GetLayerSize(); ++j) {
-        double temp_weight;
-        weights >> temp_weight;
-        if (weights.fail()) {
-          throw std::ios_base::failure("Error in weights file!");
-        }
-        temp_weights.push_back(temp_weight);
-      }
-      neuron.SetNeuronsWeights(temp_weights);
-    }
-  }
-}
-
 std::vector<double> GraphPerceptron::Predict(const Picture &picture) {
   FeedForward(picture);
   return layers_.back().GetNeuronsData();
@@ -66,9 +37,25 @@ void GraphPerceptron::SetActivationFunction(
   Neuron::SetActivationFunction(activationFunction_);
 }
 
-void GraphPerceptron::LoadWeights(const std::string &file_name) {
-  throw std::logic_error("Not implemented");
+void GraphPerceptron::LoadWeights(const std::string &file_name,
+    std::unique_ptr<IActivationFunction> &activation_function) {
+  std::ifstream file(file_name);
+
+  if (!file.is_open()) {
+    throw std::runtime_error(
+        "Cannot open file for reading graph weights");
+  }
+
+  std::string header;
+  file >> header;
+  if (header != "G") {
+    file.close();
+    throw std::ios_base::failure("Invalid file format for graph weights.");
+  }
+
+  *this = new GraphPerceptron(&file, activation_function);
 }
+
 
 void GraphPerceptron::ExportWeights(const std::string &file_name) {
   std::ofstream file(file_name);
@@ -90,6 +77,36 @@ void GraphPerceptron::ExportWeights(const std::string &file_name) {
       for (auto &weight : neuron.GetNeuronWeights()) {
         file << weight << " ";
       }
+    }
+  }
+}
+
+GraphPerceptron::GraphPerceptron(
+    std::ifstream &weights,
+    std::unique_ptr<IActivationFunction> &activation_function) {
+  SetActivationFunction(activation_function);
+  layers_.clear();
+  std::size_t input_layer_size;
+  weights >> input_layer_size;
+  weights >> hidden_layers_size_;
+  weights >> hidden_layers_count_;
+  weights >> output_layer_size_;
+  Configure(input_layer_size);
+  Neuron::SetActivationFunction(activationFunction_);
+
+  for (std::size_t i = 1; i < layers_.size(); ++i) {
+    for (auto &neuron : layers_[i].GetRawNeuronsData()) {
+      std::vector<double> temp_weights;
+      for (std::size_t j = 0; j < layers_[i - 1].GetLayerSize(); ++j) {
+        double temp_weight;
+        weights >> temp_weight;
+        if (weights.fail()) {
+          weights.close();
+          throw std::ios_base::failure("Error in weights file!");
+        }
+        temp_weights.push_back(temp_weight);
+      }
+      neuron.SetNeuronsWeights(temp_weights);
     }
   }
 }
