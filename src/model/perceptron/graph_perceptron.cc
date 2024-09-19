@@ -59,7 +59,7 @@ void GraphPerceptron::LoadWeights(const std::string &file_name) {
     throw std::ios_base::failure("Invalid file format for graph weights.");
   }
 
-  *this = new GraphPerceptron(&file, activation_function);
+  *this = new GraphPerceptron(file, activation_function);
 }
 
 
