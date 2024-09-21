@@ -99,7 +99,7 @@ void MatrixPerceptron::Train(std::size_t epochs, const Dataset &dataset) {
     for (int i = 0; !IsCancelled() && i < dataset_size; ++i) {
       SetInputLayer(dataset.GetData()[i].first);
       std::size_t max_index = ForwardFeed();
-      int expect_value = dataset.GetData()[i].second - 1;
+      int expect_value = dataset.GetData()[i].second;
       BackPropagation(expect_value);
       if (max_index == expect_value) {
         ++ra;
