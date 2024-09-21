@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <random>
 
-std::shared_ptr<IActivationFunction> Neuron::activationFunction_;
+std::shared_ptr<IActivationFunction> Neuron::activation_function_;
 
 Neuron::Neuron()
     : value_(0),
@@ -16,7 +16,7 @@ Neuron::Neuron(double value) : Neuron() { value_ = value; }
 
 void Neuron::SetActivationFunction(
     std::shared_ptr<IActivationFunction>& activationFunction) {
-  activationFunction_ = activationFunction;
+  activation_function_ = activationFunction;
 }
 
 void Neuron::ConnectNeurons(const std::vector<Neuron>& neurons) {
@@ -44,7 +44,7 @@ void Neuron::CalculateValue() {
   for (std::size_t i = 0; i < previous_neurons_.size(); ++i) {
     value_ += previous_neurons_[i]->value_ * previous_neurons_weights_[i];
   }
-  value_ = activationFunction_->Activate(value_);
+  value_ = activation_function_->Activate(value_);
 }
 
 double Neuron::GetValue() const { return value_; }
@@ -54,7 +54,7 @@ void Neuron::SetValue(double value) { value_ = value; }
 void Neuron::SetError(double error) { error_ = error; }
 
 void Neuron::CalculateWeightsDelta() {
-  weights_delta_ = error_ * activationFunction_->Derivative(value_);
+  weights_delta_ = error_ * activation_function_->Derivative(value_);
 }
 
 double Neuron::GetWeightsDelta() const { return weights_delta_; }

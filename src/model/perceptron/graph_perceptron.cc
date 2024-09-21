@@ -7,7 +7,7 @@
 GraphPerceptron::GraphPerceptron(
     std::size_t hidden_layers_count, std::size_t hidden_layers_size,
     std::size_t output_layer_size,
-    std::unique_ptr<IActivationFunction> &activation_function)
+    std::shared_ptr<IActivationFunction> activation_function)
     : IPerceptron() {
   SetActivationFunction(activation_function);
   hidden_layers_count_ = hidden_layers_count;
@@ -34,14 +34,10 @@ void GraphPerceptron::Train(std::size_t epochs, const Dataset &dataset) {
   }
 }
 
-void GraphPerceptron::Test(double segment, const Dataset &dataset) {
-  // todo
-}
-
 void GraphPerceptron::SetActivationFunction(
-    std::unique_ptr<IActivationFunction> &activationFunction) {
-  activationFunction_ = std::move(activationFunction);
-  Neuron::SetActivationFunction(activationFunction_);
+    std::shared_ptr<IActivationFunction> activationFunction) {
+  activation_function_ = std::move(activationFunction);
+  Neuron::SetActivationFunction(activation_function_);
 }
 
 void GraphPerceptron::LoadWeights(const std::string &file_name) {
@@ -59,9 +55,8 @@ void GraphPerceptron::LoadWeights(const std::string &file_name) {
     throw std::ios_base::failure("Invalid file format for graph weights.");
   }
 
-  *this = GraphPerceptron(file, activation_function);
+  *this = GraphPerceptron(file, activation_function_);
 }
-
 
 void GraphPerceptron::ExportWeights(const std::string &file_name) {
   std::ofstream file(file_name);
@@ -87,9 +82,19 @@ void GraphPerceptron::ExportWeights(const std::string &file_name) {
   }
 }
 
+GraphPerceptron& GraphPerceptron::operator=(GraphPerceptron&& other) noexcept {
+  if (this != &other) {
+    layers_ = std::move(other.layers_);
+    hidden_layers_count_ = other.hidden_layers_count_;
+    hidden_layers_size_ = other.hidden_layers_size_;
+    output_layer_size_ = other.output_layer_size_;
+    activation_function_ = std::move(other.activation_function_);
+  }
+}
+
 GraphPerceptron::GraphPerceptron(
     std::ifstream &weights,
-    std::unique_ptr<IActivationFunction> &activation_function)
+    std::shared_ptr<IActivationFunction> activation_function)
     : IPerceptron() {
   SetActivationFunction(activation_function);
   std::size_t input_layer_size;
@@ -98,7 +103,7 @@ GraphPerceptron::GraphPerceptron(
   weights >> hidden_layers_count_;
   weights >> output_layer_size_;
   Configure(input_layer_size);
-  Neuron::SetActivationFunction(activationFunction_);
+  Neuron::SetActivationFunction(activation_function_);
 
   for (std::size_t i = 1; i < layers_.size(); ++i) {
     for (auto &neuron : layers_[i].GetRawNeuronsData()) {

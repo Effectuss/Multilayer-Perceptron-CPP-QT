@@ -12,16 +12,14 @@ class MatrixPerceptron : public IPerceptron {
   MatrixPerceptron() = delete;
   MatrixPerceptron(int hidden_layers_count, int size_hidden_layers,
                    const Mapping &mapping,
-                   std::unique_ptr<IActivationFunction> &activationFunction);
+                   std::shared_ptr<IActivationFunction> activation_function);
 
   std::vector<double> Predict(const Picture &picture) override;
 
   void Train(std::size_t epochs, const Dataset &dataset) override;
 
-  void Test(double segment, const Dataset &dataset) override;
-
   void SetActivationFunction(
-      std::unique_ptr<IActivationFunction> &function) override;
+      std::shared_ptr<IActivationFunction> function) override;
 
   void LoadWeights(const std::string &file_path) override;
 
@@ -62,7 +60,7 @@ class MatrixPerceptron : public IPerceptron {
 
   std::size_t number_of_layers_{2};
 
-  std::unique_ptr<IActivationFunction> activation_function_;
+  std::shared_ptr<IActivationFunction> activation_function_;
 
   std::vector<std::size_t> size_layers_;
   std::vector<std::vector<double>> neuron_values_;
