@@ -44,8 +44,7 @@ void GraphPerceptron::LoadWeights(const std::string &file_name) {
   std::ifstream file(file_name);
 
   if (!file.is_open()) {
-    throw std::runtime_error(
-        "Cannot open file for reading graph weights");
+    throw std::runtime_error("Cannot open file for reading graph weights");
   }
 
   std::string header;
@@ -82,7 +81,7 @@ void GraphPerceptron::ExportWeights(const std::string &file_name) {
   }
 }
 
-GraphPerceptron& GraphPerceptron::operator=(GraphPerceptron&& other) noexcept {
+GraphPerceptron &GraphPerceptron::operator=(GraphPerceptron &&other) noexcept {
   if (this != &other) {
     layers_ = std::move(other.layers_);
     hidden_layers_count_ = other.hidden_layers_count_;
@@ -90,6 +89,8 @@ GraphPerceptron& GraphPerceptron::operator=(GraphPerceptron&& other) noexcept {
     output_layer_size_ = other.output_layer_size_;
     activation_function_ = std::move(other.activation_function_);
   }
+
+  return *this;
 }
 
 GraphPerceptron::GraphPerceptron(
