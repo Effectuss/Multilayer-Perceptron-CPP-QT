@@ -2,7 +2,6 @@
 
 #include <chrono>
 #include <fstream>
-#include <iostream>
 #include <sstream>
 
 bool MatrixPerceptron::IsValidDataForPerceptron(int hidden_layers_count,
@@ -99,16 +98,12 @@ void MatrixPerceptron::Train(std::size_t epochs, const Dataset &dataset) {
     for (int i = 0; !IsCancelled() && i < dataset_size; ++i) {
       SetInputLayer(dataset.GetData()[i].first);
       std::size_t max_index = ForwardFeed();
-      int expect_value = dataset.GetData()[i].second - 1;
+      int expect_value = dataset.GetData()[i].second;
       BackPropagation(expect_value);
       if (max_index == expect_value) {
         ++ra;
       }
     }
-    // todo del
-    std::cout << "After one epoch: "
-              << (double)ra / (double)dataset.GetDataSize() * 100.0
-              << std::endl;
   }
 
   if (!IsCancelled()) {
@@ -178,20 +173,6 @@ std::vector<double> MatrixPerceptron::Predict(const Picture &picture) {
   ForwardFeed();
 
   return neuron_values_[number_of_layers_ - 1];
-}
-
-// todo del maybe
-double MatrixPerceptron::TestMatrixPerceptron(const Dataset &test_dataset) {
-  int right_answer = 0;
-  for (std::size_t i = 0; i < test_dataset.GetDataSize(); ++i) {
-    SetInputLayer(test_dataset.GetData()[i].first);
-    std::size_t max_index = ForwardFeed();
-    if (max_index == test_dataset.GetData()[i].second - 1) {
-      ++right_answer;
-    }
-  }
-
-  return (double)right_answer / (double)test_dataset.GetDataSize() * 100.0;
 }
 
 void MatrixPerceptron::ExportWeights(const std::string &file_path) {
