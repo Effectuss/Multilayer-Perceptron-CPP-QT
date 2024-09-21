@@ -25,8 +25,6 @@ class MatrixPerceptron : public IPerceptron {
 
   void ExportWeights(const std::string &file_path) override;
 
-  double TestMatrixPerceptron(const Dataset &test_dataset);
-
  private:
   static constexpr int kMinAmountOfHiddenLayers{2};
   static constexpr int kMaxAmountOfHiddenLayers{5};

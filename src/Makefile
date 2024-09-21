@@ -5,8 +5,8 @@ build:
 	cd ../build; cmake ../src; make
 
 install: build
-	-cp ../build/MultilayerPerceptron ~/MultilayerPerceptron
-	-cp ../build/MultilayerPerceptron.app ~/MultilayerPerceptron.app
+	-cp -r ../build/MultilayerPerceptron ~/MultilayerPerceptron
+	-cp -r ../build/MultilayerPerceptron.app ~/MultilayerPerceptron.app
 
 uninstall:
 	rm -rf ~/MultilayerPerceptron
