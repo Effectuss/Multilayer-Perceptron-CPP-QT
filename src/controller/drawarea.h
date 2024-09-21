@@ -14,6 +14,8 @@ class DrawArea : public QGraphicsScene {
  public:
   DrawArea(QWidget* parent = nullptr);
 
+  bool SetPixmap(const QPixmap& pixmap);
+
  public slots:
   void ClearImage();
   void SetPenRadius(int radius);

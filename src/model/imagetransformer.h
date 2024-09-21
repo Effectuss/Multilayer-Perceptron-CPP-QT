@@ -10,11 +10,12 @@
 class ImageTransformer {
  public:
   enum RotationSide { kNorth, kEast, kSouth, kWest };
-  enum Invertion { kVertical = 0b1, kHorizontal = 0b10 };
+  enum Invertion { kVertical = 0b1, kHorizontal = 0b10, kNoInvertion = 0 };
 
   ImageTransformer() = delete;
-  ImageTransformer(const QSize& target_size, RotationSide rotation_side,
-                   Invertion invertions);
+  explicit ImageTransformer(const QSize& target_size,
+                            RotationSide rotation_side = kNorth,
+                            Invertion invertions = kNoInvertion);
 
   QImage Transform(const QImage& image) const;
   Picture ImageToDoubleMatrix(const QImage& image) const;
