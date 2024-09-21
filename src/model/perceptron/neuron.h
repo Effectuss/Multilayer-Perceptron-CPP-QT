@@ -40,7 +40,7 @@ class Neuron final {
   void SetNeuronsWeights(std::vector<double> &weights);
 
  private:
-  static std::shared_ptr<IActivationFunction> activationFunction_;
+  static std::shared_ptr<IActivationFunction> activation_function_;
 
   double value_;
   double error_;

@@ -14,7 +14,7 @@ bool MatrixPerceptron::IsValidDataForPerceptron(int hidden_layers_count,
 
 MatrixPerceptron::MatrixPerceptron(
     int hidden_layers_count, int size_hidden_layers, const Mapping &mapping,
-    std::unique_ptr<IActivationFunction> &activationFunction)
+    std::shared_ptr<IActivationFunction> activation_function)
     : IPerceptron() {
   if (!IsValidDataForPerceptron(hidden_layers_count, size_hidden_layers)) {
     throw std::invalid_argument("Incorrect data for perceptron!");
@@ -25,7 +25,7 @@ MatrixPerceptron::MatrixPerceptron(
   InitSizeLayers(size_hidden_layers, mapping);
   InitRandomWeights();
   InitNeuronNetwork();
-  activation_function_ = std::move(activationFunction);
+  activation_function_ = std::move(activation_function);
 }
 
 void MatrixPerceptron::InitSizeLayers(int size_hidden, const Mapping &mapping) {
@@ -59,7 +59,7 @@ void MatrixPerceptron::InitNeuronNetwork() {
 }
 
 void MatrixPerceptron::SetActivationFunction(
-    std::unique_ptr<IActivationFunction> &function) {
+    std::shared_ptr<IActivationFunction> function) {
   activation_function_ = std::move(function);
 }
 
@@ -258,6 +258,3 @@ void MatrixPerceptron::InitPerceptronFromFile(const std::string &settings) {
   InitRandomWeights();
   InitNeuronNetwork();
 }
-
-// todo
-void MatrixPerceptron::Test(double segment, const Dataset &dataset) {}
