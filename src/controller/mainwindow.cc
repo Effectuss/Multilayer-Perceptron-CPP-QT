@@ -169,6 +169,9 @@ void MainWindow::CheckResetAllButtonAndUpdateButtonConditions() {
 
   ui->trainModelButton->setEnabled(train_enabled_condition);
   ui->actionLoad_bmp->setEnabled(train_enabled_condition);
+
+  ui->loadWeightsButton->setEnabled(
+      !ui->loadedMappingPathLineEdit->text().isEmpty());
 }
 
 void MainWindow::TrainModel(IPerceptron **new_perceptron) {
@@ -221,6 +224,8 @@ void MainWindow::TrainModel(IPerceptron **new_perceptron) {
   } else {
     delete *new_perceptron;
   }
+
+  ui->exportWeightsButton->setEnabled(perceptron_ != nullptr);
 }
 
 void MainWindow::on_penRadiusSpinbox_valueChanged(int arg1) {
@@ -331,13 +336,64 @@ void MainWindow::on_trainModelButton_clicked() {
 }
 
 void MainWindow::on_loadWeightsButton_clicked() {
-  QString weights_path = QFileDialog::getOpenFileName(
-      this, "Select weights file", QDir::currentPath());
+  QString weights_path =
+      QFileDialog::getOpenFileName(this, "Select weights file");
   if (weights_path.isEmpty()) return;
 
-  //  try {
-  //    IPerceptron* new_perceptron = new GraphPerceptron()
-  //  }
+  Parser parser;
+  Mapping *new_mapping = new Mapping(
+      parser.ParseMapping(ui->loadedMappingPathLineEdit->text().toStdString()));
+  std::shared_ptr<IActivationFunction> func(new Sigmoid());
+
+  IPerceptron *new_perceptron = new GraphPerceptron(
+      perceptron_params_.hidden_layers_count,
+      perceptron_params_.hidden_layers_size, new_mapping->GetDataSize(), func);
+  try {
+    new_perceptron->LoadWeights(weights_path.toStdString());
+    delete perceptron_;
+    perceptron_ = new_perceptron;
+    delete mapping_;
+    mapping_ = new_mapping;
+    ui->loadedWeightsPath->setText(weights_path);
+    return;
+  } catch (const std::exception &e) {
+    // ignore
+  }
+
+  delete new_perceptron;
+  new_perceptron = new MatrixPerceptron(perceptron_params_.hidden_layers_count,
+                                        perceptron_params_.hidden_layers_size,
+                                        *new_mapping, func);
+  try {
+    new_perceptron->LoadWeights(weights_path.toStdString());
+    delete perceptron_;
+    perceptron_ = new_perceptron;
+    delete mapping_;
+    mapping_ = new_mapping;
+    ui->loadedWeightsPath->setText(weights_path);
+    return;
+  } catch (const std::exception &e) {
+    QMessageBox::critical(
+        this, "Import",
+        "Error while importing weights from " + weights_path + ": " + e.what());
+  }
+
+  delete new_perceptron;
+}
+
+void MainWindow::on_exportWeightsButton_clicked() {
+  QString weights_path = QFileDialog::getSaveFileName(this, "Select file");
+  if (weights_path.isEmpty()) return;
+
+  try {
+    perceptron_->ExportWeights(weights_path.toStdString());
+    QMessageBox::information(this, "Export",
+                             "Succesfully exported weights to " + weights_path);
+  } catch (const std::exception &e) {
+    QMessageBox::critical(
+        this, "Export",
+        "Error while exporting weights to " + weights_path + ": " + e.what());
+  }
 }
 
 void MainWindow::on_actionLoad_bmp_triggered() {
